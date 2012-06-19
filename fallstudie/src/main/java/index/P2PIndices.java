@@ -12,6 +12,8 @@ import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
+import distribution.DistributionFactory;
+import distribution.DistributionStrategy;
 
 /**
  * ist für die Verwaltung des eigentlichen Index zuständig.
@@ -25,6 +27,7 @@ import net.tomp2p.storage.Data;
 public class P2PIndices extends Indices {
 
 	private Peer	peer;
+	private DistributionStrategy	distributor;
 
 	/**
 	 * uri literals sind für benannte graphen zuständig bzw. für die default
@@ -40,6 +43,12 @@ public class P2PIndices extends Indices {
 		super();
 		setRdfName(uriLiteral);
 		connect();
+		initDistributionStrategy();
+	}
+
+	private void initDistributionStrategy() {
+		distributor = DistributionFactory.create(1);
+		distributor.setPeer(peer);
 	}
 
 	/**
@@ -60,17 +69,22 @@ public class P2PIndices extends Indices {
 	}
 
 	@Override
-	public boolean add(Triple t) {
+	public boolean add(Triple triple) {
 
-		String key = t.getPos(0).originalString()
-				+ t.getPos(1).originalString();
 		try {
-			peer.put(Number160.createHash(key),
- new Data(t))
-					.awaitUninterruptibly();
+			distributor.distribute(triple);
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+			return false;
 		}
+		// try {
+		// peer.put(Number160.createHash(key),
+		// new Data(triple))
+		// .awaitUninterruptibly();
+		// } catch (IOException e) {
+		// e.printStackTrace();
+		// }
 
 		return true;
 	}
@@ -123,6 +137,11 @@ public class P2PIndices extends Indices {
 		}
 
 		return result;
+	}
+
+	public int numberOfTriples() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 }
