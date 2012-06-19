@@ -125,4 +125,10 @@ public class P2PIndices extends Indices {
 		return result;
 	}
 
+	@Override
+	public int numberOfTriples() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }
