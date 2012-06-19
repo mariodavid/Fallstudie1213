@@ -22,7 +22,7 @@ public class Test {
 		// Literale werden als String gespeichert. Möglich wären auch Maps, bei
 		// denen die Strings als Integer representiert werden, Dies funktioniert
 		// allerdings nicht in einem verteilten System
-		LiteralFactory.setType(MapType.NOCODEMAP);
+		// LiteralFactory.setType(MapType.NOCODEMAP);
 
 		// ebenso wegen dem VS
 		Bindings.instanceClass = BindingsMap.class;
@@ -30,28 +30,36 @@ public class Test {
 		P2PIndexQueryEvaluator ev = new P2PIndexQueryEvaluator();
 
 		Collection<URILiteral> defaultGraphs = new LinkedList<URILiteral>();
+
+		/*
+		 * ACHTUNG: die folgende line muss hier sein, da sonst NOCODEMAP durch
+		 * PREFIXCODEMAP automatisch ersetzt wird (Wahrscheinlich durch die
+		 * Instanziierung von P2PIndexQueryEvaluator() ... diese Stelle sollten
+		 * wir dann auf jeden Fall noch anpassen!)
+		 */
+		LiteralFactory.setType(MapType.NOCODEMAP);
 		defaultGraphs.add(LiteralFactory
 				.createURILiteralWithoutLazyLiteral("<inlinedata:>"));
 		Collection<URILiteral> namedGraphs = new LinkedList<URILiteral>();
 		ev.prepareInputData(defaultGraphs, namedGraphs);
 
 		int mode = Integer.parseInt(args[0]);
-		ev.compileQuery("INSERT DATA {<a> <b> <c>}");
-		// ev.compileQuery("INSERT DATA {<2> <b> <2>}");
-		// ev.compileQuery("INSERT DATA {<3> <b> <a>}");
-		// ev.compileQuery("INSERT DATA {<4> <b> <b>}");
-		// ev.compileQuery("INSERT DATA {<5> <b> <c>}");
-		// ev.compileQuery("INSERT DATA {<6> <b> <4>}");
-		// ev.compileQuery("INSERT DATA {<7> <b> <c>}");
-		// ev.compileQuery("INSERT DATA {<8> <b> <c>}");
-		// ev.compileQuery("INSERT DATA {<9> <b> <c>}");
-		// ev.compileQuery("INSERT DATA {<0> <b> <c>}");
+
 		ev.logicalOptimization();
 		ev.physicalOptimization();
 		ev.getResult();
 
 		if (mode == 0 || mode == 2) {
 			ev.compileQuery("INSERT DATA {<a> <b> <c>}");
+			// ev.compileQuery("INSERT DATA {<2> <b> <2>}");
+			// ev.compileQuery("INSERT DATA {<3> <b> <a>}");
+			// ev.compileQuery("INSERT DATA {<4> <b> <b>}");
+			// ev.compileQuery("INSERT DATA {<5> <b> <c>}");
+			// ev.compileQuery("INSERT DATA {<6> <b> <4>}");
+			// ev.compileQuery("INSERT DATA {<7> <b> <c>}");
+			// ev.compileQuery("INSERT DATA {<8> <b> <c>}");
+			// ev.compileQuery("INSERT DATA {<9> <b> <c>}");
+			// ev.compileQuery("INSERT DATA {<0> <b> <c>}");
 			ev.logicalOptimization();
 			ev.physicalOptimization();
 			ev.getResult();
