@@ -49,6 +49,8 @@ public class GetLocalStorage implements Command {
 			}
 
 		}
+		
+		
 
 		System.out.println("local storage size: "
 				+ peer.getPeerBean().getStorage()

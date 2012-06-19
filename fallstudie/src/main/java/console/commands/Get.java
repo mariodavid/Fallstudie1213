@@ -10,7 +10,7 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
 
 public class Get implements Command {
-	private FutureDHT	future;
+	private FutureDHT future;
 
 	public void execute(Scanner scanner, Peer peer) {
 		String key = scanner.next();
@@ -31,11 +31,12 @@ public class Get implements Command {
 
 				System.out.println("Peer id: "
 						+ peer.getPeerBean().getStorage()
-						.findPeerIDForResponsibleContent(key));
+								.findPeerIDForResponsibleContent(key));
 				if (result.getObject().getClass() == String.class)
 					System.out.print(result.getObject().toString());
 				else if (result.getObject().getClass() == Triple.class) {
-					System.out.println(((Triple) result.getObject()).toN3String());
+					System.out.println(((Triple) result.getObject())
+							.toN3String());
 				} else {
 					System.out.println("Unbekanntes Format!");
 				}

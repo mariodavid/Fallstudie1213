@@ -102,8 +102,8 @@ public class Console {
 
 			case 3:
 				String ip = args[0];
-				int localPort = Integer.parseInt(args[1]);
-				int remotePort = Integer.parseInt(args[2]);
+				int remotePort = Integer.parseInt(args[1]);
+				int localPort = Integer.parseInt(args[2]);
 
 				connection.connect(ip, remotePort, localPort);
 				console.start();
