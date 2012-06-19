@@ -1,0 +1,119 @@
+package console;
+
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Scanner;
+
+import console.commands.Add;
+import console.commands.Command;
+import console.commands.Get;
+import console.commands.GetAll;
+import console.commands.GetAllNodes;
+import console.commands.GetLocalStorage;
+import console.commands.Help;
+import console.commands.Put;
+import console.commands.Quit;
+import console.commands.Remove;
+import console.commands.RemoveAll;
+import console.commands.SendMessage;
+
+
+public class Console {
+
+	private final Connection	connection;
+
+	public Console(Connection connection) {
+		this.connection = connection;
+	}
+
+	/**
+	 * starts the console when a connection is already established. reads
+	 * commands from std in and executes them
+	 * 
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
+	public void start() throws ClassNotFoundException, IOException {
+		System.out
+				.println("\n############ KONSOLENMODUS GESTARTET ############");
+		System.out.println("Type \"help\" for possible commands");
+		String input = null;
+		Scanner scanner = new Scanner(System.in);
+
+		HashMap<String, Command> commandList = generateCommands();
+
+		while (true) {
+
+			System.out.print("command: ");
+			input = scanner.next().toLowerCase();
+
+			Command command = commandList.get(input);
+			if (command != null) {
+				command.execute(scanner, this.connection.getPeer());
+			}
+
+		}
+	}
+
+	/**
+	 * this method generates objects for all available commands and returns them
+	 * in a collection
+	 * 
+	 * @return the available commands
+	 */
+	private HashMap<String, Command> generateCommands() {
+		HashMap<String, Command> commands = new HashMap<String, Command>();
+
+		commands.put("add", new Add());
+		commands.put("get", new Get());
+		commands.put("getall", new GetAll());
+		commands.put("put", new Put());
+		commands.put("remove", new Remove());
+		commands.put("removeall", new RemoveAll());
+		commands.put("quit", new Quit());
+		commands.put("getallnodes", new GetAllNodes());
+		commands.put("sendmessage", new SendMessage());
+		commands.put("getlocalstorage", new GetLocalStorage());
+//		commands.put("loadrdf", new LoadRDF());
+		
+		commands.put("help", new Help(commands.values()));
+		
+		return commands;
+	}
+
+	/**
+	 * the entry point of the application. depending on the command line
+	 * arguments the connection is established via broadcast or a given ip:port
+	 * combination to connect to the network
+	 * 
+	 * @param args
+	 * @throws Exception
+	 */
+	public static void main(String[] args) throws Exception {
+
+		Connection connection = new Connection();
+		Console console = new Console(connection);
+
+		switch (args.length) {
+			case 0:
+				connection.connect();
+				console.start();
+				break;
+
+			case 3:
+				String ip = args[0];
+				int localPort = Integer.parseInt(args[1]);
+				int remotePort = Integer.parseInt(args[2]);
+
+				connection.connect(ip, remotePort, localPort);
+				console.start();
+				break;
+
+			default:
+				System.out.println("usage: program [ip] [port]");
+				break;
+		}
+
+	}
+
+}
