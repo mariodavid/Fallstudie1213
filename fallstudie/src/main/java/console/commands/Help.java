@@ -4,6 +4,7 @@ import java.util.Collection;
 import java.util.Scanner;
 
 import net.tomp2p.p2p.Peer;
+import evaluators.P2PIndexQueryEvaluator;
 
 public class Help implements Command {
 
@@ -12,7 +13,9 @@ public class Help implements Command {
 	public Help(Collection<Command> commands) {
 		this.commands = commands;
 	}
-	public void execute(Scanner scanner, Peer peer) {
+
+	public void execute(Scanner scanner, Peer peer,
+			P2PIndexQueryEvaluator evaluator) {
 
 		for (Command c : commands) {
 			printCommandDescription(c);

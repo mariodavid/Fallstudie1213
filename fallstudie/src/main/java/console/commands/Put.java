@@ -6,9 +6,11 @@ import java.util.Scanner;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
+import evaluators.P2PIndexQueryEvaluator;
 
 public class Put implements Command {
-	public void execute(Scanner scanner, Peer peer) {
+	public void execute(Scanner scanner, Peer peer,
+			P2PIndexQueryEvaluator evaluator) {
 		String key = scanner.next();
 		String data = scanner.next();
 		try {

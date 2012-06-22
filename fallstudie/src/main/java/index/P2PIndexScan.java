@@ -7,6 +7,7 @@ import lupos.datastructures.items.Item;
 import lupos.datastructures.items.Triple;
 import lupos.datastructures.items.Variable;
 import lupos.datastructures.items.literal.Literal;
+import lupos.datastructures.items.literal.string.StringURILiteral;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.index.BasicIndex;
@@ -54,36 +55,46 @@ public class P2PIndexScan extends BasicIndex {
 
 		P2PIndices p2pIndices = (P2PIndices) indices;
 		QueryResult result = QueryResult.createInstance();
+
 		for (TriplePattern pattern : this.triplePatterns) {
 
-			Literal s = (Literal) pattern.getItems()[0];
-			Literal p = (Literal) pattern.getItems()[1];
-			Variable o = (Variable) pattern.getItems()[2];
+			Item[] items = pattern.getItems();
+			String key = generateKey(items);
 
-			String key = s.originalString() + p.originalString();
-			for (Triple t : p2pIndices.getAll(key)) {
-				Bindings b = Bindings.createNewInstance();
-				b.add(o, t.getPos(2));
+			System.out.println("Hash: h(" + key + ")");
+
+			for (Triple triple : p2pIndices.getAll(key)) {
+				Bindings b = addVariablesToBindings(items, triple);
 				result.add(b);
 			}
-			//
-			// if (!s.isVariable()) {
-			// Literal l = (Literal) s;
-			// l.originalString(); // String Repräsentation eines item
-			//
-			// } else {
-			// Bindings b = Bindings.createNewInstance();
-			// Variable v = (Variable) s;
-			// Literal lit = getLiteralFromP2PNetwork();
-			// b.add(v, lit);
-			//
-			// result.add(b);
-			//
-			// }
-
 		}
 
 		return result;
+	}
+
+	private Bindings addVariablesToBindings(Item[] items, Triple t) {
+		Bindings b = Bindings.createNewInstance();
+		for (int i = 0; i < items.length; i++) {
+			Item item = items[i];
+			if (item.getClass() == Variable.class) {
+				Variable v = (Variable) item;
+				b.add(v, t.getPos(i));
+
+			}
+		}
+		return b;
+	}
+
+	private String generateKey(Item[] items) {
+		StringBuilder key = new StringBuilder();
+
+		for (Item item : items) {
+			if (item.getClass() == StringURILiteral.class) {
+				Literal lit = (Literal) item;
+				key.append(lit.originalString());
+			}
+		}
+		return key.toString();
 	}
 
 }

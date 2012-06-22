@@ -4,14 +4,15 @@ import java.io.IOException;
 import java.util.Scanner;
 
 import lupos.datastructures.items.Triple;
-
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
+import evaluators.P2PIndexQueryEvaluator;
 
 public class GetLocalStorage implements Command {
-	public void execute(Scanner scanner, Peer peer) {
+	public void execute(Scanner scanner, Peer peer,
+			P2PIndexQueryEvaluator evaluator) {
 
 		System.out.println("KEY \t\t\t\t\t        VALUE");
 		for (Number160 key : peer.getPeerBean().getStorage()
@@ -28,9 +29,9 @@ public class GetLocalStorage implements Command {
 					if (i == 0) {
 						System.out.print("\t");
 					}
-					if (result.getObject().getClass() == String.class)
+					if (result.getObject().getClass() == String.class) {
 						System.out.print(result.getObject().toString());
-					else if (result.getObject().getClass() == Triple.class) {
+					} else if (result.getObject().getClass() == Triple.class) {
 						System.out.println(((Triple) result.getObject()).toN3String());
 					} else {
 						System.out.println("Unbekanntes Format!");

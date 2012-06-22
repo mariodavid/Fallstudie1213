@@ -7,13 +7,10 @@ import java.util.LinkedList;
 import lupos.datastructures.items.Triple;
 import lupos.datastructures.items.literal.URILiteral;
 import lupos.engine.operators.index.Indices;
-import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDHT;
-import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
-import distribution.DistributionFactory;
-import distribution.DistributionStrategy;
+import console.P2PAdapter;
 
 /**
  * ist für die Verwaltung des eigentlichen Index zuständig.
@@ -26,8 +23,16 @@ import distribution.DistributionStrategy;
  */
 public class P2PIndices extends Indices {
 
-	private Peer	peer;
-	private DistributionStrategy	distributor;
+
+	private P2PAdapter		adapter;
+	// private DistributionStrategy strategy;
+	private int						distributionStrategy;
+
+	// public void setStrategy(int strategy) {
+	// this.distributionStrategy = strategy;
+	// this.strategy = DistributionFactory.create(this.distributionStrategy);
+	// this.strategy.setPeer(peer);
+	// }
 
 	/**
 	 * uri literals sind für benannte graphen zuständig bzw. für die default
@@ -42,49 +47,31 @@ public class P2PIndices extends Indices {
 	public P2PIndices(URILiteral uriLiteral) {
 		super();
 		setRdfName(uriLiteral);
-		connect();
-		initDistributionStrategy();
+		adapter.connect();
+		// initDistributionStrategy();
 	}
 
-	private void initDistributionStrategy() {
-		distributor = DistributionFactory.create(1);
-		distributor.setPeer(peer);
+	public P2PIndices(URILiteral uriLiteral, P2PAdapter adapter) {
+		super();
+		setRdfName(uriLiteral);
+		this.adapter = adapter;
+		// initDistributionStrategy();
 	}
 
-	/**
-	 * stellt die Verbindung zum P2P Netzwerk her
-	 */
-	private void connect() {
-		peer = new Peer(Number160.createHash("sad"));
-		try {
-			peer.listen(4000, 4000);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 
-		FutureBootstrap fb = peer.bootstrapBroadcast(4000);
-		fb.awaitUninterruptibly();
 
-	}
+
 
 	@Override
 	public boolean add(Triple triple) {
 
 		try {
-			distributor.distribute(triple);
+			adapter.getDistributionStrategy().distribute(triple);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;
 		}
-		// try {
-		// peer.put(Number160.createHash(key),
-		// new Data(triple))
-		// .awaitUninterruptibly();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
 
 		return true;
 	}
@@ -121,7 +108,7 @@ public class P2PIndices extends Indices {
 
 	public Collection<Triple> getAll(String key) {
 		Collection<Triple> result = new LinkedList<Triple>();
-		FutureDHT future = peer.getAll(Number160.createHash(key));
+		FutureDHT future = adapter.getPeer().getAll(Number160.createHash(key));
 		future.awaitUninterruptibly();
 
 		for (Data r : future.getData().values()) {

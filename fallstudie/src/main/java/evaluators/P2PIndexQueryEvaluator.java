@@ -41,8 +41,19 @@ import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
 import lupos.misc.Tuple;
+import console.P2PAdapter;
 
 public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
+
+	private P2PAdapter	p2pAdapter;
+
+	public P2PAdapter getP2PAdapter() {
+		return p2pAdapter;
+	}
+
+	public void setP2PAdapter(P2PAdapter adapter) {
+		this.p2pAdapter = adapter;
+	}
 
 	protected enum Optimizations {
 		NONE, MOSTRESTRICTIONS, MOSTRESTRICTIONSLEASTENTRIES, LEASTENTRIES, BINARY;
@@ -168,11 +179,11 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	private class P2PIndicesFactory implements Dataset.IndicesFactory {
 
 		public Indices createIndices(final URILiteral uriLiteral) {
-					return new P2PIndices(uriLiteral);
+			return new P2PIndices(uriLiteral, p2pAdapter);
 		}
 
 		public lupos.engine.operators.index.IndexCollection createIndexCollection() {
-					return new P2PIndexCollection(dataset);
+			return new P2PIndexCollection(dataset);
 		}
 }
 }

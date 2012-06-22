@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
+import test.LuposServer;
 import console.commands.Add;
 import console.commands.Command;
 import console.commands.Get;
@@ -12,18 +13,22 @@ import console.commands.GetAllNodes;
 import console.commands.GetLocalStorage;
 import console.commands.Help;
 import console.commands.Put;
+import console.commands.Query;
 import console.commands.Quit;
 import console.commands.Remove;
 import console.commands.RemoveAll;
 import console.commands.SendMessage;
+import console.commands.SetStrategy;
 
 
 public class Console {
 
 	private final Connection	connection;
+	private final LuposServer	server;
 
-	public Console(Connection connection) {
+	public Console(Connection connection, LuposServer server) {
 		this.connection = connection;
+		this.server = server;
 	}
 
 	/**
@@ -49,7 +54,8 @@ public class Console {
 
 			Command command = commandList.get(input);
 			if (command != null) {
-				command.execute(scanner, this.connection.getPeer());
+				command.execute(scanner, this.connection.getPeer(),
+						this.server.getEvaluator());
 			}
 
 		}
@@ -74,6 +80,8 @@ public class Console {
 		commands.put("getallnodes", new GetAllNodes());
 		commands.put("sendmessage", new SendMessage());
 		commands.put("getlocalstorage", new GetLocalStorage());
+		commands.put("query", new Query());
+		commands.put("setstrategy", new SetStrategy());
 //		commands.put("loadrdf", new LoadRDF());
 		
 		commands.put("help", new Help(commands.values()));
@@ -92,11 +100,16 @@ public class Console {
 	public static void main(String[] args) throws Exception {
 
 		Connection connection = new Connection();
-		Console console = new Console(connection);
+		LuposServer server = new LuposServer();
+
+		Console console = new Console(connection, server);
 
 		switch (args.length) {
 			case 0:
 				connection.connect();
+				P2PAdapter config = new P2PAdapter(
+						connection.getPeer());
+				server.start(config);
 				console.start();
 				break;
 

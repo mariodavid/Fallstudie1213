@@ -4,9 +4,11 @@ import java.util.Scanner;
 
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.PeerAddress;
+import evaluators.P2PIndexQueryEvaluator;
 
 public class GetAllNodes implements Command {
-	public void execute(Scanner scanner, Peer peer) {
+	public void execute(Scanner scanner, Peer peer,
+			P2PIndexQueryEvaluator evaluator) {
 		System.out.println("Nodes available: " + peer.getPeerBean().getPeerMap().size());
 		for (PeerAddress curPeer : peer.getPeerBean().getPeerMap().getAll()) {
 			System.out.println(curPeer.toString());

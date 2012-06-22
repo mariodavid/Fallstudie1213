@@ -1,23 +1,28 @@
 package console.commands;
 
-import java.io.IOException;
 import java.util.Scanner;
 
 import net.tomp2p.p2p.Peer;
-import net.tomp2p.peers.Number160;
-import net.tomp2p.storage.Data;
+import evaluators.P2PIndexQueryEvaluator;
 
 public class Add implements Command {
-	public void execute(Scanner scanner, Peer peer) {
-		String key = scanner.next();
-		String data = scanner.next();
-		
+	public void execute(Scanner scanner, Peer peer,
+			P2PIndexQueryEvaluator evaluator) {
+		String s = scanner.next();
+		String p = scanner.next();
+		String o = scanner.next();
+
 		try {
-			peer.add(Number160.createHash(key), new Data(data))
-					.awaitUninterruptibly();
-		} catch (IOException e) {
+			evaluator.compileQuery("INSERT DATA {<" + s + "> <" + p + "> <" + o
+					+ ">}");
+			evaluator.logicalOptimization();
+			evaluator.physicalOptimization();
+			evaluator.getResult();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 	}
 
 	public String getDescription() {
