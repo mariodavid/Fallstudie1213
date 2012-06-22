@@ -11,17 +11,17 @@ public class SetStrategy implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
-		int newStrategy = scanner.nextInt();
+		int newStrategyNumber = scanner.nextInt();
 
 		evaluator.getP2PAdapter().setDistributionStrategy(
-				DistributionFactory.create(newStrategy));
+				DistributionFactory.create(newStrategyNumber));
 
-		System.out.println("Strategy set to:" + newStrategy);
+		System.out.println("Strategy set to:" + newStrategyNumber);
 	}
 
 	public String getDescription() {
 		// TODO Auto-generated method stub
-		return null;
+		return "[number of strategy] sets the distribution strategy to the given value (1=OneKeyDistribution, 2=TwoKeyDistribution, 3=ThreeKeyDistribution)";
 	}
 
 }

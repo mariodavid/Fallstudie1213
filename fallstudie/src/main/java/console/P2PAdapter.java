@@ -48,6 +48,9 @@ public class P2PAdapter {
 
 	/**
 	 * stellt die Verbindung zum P2P Netzwerk her
+	 * 
+	 * wird nur benoetigt, wenn dem P2P Adapter kein Peer uebergeben wird (wenn
+	 * die Console nicht die Verbindung herstellt)
 	 */
 	public void connect() {
 

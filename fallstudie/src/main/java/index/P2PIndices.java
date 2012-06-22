@@ -25,14 +25,8 @@ public class P2PIndices extends Indices {
 
 
 	private P2PAdapter		adapter;
-	// private DistributionStrategy strategy;
 	private int						distributionStrategy;
 
-	// public void setStrategy(int strategy) {
-	// this.distributionStrategy = strategy;
-	// this.strategy = DistributionFactory.create(this.distributionStrategy);
-	// this.strategy.setPeer(peer);
-	// }
 
 	/**
 	 * uri literals sind für benannte graphen zuständig bzw. für die default
@@ -48,14 +42,12 @@ public class P2PIndices extends Indices {
 		super();
 		setRdfName(uriLiteral);
 		adapter.connect();
-		// initDistributionStrategy();
 	}
 
 	public P2PIndices(URILiteral uriLiteral, P2PAdapter adapter) {
 		super();
 		setRdfName(uriLiteral);
 		this.adapter = adapter;
-		// initDistributionStrategy();
 	}
 
 
