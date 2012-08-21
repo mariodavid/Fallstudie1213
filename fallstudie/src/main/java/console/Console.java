@@ -10,6 +10,7 @@ import console.commands.Command;
 import console.commands.Get;
 import console.commands.GetAll;
 import console.commands.GetAllNodes;
+import console.commands.GetExampleQueries;
 import console.commands.GetLocalStorage;
 import console.commands.Help;
 import console.commands.Put;
@@ -82,6 +83,7 @@ public class Console {
 		commands.put("getlocalstorage", new GetLocalStorage());
 		commands.put("query", new Query());
 		commands.put("setstrategy", new SetStrategy());
+		commands.put("getexamplequeries", new GetExampleQueries());
 //		commands.put("loadrdf", new LoadRDF());
 		
 		commands.put("help", new Help(commands.values()));

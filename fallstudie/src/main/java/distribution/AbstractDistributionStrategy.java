@@ -3,6 +3,7 @@ package distribution;
 import java.io.IOException;
 
 import lupos.datastructures.items.Triple;
+import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
@@ -14,7 +15,7 @@ public abstract class AbstractDistributionStrategy implements
 		DistributionStrategy {
 
 	/** The peer. */
-	private Peer	peer;
+	private Peer peer;
 
 	/*
 	 * (non-Javadoc)
@@ -36,6 +37,10 @@ public abstract class AbstractDistributionStrategy implements
 	 */
 	public abstract void distribute(Triple triple) throws IOException;
 
+	public abstract void remove(Triple triple) throws IOException;
+
+	public abstract boolean contains(Triple triple) throws IOException;
+
 	/**
 	 * Adds a given key value pair to network.
 	 * 
@@ -52,6 +57,55 @@ public abstract class AbstractDistributionStrategy implements
 
 		// peer.add(hash, data); for async mode
 		peer.add(hash, data).awaitUninterruptibly();
+	}
+
+	/**
+	 * Adds a given key value pair to network.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	protected void removeFromNetwork(String key, Triple triple) throws IOException {
+		Number160 hash = Number160.createHash(key);
+		System.out.println(triple.toN3String());
+
+		Number160 contentKey = Number160.createHash(triple.toN3String());
+		
+		peer.remove(hash, contentKey);
+		//peer.removeAll(hash).awaitUninterruptibly();
+	}
+
+	/**
+	 * Check if a key is in the Network.
+	 * 
+	 * @param key
+	 *            the key
+	 * @param value
+	 *            the value
+	 * @throws IOException
+	 *             Signals that an I/O exception has occurred.
+	 */
+	protected boolean isInNetwork(String key, Triple triple) throws IOException {
+		FutureDHT future = peer.getAll(Number160.createHash(key));
+		future.awaitUninterruptibly();
+
+		for (Data value : future.getData().values()) {
+			try {
+				if (value.getObject().getClass() == Triple.class) {
+					Triple curTriple = (Triple) value.getObject();
+					if (curTriple.equals(triple))
+						return true;
+				}
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return false;
 	}
 
 }

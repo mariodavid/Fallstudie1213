@@ -30,4 +30,13 @@ public class ThreeKeyDistribution extends AbstractDistributionStrategy {
 				+ triple.getObject().originalString();
 	}
 
+	@Override
+	public void remove(Triple triple) throws IOException {
+		removeFromNetwork(getSPO(triple), triple);
+	}
+	
+	public boolean contains(Triple triple) throws IOException {
+		return isInNetwork(getSPO(triple), triple);
+	}
+
 }

@@ -70,14 +70,23 @@ public class P2PIndices extends Indices {
 
 	@Override
 	public boolean remove(Triple t) {
-		// TODO implementieren
-		return false;
+		System.out.println("Ich war hier!");
+		try {
+			adapter.getDistributionStrategy().remove(t);
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
 	}
 
 	@Override
 	public boolean contains(Triple t) {
-		// TODO implementieren
-		return false;
+		System.out.println("Ich war auch hier!");
+		try {
+			return adapter.getDistributionStrategy().contains(t);
+		} catch (IOException e) {
+			return false;
+		}
 	}
 
 	@Override

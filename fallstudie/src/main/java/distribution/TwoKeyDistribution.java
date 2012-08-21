@@ -1,10 +1,8 @@
 package distribution;
 
-
 import java.io.IOException;
 
 import lupos.datastructures.items.Triple;
-
 
 /**
  * The Class TwoKeyDistribution is a distribution strategy where two elements of
@@ -30,6 +28,13 @@ public class TwoKeyDistribution extends AbstractDistributionStrategy {
 		addToNetwork(getPO(triple), triple);
 	}
 
+	@Override
+	public void remove(Triple triple) throws IOException {
+		removeFromNetwork(getSP(triple), triple);
+		removeFromNetwork(getSO(triple), triple);
+		removeFromNetwork(getPO(triple), triple);
+	}
+
 	private String getSP(Triple triple) {
 		return triple.getSubject().originalString()
 				+ triple.getPredicate().originalString();
@@ -43,5 +48,11 @@ public class TwoKeyDistribution extends AbstractDistributionStrategy {
 	private String getPO(Triple triple) {
 		return triple.getPredicate().originalString()
 				+ triple.getObject().originalString();
+	}
+
+	public boolean contains(Triple triple) throws IOException {
+		return isInNetwork(getSP(triple), triple)
+				&& isInNetwork(getSO(triple), triple)
+				&& isInNetwork(getPO(triple), triple);
 	}
 }
