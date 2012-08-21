@@ -5,6 +5,8 @@ import java.io.IOException;
 import lupos.datastructures.items.Triple;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.p2p.config.ConfigurationStore;
+import net.tomp2p.p2p.config.Configurations;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
 
@@ -53,10 +55,16 @@ public abstract class AbstractDistributionStrategy implements
 	 */
 	protected void addToNetwork(String key, Triple value) throws IOException {
 		Number160 hash = Number160.createHash(key);
+		Number160 contentKey = Number160.createHash(value.toN3String());
 		Data data = new Data(value);
 
-		// peer.add(hash, data); for async mode
-		peer.add(hash, data).awaitUninterruptibly();
+		/*
+		 * Jeder Eintrag kriegt eine eindeutige ID, damit ein einzelner Wert zu
+		 * einen bestimmten Hash rausgeloescht werden kann.
+		 */
+		ConfigurationStore cs = Configurations.defaultStoreConfiguration();
+		cs.setContentKey(contentKey);
+		peer.put(hash, data, cs).awaitUninterruptibly();
 	}
 
 	/**
@@ -69,14 +77,15 @@ public abstract class AbstractDistributionStrategy implements
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	protected void removeFromNetwork(String key, Triple triple) throws IOException {
+	protected void removeFromNetwork(String key, Triple triple)
+			throws IOException {
 		Number160 hash = Number160.createHash(key);
 		System.out.println(triple.toN3String());
 
 		Number160 contentKey = Number160.createHash(triple.toN3String());
-		
+
 		peer.remove(hash, contentKey);
-		//peer.removeAll(hash).awaitUninterruptibly();
+		// peer.removeAll(hash).awaitUninterruptibly();
 	}
 
 	/**
