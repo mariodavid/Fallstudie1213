@@ -32,7 +32,7 @@ public class GetLocalStorage implements Command {
 					if (result.getObject().getClass() == String.class) {
 						System.out.print(result.getObject().toString());
 					} else if (result.getObject().getClass() == Triple.class) {
-						System.out.println(((Triple) result.getObject()).toN3String());
+						System.out.print(((Triple) result.getObject()).toN3String());
 					} else {
 						System.out.println("Unbekanntes Format!");
 					}

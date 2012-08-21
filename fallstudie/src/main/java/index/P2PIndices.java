@@ -70,7 +70,6 @@ public class P2PIndices extends Indices {
 
 	@Override
 	public boolean remove(Triple t) {
-		System.out.println("Ich war hier!");
 		try {
 			adapter.getDistributionStrategy().remove(t);
 		} catch (IOException e) {
@@ -81,7 +80,6 @@ public class P2PIndices extends Indices {
 
 	@Override
 	public boolean contains(Triple t) {
-		System.out.println("Ich war auch hier!");
 		try {
 			return adapter.getDistributionStrategy().contains(t);
 		} catch (IOException e) {
