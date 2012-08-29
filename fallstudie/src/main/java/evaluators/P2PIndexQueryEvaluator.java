@@ -29,6 +29,7 @@ import index.P2PIndices;
 import java.util.Collection;
 import java.util.Date;
 
+import logicalOptimization.P2PRulePackage;
 import lupos.datastructures.dbmergesortedds.heap.Heap;
 import lupos.datastructures.dbmergesortedds.tosort.ToSort;
 import lupos.datastructures.items.literal.LiteralFactory;
@@ -175,6 +176,13 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 		final long prepareTime = new Date().getTime() - a.getTime();
 		return prepareTime;
 	}
+	
+	@Override
+	public long logicalOptimization() {
+		P2PRulePackage rp = new P2PRulePackage();
+		rp.applyRules(this.getRootNode());
+		return super.logicalOptimization();
+	};
 
 	private class P2PIndicesFactory implements Dataset.IndicesFactory {
 
