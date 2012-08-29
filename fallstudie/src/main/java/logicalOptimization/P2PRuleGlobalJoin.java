@@ -9,17 +9,26 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-
-import lupos.optimizations.logical.rules.generated.runtime.Rule;
 import lupos.datastructures.items.Variable;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.multiinput.join.Join;
 import lupos.engine.operators.tripleoperator.TriplePattern;
+import lupos.optimizations.logical.rules.generated.runtime.Rule;
 
 
 
-
+/**
+ * Diese Klasse ist jetzt die logische Optimierung, die durch den Ruleeditor
+ * generiert wurde. Hier findet die Transformation der Anfragegraphen statt. Zu
+ * diesem Zeitpunkt funktioniert alles zentralistisch, sprich, es werden keine
+ * Teilgraphen verschickt.
+ * 
+ * Somit stellt diese Klasse die Basisimplementierung dar. Diese kann als
+ * Referenz dienen für die verschiedenen Optimierungen bei denen Teilgraphen
+ * verschickt werden und diese können dann in Benchmarks gegeneinander
+ * "antreten"
+ * 
+ */
 public class P2PRuleGlobalJoin extends Rule {
 
     private lupos.engine.operators.BasicOperator[] Op3 = null;
@@ -42,7 +51,7 @@ public class P2PRuleGlobalJoin extends Rule {
                 continue;
             }
 
-            this.Op1 = (lupos.engine.operators.BasicOperator) _precOp_1_0;
+            this.Op1 = _precOp_1_0;
 
             List<OperatorIDTuple> _succedingOperators_1_0 = _op.getSucceedingOperators();
 
@@ -69,7 +78,7 @@ public class P2PRuleGlobalJoin extends Rule {
             return false;
         }
 
-        this.Op3[this._dim_0] = (lupos.engine.operators.BasicOperator) _op;
+        this.Op3[this._dim_0] = _op;
 
         return true;
     }
@@ -80,14 +89,16 @@ public class P2PRuleGlobalJoin extends Rule {
         this.ruleName = "P2PRule";
     }
 
-    protected boolean check(BasicOperator _op) {
+    @Override
+	protected boolean check(BasicOperator _op) {
        if (this._checkPrivate0(_op)) {
     	   return this.Op2.getTriplePattern().size() > 1;
        }
        return false;
     }
 
-    protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
+    @Override
+	protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
         // remove obsolete connections...
         int[] _label_a = null;
 
