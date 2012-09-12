@@ -14,7 +14,7 @@ public class Put implements Command {
 		String key = scanner.next();
 		String data = scanner.next();
 		try {
-			peer.put(Number160.createHash(key), new Data(data))
+			peer.put(Number160.createHash(key)).setData(new Data(data)).start()
 					.awaitUninterruptibly();
 		} catch (IOException e) {
 			e.printStackTrace();

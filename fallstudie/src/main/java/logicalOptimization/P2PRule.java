@@ -32,8 +32,8 @@ import lupos.engine.operators.tripleoperator.TriplePattern;
  * -------- (4) <------------------ (3) -----------
  * 			        Anfrage Result
  * 
- * Idee von Sven: Man sollte nun eine Klasse erstellen, die von IndexCollection erbt (wahrscheinlich die Klasse)
- * und es wird nun eine einzelne IndexCollection die hier auftriff durch diese geerbte Klasse ersetzt. Diese Klasse
+ * Idee von Sven: Man sollte nun eine Klasse erstellen, die von IndexScanOperators erbt (wahrscheinlich die Klasse)
+ * und es wird nun eine einzelne IndexScanOperator die hier auftriff durch diese geerbte Klasse ersetzt. Diese Klasse
  * hat jetzt mehrere Operatoren in sich, so dass neben der IndexCollection auch ein Result Operator enthŠlt.
  * Dieser Result Operator enthŠlt die P2PApplication klasse als Application. Diese drei Operatoren werden von der von
  * IndexCollection erbenden Klasse verschickt und das Ergebnis wird wieder entgegen genommen.

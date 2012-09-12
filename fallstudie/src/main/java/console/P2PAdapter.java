@@ -1,7 +1,12 @@
 package console;
 
+import java.io.IOException;
+import java.util.Random;
+
 import net.tomp2p.futures.FutureBootstrap;
+import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.peers.Number160;
 import distribution.DistributionFactory;
 import distribution.DistributionStrategy;
@@ -54,16 +59,28 @@ public class P2PAdapter {
 	 */
 	public void connect() {
 
-		peer = new Peer(Number160.createHash("sad"));
+		PeerMaker maker = new PeerMaker(new Number160(new Random(50000)))
+				.setPorts(4000);
+
 		try {
-			peer.listen(4000, 4000);
-		} catch (Exception e) {
+			peer = maker.makeAndListen();
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		FutureBootstrap fb = peer.bootstrapBroadcast(4000);
+
+		FutureBootstrap fb = peer.bootstrap().setBroadcast().setPorts(4000)
+				.start();
 		fb.awaitUninterruptibly();
+
+	}
+
+	public void send(String msg, Number160 destination) {
+
+		FutureDHT future = peer.send(destination).setObject(msg).start();
+
+		future.awaitUninterruptibly();
 
 	}
 

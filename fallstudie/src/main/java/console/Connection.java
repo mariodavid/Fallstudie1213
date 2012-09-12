@@ -2,12 +2,12 @@ package console;
 
 import java.io.IOException;
 import java.net.InetAddress;
-import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
@@ -40,9 +40,10 @@ public class Connection {
 
 		this.peer = createPeer(localPort, -1);
 
-		InetSocketAddress inetSock = new InetSocketAddress(
-				InetAddress.getByName(ip), remotePort);
-		FutureBootstrap fb = this.peer.bootstrap(inetSock);
+		FutureBootstrap fb = this.peer.bootstrap()
+				.setInetAddress(InetAddress.getByName(ip)).setPorts(remotePort)
+				.start();
+
 		fb.awaitUninterruptibly();
 
 
@@ -65,7 +66,10 @@ public class Connection {
 
 		listenToMessages();
 
-		FutureBootstrap fb = this.peer.bootstrapBroadcast(DEFAULT_PORT);
+		FutureBootstrap fb = this.peer.bootstrap()
+				.setPorts(DEFAULT_PORT)
+				.setBroadcast()
+				.start();
 		fb.awaitUninterruptibly();
 
 		return true;
@@ -97,10 +101,9 @@ public class Connection {
 			id = gen.nextInt(50000);
 		}
 
-		Peer peer = new Peer(Number160.createHash(id));
-		peer.listen(port, port);
+		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port);
 
-		return peer;
+		return peer.makeAndListen();
 	}
 
 }

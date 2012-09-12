@@ -15,7 +15,12 @@ public class Get implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 		String key = scanner.next();
-		future = peer.get(Number160.createHash(key));
+		future = peer.get(Number160.createHash(key)).start();
+		Number160 contentKey = Number160.createHash("<s> <p> <o> .");
+		// future =
+		// peer.get(Number160.createHash(key)).setContentKey(contentKey)
+		// .start();
+		future = peer.get(Number160.createHash(key)).setAll().start();
 		future.awaitUninterruptibly();
 
 		if (future.isSuccess()) {
@@ -28,7 +33,7 @@ public class Get implements Command {
 
 	private void printResults(Peer peer, Number160 key) {
 		try {
-			for (Data result : future.getData().values()) {
+			for (Data result : future.getDataMap().values()) {
 
 				System.out.println("Peer id: "
 						+ peer.getPeerBean().getStorage()

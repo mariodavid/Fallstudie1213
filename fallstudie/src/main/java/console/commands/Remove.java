@@ -10,7 +10,7 @@ public class Remove implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 		String key = scanner.next();
-		peer.remove(Number160.createHash(key))
+		peer.remove(Number160.createHash(key)).setAll().start()
 				.awaitUninterruptibly();
 	}
 

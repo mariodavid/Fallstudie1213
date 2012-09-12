@@ -19,12 +19,12 @@ public class GetLocalStorage implements Command {
 				.findContentForResponsiblePeerID(peer.getPeerID())) {
 
 			System.out.print(key);
-			FutureDHT future = peer.getAll(key);
+			FutureDHT future = peer.get(key).setAll().start();
 			future.awaitUninterruptibly();
 
-			int size = future.getData().values().size();
+			int size = future.getDataMap().values().size();
 			int i = 0;
-			for (Data result : future.getData().values()) {
+			for (Data result : future.getDataMap().values()) {
 				try {
 					if (i == 0) {
 						System.out.print("\t");

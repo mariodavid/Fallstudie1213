@@ -18,7 +18,7 @@
 		<dependency>
 			<groupId>net.tomp2p</groupId>
 			<artifactId>TomP2P</artifactId>
-			<version>4.0.7</version>
+			<version>4.2</version>
 		</dependency>
 		
   		<dependency>

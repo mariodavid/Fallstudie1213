@@ -107,10 +107,11 @@ public class P2PIndices extends Indices {
 
 	public Collection<Triple> getAll(String key) {
 		Collection<Triple> result = new LinkedList<Triple>();
-		FutureDHT future = adapter.getPeer().getAll(Number160.createHash(key));
+		FutureDHT future = adapter.getPeer().get(Number160.createHash(key))
+				.start();
 		future.awaitUninterruptibly();
 
-		for (Data r : future.getData().values()) {
+		for (Data r : future.getDataMap().values()) {
 			try {
 				result.add((Triple) r.getObject());
 			} catch (ClassNotFoundException e) {
@@ -125,6 +126,7 @@ public class P2PIndices extends Indices {
 		return result;
 	}
 
+	@Override
 	public int numberOfTriples() {
 		// TODO Auto-generated method stub
 		return 0;

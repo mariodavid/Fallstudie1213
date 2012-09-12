@@ -39,7 +39,6 @@ public class P2PApplication implements Application {
 		 * Serialisierung:  lupos.endpoint.server.format;
 		 * Deserialisierung: lupos.endpoint.client.formatreader;
 		 */
-
 	}
 
 	public void start(Type type) {
