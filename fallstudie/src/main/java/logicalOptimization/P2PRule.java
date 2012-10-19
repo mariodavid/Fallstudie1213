@@ -9,34 +9,33 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
-
-import lupos.optimizations.logical.rules.generated.runtime.Rule;
 import lupos.datastructures.items.Variable;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.multiinput.join.Join;
 import lupos.engine.operators.tripleoperator.TriplePattern;
+import lupos.optimizations.logical.rules.generated.runtime.Rule;
 
 
 
 /**
- * genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung des Anfragegraphen.
- * Bei P2PRuleGlobalJoin war alles noch zentralistisch. Hier sollen nun Optimierungen eingeführt werden,
- * bei denen dann Teilgraphen verschickt werden.
+ * genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung
+ * des Anfragegraphen. Bei P2PRuleGlobalJoin war alles noch zentralistisch. Hier
+ * sollen nun Optimierungen eingeführt werden, bei denen dann Teilgraphen
+ * verschickt werden.
  * 
  * Wir befinden uns in der Kommunikation an der Stelle (1)
  * 
- *                Teil Anfragegraph
- * -------- (1) ------------------> (2) -----------
- * |Sender|                             |Empfänger|
- * -------- (4) <------------------ (3) -----------
- * 			        Anfrage Result
+ * Teil Anfragegraph -------- (1) -------------------> (2) ----------- |Sender|
+ * |Empfänger| -------- (4) <------------------- (3) ----------- Anfrageergebnis
  * 
- * Idee von Sven: Man sollte nun eine Klasse erstellen, die von IndexScanOperators erbt (wahrscheinlich die Klasse)
- * und es wird nun eine einzelne IndexScanOperator die hier auftriff durch diese geerbte Klasse ersetzt. Diese Klasse
- * hat jetzt mehrere Operatoren in sich, so dass neben der IndexCollection auch ein Result Operator enthält.
- * Dieser Result Operator enthält die P2PApplication klasse als Application. Diese drei Operatoren werden von der von
- * IndexCollection erbenden Klasse verschickt und das Ergebnis wird wieder entgegen genommen.
+ * Idee von Sven: Man sollte nun eine Klasse erstellen, die von
+ * IndexScanOperators erbt (wahrscheinlich die Klasse) und es wird nun eine
+ * einzelne IndexScanOperator die hier auftriff durch diese geerbte Klasse
+ * ersetzt. Diese Klasse hat jetzt mehrere Operatoren in sich, so dass neben der
+ * IndexScanOperator auch ein Result Operator enthält. Dieser Result Operator
+ * enthält die P2PApplication klasse als Application. Diese drei Operatoren
+ * werden von der von IndexCollection erbenden Klasse verschickt und das
+ * Ergebnis wird wieder entgegen genommen.
  */
 public class P2PRule extends Rule {
 
@@ -60,7 +59,7 @@ public class P2PRule extends Rule {
                 continue;
             }
 
-            this.Op1 = (lupos.engine.operators.BasicOperator) _precOp_1_0;
+            this.Op1 = _precOp_1_0;
 
             List<OperatorIDTuple> _succedingOperators_1_0 = _op.getSucceedingOperators();
 
@@ -87,7 +86,7 @@ public class P2PRule extends Rule {
             return false;
         }
 
-        this.Op3[this._dim_0] = (lupos.engine.operators.BasicOperator) _op;
+        this.Op3[this._dim_0] = _op;
 
         return true;
     }
@@ -98,14 +97,16 @@ public class P2PRule extends Rule {
         this.ruleName = "P2PRule";
     }
 
-    protected boolean check(BasicOperator _op) {
+    @Override
+	protected boolean check(BasicOperator _op) {
        if (this._checkPrivate0(_op)) {
     	   return this.Op2.getTriplePattern().size() > 1;
        }
        return false;
     }
 
-    protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
+    @Override
+	protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
         // remove obsolete connections...
         int[] _label_a = null;
 

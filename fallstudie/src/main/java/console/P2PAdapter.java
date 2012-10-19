@@ -7,6 +7,7 @@ import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
+import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import distribution.DistributionFactory;
 import distribution.DistributionStrategy;
@@ -78,7 +79,9 @@ public class P2PAdapter {
 
 	public void send(String msg, Number160 destination) {
 
-		FutureDHT future = peer.send(destination).setObject(msg).start();
+		RequestP2PConfiguration config = new RequestP2PConfiguration(1, 5, 0);
+		FutureDHT future = peer.send(destination).setObject(msg)
+				.setRequestP2PConfiguration(config).start();
 
 		future.awaitUninterruptibly();
 

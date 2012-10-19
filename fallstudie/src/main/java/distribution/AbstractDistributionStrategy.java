@@ -92,8 +92,10 @@ public abstract class AbstractDistributionStrategy implements
 
 		Number160 contentKey = Number160.createHash(triple.toN3String());
 
-		FutureDHT future = peer.get(Number160.createHash(key))
-				.setContentKey(contentKey).start();
+		FutureDHT future =
+
+		peer.get(Number160.createHash(key)).setContentKey(contentKey).start();
+
 		future.awaitUninterruptibly();
 
 		return future.isSuccess();

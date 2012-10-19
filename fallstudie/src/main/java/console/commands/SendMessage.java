@@ -22,21 +22,30 @@ public class SendMessage implements Command {
 //
 //		}
 
-		
-		Number160 contentHash = Number160.createHash("hallo");
 
+		String input = scanner.next();
+		
+		Number160 contentHash = Number160.createHash(input);
+
+
+		// FutureTracker ft = peer.getTracker(contentHash).start();
+		//
+		// ft.awaitUninterruptibly();
 		
 		// finds the peer id for the given content hash
 		Number160 destination = peer.getPeerBean().getStorage()
 				.findPeerIDForResponsibleContent(contentHash);
 
+
 		// if destination is null, no peer is responsible for this content
 		// in this case, the destination is this node
 		if (destination == null) {
+			System.out.println("Der null fall ist aufgetreten");
 			destination = peer.getPeerID();
 		}
 
-		evaluator.getP2PAdapter().send("Hallo", destination);
+		System.out.println(destination);
+		evaluator.getP2PAdapter().send(input, destination);
 		
 
 	}

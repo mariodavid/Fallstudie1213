@@ -46,6 +46,8 @@ public class Get implements Command {
 				} else {
 					System.out.println("Unbekanntes Format!");
 				}
+
+				System.out.println();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
