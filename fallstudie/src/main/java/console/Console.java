@@ -12,6 +12,7 @@ import console.commands.GetAll;
 import console.commands.GetAllNodes;
 import console.commands.GetExampleQueries;
 import console.commands.GetLocalStorage;
+import console.commands.GetPeerForContent;
 import console.commands.Help;
 import console.commands.Put;
 import console.commands.Query;
@@ -84,6 +85,7 @@ public class Console {
 		commands.put("query", new Query());
 		commands.put("setstrategy", new SetStrategy());
 		commands.put("getexamplequeries", new GetExampleQueries());
+		commands.put("getpeerforcontent", new GetPeerForContent());
 //		commands.put("loadrdf", new LoadRDF());
 		
 		commands.put("help", new Help(commands.values()));

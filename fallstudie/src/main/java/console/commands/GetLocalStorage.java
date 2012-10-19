@@ -14,6 +14,7 @@ public class GetLocalStorage implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
+		System.out.println("local destination hash: " + peer.getPeerID());
 		System.out.println("KEY \t\t\t\t\t        VALUE");
 		for (Number160 key : peer.getPeerBean().getStorage()
 				.findContentForResponsiblePeerID(peer.getPeerID())) {
