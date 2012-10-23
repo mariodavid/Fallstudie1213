@@ -6,6 +6,7 @@ import lupos.datastructures.items.Triple;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
 import evaluators.P2PIndexQueryEvaluator;
 
@@ -43,6 +44,9 @@ public class Get implements Command {
 				} else if (result.getObject().getClass() == Triple.class) {
 					System.out.println(((Triple) result.getObject())
 							.toN3String());
+				} else if (result.getObject().getClass() == PeerAddress.class) {
+					System.out.println(((PeerAddress) result.getObject())
+							.toString());
 				} else {
 					System.out.println("Unbekanntes Format!");
 				}
