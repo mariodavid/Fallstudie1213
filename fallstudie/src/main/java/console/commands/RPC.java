@@ -13,6 +13,7 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.storage.Data;
 import evaluators.P2PIndexQueryEvaluator;
 
 public class RPC implements Command {
@@ -70,9 +71,8 @@ public class RPC implements Command {
 		
 		sendBuilder.setConnection(peer.createPeerConnection(pa, 5000));
 		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
-		final FutureResponse response = sendBuilder.start();
-		response.awaitUninterruptibly();
-		System.out.println("Ich habe fertig!");
+		final FutureResponse response = sendBuilder.start().awaitUninterruptibly();;
+		System.out.println(response.getBuffer().toString("UTF-8"));
 
 	}
 

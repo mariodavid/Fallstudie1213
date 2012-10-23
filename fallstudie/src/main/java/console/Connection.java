@@ -6,6 +6,7 @@ import java.net.UnknownHostException;
 import java.util.Random;
 
 import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -99,12 +100,12 @@ public class Connection {
 					throws InvalidProtocolBufferException {
 //				System.out.println("ICH BIN HIER DRIN");
 //				notifyObservers(message, sender);
-				
-				System.out.println(requestBuffer.toString("UTF-8"));
+				String receivedMessage = requestBuffer.toString("UTF-8");
+				System.out.println(receivedMessage);
 				
 				// basically we didn't want to send any response so its null
 				// here
-				return null;
+				return ChannelBuffers.wrappedBuffer(("Deine Nachricht war: "+receivedMessage).getBytes());
 			}
 		});
 	}
