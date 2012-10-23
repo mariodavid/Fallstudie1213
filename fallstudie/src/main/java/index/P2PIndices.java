@@ -15,8 +15,6 @@ import console.P2PAdapter;
 /**
  * ist für die Verwaltung des eigentlichen Index zuständig.
  * 
- * weitere Methoden mussen hinzugefügt werden, um weitere Funktionalitäten wie
- * GET .. zu bekommen
  * 
  * @author Mario David, Sebastian Walther
  * 
@@ -25,7 +23,6 @@ public class P2PIndices extends Indices {
 
 
 	private P2PAdapter		adapter;
-	private int						distributionStrategy;
 
 
 	/**
@@ -51,8 +48,30 @@ public class P2PIndices extends Indices {
 	}
 
 
+	public Collection<Triple> getAll(String key) {
 
+		Collection<Triple> result = new LinkedList<Triple>();
 
+		// perform p2p operation
+		FutureDHT future = adapter.getPeer().get(Number160.createHash(key))
+				.setAll().start();
+		future.awaitUninterruptibly();
+
+		// add all p2p results to the result collection
+		for (Data r : future.getDataMap().values()) {
+
+			try {
+				result.add((Triple) r.getObject());
+
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
 
 	@Override
 	public boolean add(Triple triple) {
@@ -103,27 +122,6 @@ public class P2PIndices extends Indices {
 	public void writeOutAllModifiedPages() throws IOException {
 		// TODO Auto-generated method stub
 
-	}
-
-	public Collection<Triple> getAll(String key) {
-		Collection<Triple> result = new LinkedList<Triple>();
-		FutureDHT future = adapter.getPeer().get(Number160.createHash(key))
-				.start();
-		future.awaitUninterruptibly();
-
-		for (Data r : future.getDataMap().values()) {
-			try {
-				result.add((Triple) r.getObject());
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return result;
 	}
 
 	@Override

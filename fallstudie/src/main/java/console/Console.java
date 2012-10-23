@@ -7,6 +7,7 @@ import java.util.Scanner;
 import test.LuposServer;
 import console.commands.Add;
 import console.commands.Command;
+import console.commands.DeserializerTest;
 import console.commands.Get;
 import console.commands.GetAll;
 import console.commands.GetAllNodes;
@@ -86,6 +87,7 @@ public class Console {
 		commands.put("setstrategy", new SetStrategy());
 		commands.put("getexamplequeries", new GetExampleQueries());
 		commands.put("getpeerforcontent", new GetPeerForContent());
+		commands.put("test", new DeserializerTest());
 //		commands.put("loadrdf", new LoadRDF());
 		
 		commands.put("help", new Help(commands.values()));

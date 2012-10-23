@@ -125,16 +125,6 @@ public class P2PRuleGlobalJoin extends Rule {
         this.Op2.addSucceedingOperator(new OperatorIDTuple(Join1, 0));
         Join1.addPrecedingOperator(this.Op2);
         
-        /**
-         * irgendwo an dieser Stelle muss nun der Operatorbaum so verändert werden, dass
-         * statt eines IndexScanOperators ein anderer Operator verwendet wird, der sich zusätlich noch um
-         * die Kommunikaiton mit den anderen Knoten kümmert.
-         * 
-         * Wichtig dabei, dass man hier eine Serialisierungsform für diesen Teil Operatorgraphen erstellt
-         * und diese dann verschickt. Das ist anders als bei der Rückrichtung, da dort ein QueryResult verschickt
-         * werden kann. Hier wird allerdings ein Teil Operatorgraph verschickt, für den es keine Serialisierungsform gibt
-         * 
-         */
 
         Index1.addSucceedingOperator(new OperatorIDTuple(Join1, 1));
         Join1.addPrecedingOperator(Index1);

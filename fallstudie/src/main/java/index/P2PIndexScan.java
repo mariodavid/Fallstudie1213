@@ -43,8 +43,8 @@ public class P2PIndexScan extends BasicIndex {
 	 * Als Ergebnis soll dann zurückgegeben werden: "?s=<Hallo>, ?class=<Test>"
 	 * "?s=<Hallo2>, ?class=<Test2>" "?s=<Hallo>, ?class=<Test3>" ...
 	 * 
-	 * bindings ist normalerweise leer, außer wenn die graph operation in der
-	 * SPARQL Anfrage vwerden wird. dabei werden dann bei den bindings an
+	 * Bindings ist normalerweise leer, außer wenn die graph operation in der
+	 * SPARQL Anfrage verwendet wird. Dabei werden dann bei den bindings an
 	 * gegebene Variablen direkt werte gebunden. Dann muss im tripelmuster
 	 * nachgeschaut werden, ob diese variable existiert und ggf. ersetzt werden
 	 * durch den übergebenen wert. Die Variablen die übergeben werden müssen
@@ -59,6 +59,7 @@ public class P2PIndexScan extends BasicIndex {
 		for (TriplePattern pattern : this.triplePatterns) {
 
 			Item[] items = pattern.getItems();
+
 			String key = generateKey(items);
 
 			System.out.println("Hash: h(" + key + ")");

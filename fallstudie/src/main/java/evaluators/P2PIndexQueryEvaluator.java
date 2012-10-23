@@ -67,34 +67,53 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	public P2PIndexQueryEvaluator(final String[] arguments) throws Exception {
 		super(arguments);
 	}
-	
-	public P2PIndexQueryEvaluator(DEBUG debug, boolean multiplequeries, compareEvaluator compare, String compareoptions, int times, String dataset,
-			final String type, final String externalontology,
-			final boolean inmemoryexternalontologyinference, final RDFS rdfs,
-			final LiteralFactory.MapType codemap, final String[] tmpDirs,
+
+	public P2PIndexQueryEvaluator(
+			DEBUG debug,
+			boolean multiplequeries,
+			compareEvaluator compare,
+			String compareoptions,
+			int times,
+			String dataset,
+			final String type,
+			final String externalontology,
+			final boolean inmemoryexternalontologyinference,
+			final RDFS rdfs,
+			final LiteralFactory.MapType codemap,
+			final String[] tmpDirs,
 			final boolean loadindexinfo,
-			final PARALLELOPERANDS parallelOperands, final boolean blockwise,
-			final int limit, final int jointhreads, final int joinbuffer,
-			final Heap.HEAPTYPE heap, final ToSort.TOSORT tosort,
-			final int indexheap, final int mergeheapheight,
-			final Heap.HEAPTYPE mergeheaptype, final int chunk,
-			final int mergethreads, final int yagomax,
+			final PARALLELOPERANDS parallelOperands,
+			final boolean blockwise,
+			final int limit,
+			final int jointhreads,
+			final int joinbuffer,
+			final Heap.HEAPTYPE heap,
+			final ToSort.TOSORT tosort,
+			final int indexheap,
+			final int mergeheapheight,
+			final Heap.HEAPTYPE mergeheaptype,
+			final int chunk,
+			final int mergethreads,
+			final int yagomax,
 			final SuperTrie.TRIETYPE stringsearch,
-			final QueryResult.TYPE resulttype, final STORAGE storage,
-			final JOIN join, final JOIN optional, final SORT sort,
+			final QueryResult.TYPE resulttype,
+			final STORAGE storage,
+			final JOIN join,
+			final JOIN optional,
+			final SORT sort,
 			final DISTINCT distinct,
-			final MERGE_JOIN_OPTIONAL merge_join_optional, final String encoding,
+			final MERGE_JOIN_OPTIONAL merge_join_optional,
+			final String encoding,
 			final lupos.engine.operators.index.Indices.DATA_STRUCT datastructure,
-			final Dataset.SORT datasetsort,
-			final Optimizations optimization){
+			final Dataset.SORT datasetsort, final Optimizations optimization) {
 		super(debug, multiplequeries, compare, compareoptions, times, dataset,
-				type, externalontology,inmemoryexternalontologyinference, rdfs, codemap, tmpDirs, loadindexinfo,
-				parallelOperands, blockwise,
-				limit, jointhreads, joinbuffer,
-				heap, tosort, indexheap, mergeheapheight, mergeheaptype, chunk, mergethreads, yagomax,
-				stringsearch, resulttype, storage, join, optional, sort, distinct,
-				merge_join_optional, encoding,
-				datastructure, datasetsort);
+				type, externalontology, inmemoryexternalontologyinference,
+				rdfs, codemap, tmpDirs, loadindexinfo, parallelOperands,
+				blockwise, limit, jointhreads, joinbuffer, heap, tosort,
+				indexheap, mergeheapheight, mergeheaptype, chunk, mergethreads,
+				yagomax, stringsearch, resulttype, storage, join, optional,
+				sort, distinct, merge_join_optional, encoding, datastructure,
+				datasetsort);
 		init(datastructure, optimization);
 	}
 
@@ -102,21 +121,21 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 			final Optimizations optimization) {
 		Indices.setUsedDatastructure(datastructure);
 		switch (optimization) {
-		case MOSTRESTRICTIONS:
-			opt = BasicIndex.MOSTRESTRICTIONS;
-			break;
-		case MOSTRESTRICTIONSLEASTENTRIES:
-			opt = BasicIndex.MOSTRESTRICTIONSLEASTENTRIES;
-			break;
-		case LEASTENTRIES:
-			opt = BasicIndex.LEASTENTRIES;
-			break;
-		case BINARY:
-			opt = BasicIndex.Binary;
-			break;
-		default:
-			opt = BasicIndex.NONE;
-			break;
+			case MOSTRESTRICTIONS:
+				opt = BasicIndex.MOSTRESTRICTIONS;
+				break;
+			case MOSTRESTRICTIONSLEASTENTRIES:
+				opt = BasicIndex.MOSTRESTRICTIONSLEASTENTRIES;
+				break;
+			case LEASTENTRIES:
+				opt = BasicIndex.LEASTENTRIES;
+				break;
+			case BINARY:
+				opt = BasicIndex.Binary;
+				break;
+			default:
+				opt = BasicIndex.NONE;
+				break;
 		}
 	}
 
@@ -168,7 +187,8 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 			Collection<Tuple<URILiteral, URILiteral>> namedGraphs)
 			throws Exception {
 		final Date a = new Date();
-		super.prepareInputDataWithSourcesOfNamedGraphs(defaultGraphs, namedGraphs);
+		super.prepareInputDataWithSourcesOfNamedGraphs(defaultGraphs,
+				namedGraphs);
 		dataset = new Dataset(defaultGraphs, namedGraphs,
 				getMaterializeOntology(), type, opt, new P2PIndicesFactory(),
 				debug != DEBUG.NONE, inmemoryexternalontologyinference);
@@ -176,7 +196,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 		final long prepareTime = new Date().getTime() - a.getTime();
 		return prepareTime;
 	}
-	
+
 	@Override
 	public long logicalOptimization() {
 		P2PRulePackage rp = new P2PRulePackage();
@@ -193,5 +213,5 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 		public lupos.engine.operators.index.IndexCollection createIndexCollection() {
 			return new P2PIndexCollection(dataset);
 		}
-}
+	}
 }
