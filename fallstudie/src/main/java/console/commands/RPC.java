@@ -71,6 +71,7 @@ public class RPC implements Command {
 		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer("Hallo".getBytes()));
 		final FutureResponse response = sendBuilder.start();
 		response.awaitUninterruptibly();
+		System.out.println("Ich habe fertig!");
 
 	}
 

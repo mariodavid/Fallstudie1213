@@ -98,7 +98,12 @@ public class Connection {
 					throws InvalidProtocolBufferException {
 				System.out.println("ICH BIN HIER DRIN");
 //				notifyObservers(message, sender);
-
+				try {
+					Thread.sleep(10000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				// basically we didn't want to send any response so its null
 				// here
 				return null;
