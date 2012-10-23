@@ -70,6 +70,7 @@ public class Connection {
 		// this.peer.listen(DEFAULT_PORT, DEFAULT_PORT);
 
 		listenToMessages();
+		listenForDataMessages();
 
 		FutureBootstrap fb = this.peer.bootstrap().setPorts(DEFAULT_PORT)
 				.setBroadcast().start();
