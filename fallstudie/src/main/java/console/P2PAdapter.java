@@ -9,6 +9,8 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.storage.Data;
 import distribution.DistributionFactory;
 import distribution.DistributionStrategy;
 
@@ -25,6 +27,18 @@ public class P2PAdapter {
 
 	public P2PAdapter(Peer peer) {
 		this.peer = peer;
+		/*
+		 * Am Anfang wird das PeerAdress Objekt in das Netzwerk gespeichert, so
+		 * dass jeder Knoten dazu in der Lage ist anhand der peer id die exakte
+		 * Adresse des Knoten heraus zu bekommen.
+		 */
+		try {
+			peer.put(Number160.createHash(peer.getPeerID() + ""))
+					.setData(new Data(peer.getPeerAddress())).start()
+					.awaitUninterruptibly();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		initDistributionStrategy();
 	}
 
@@ -85,6 +99,32 @@ public class P2PAdapter {
 
 		future.awaitUninterruptibly();
 
+	}
+	
+	public PeerAddress getPeerAddress(Number160 destination) {
+		try {
+			FutureDHT future = peer.get(Number160.createHash(destination.toString())).setAll().start();
+			future.awaitUninterruptibly();
+			if (future.isSuccess()) {
+				for (Data result : future.getDataMap().values()) {
+					if (result.getObject().getClass() == PeerAddress.class) {
+						return (PeerAddress) result.getObject();
+					} else {
+						System.out.println("Unbekannter Fehler 1!");
+						return null;
+					}
+				}
+			} else {
+				System.out.println("PeerAddress nicht vorhanden!");
+				return null;
+			}
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		System.out.println("Unbekannter Fehler 2!");
+		return null;
 	}
 
 }
