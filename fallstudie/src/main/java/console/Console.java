@@ -17,6 +17,7 @@ import console.commands.Help;
 import console.commands.Put;
 import console.commands.Query;
 import console.commands.Quit;
+import console.commands.RPC;
 import console.commands.Remove;
 import console.commands.RemoveAll;
 import console.commands.SendMessage;
@@ -86,6 +87,7 @@ public class Console {
 		commands.put("setstrategy", new SetStrategy());
 		commands.put("getexamplequeries", new GetExampleQueries());
 		commands.put("getpeerforcontent", new GetPeerForContent());
+		commands.put("rpc", new RPC());
 //		commands.put("loadrdf", new LoadRDF());
 		
 		commands.put("help", new Help(commands.values()));
