@@ -5,17 +5,22 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
+import net.tomp2p.rpc.RawDataReply;
 
 public class Connection {
 
-	private static final int	DEFAULT_PORT	= 4000;
-	private Peer				peer;
+	private static final int DEFAULT_PORT = 4000;
+	private Peer peer;
 
 	public Peer getPeer() {
 		return peer;
@@ -35,8 +40,9 @@ public class Connection {
 	 * @throws ClassNotFoundException
 	 * @throws IOException
 	 */
-	public boolean connect(String ip, int remotePort, int localPort) throws Exception,
-			UnknownHostException, ClassNotFoundException, IOException {
+	public boolean connect(String ip, int remotePort, int localPort)
+			throws Exception, UnknownHostException, ClassNotFoundException,
+			IOException {
 
 		this.peer = createPeer(localPort, -1);
 
@@ -45,7 +51,6 @@ public class Connection {
 				.start();
 
 		fb.awaitUninterruptibly();
-
 
 		return true;
 	}
@@ -62,14 +67,12 @@ public class Connection {
 	public boolean connect() throws Exception, ClassNotFoundException,
 			IOException {
 		this.peer = this.createPeer(DEFAULT_PORT, -1);
-//		this.peer.listen(DEFAULT_PORT, DEFAULT_PORT);
+		// this.peer.listen(DEFAULT_PORT, DEFAULT_PORT);
 
 		listenToMessages();
 
-		FutureBootstrap fb = this.peer.bootstrap()
-				.setPorts(DEFAULT_PORT)
-				.setBroadcast()
-				.start();
+		FutureBootstrap fb = this.peer.bootstrap().setPorts(DEFAULT_PORT)
+				.setBroadcast().start();
 		fb.awaitUninterruptibly();
 
 		return true;
@@ -81,6 +84,23 @@ public class Connection {
 			public Object reply(PeerAddress sender, Object request)
 					throws Exception {
 				System.out.println(request);
+				return null;
+			}
+		});
+	}
+
+	private void listenForDataMessages() {
+		this.peer.setRawDataReply(new RawDataReply() {
+
+			
+			public ChannelBuffer reply(final PeerAddress sender,
+					final ChannelBuffer requestBuffer)
+					throws InvalidProtocolBufferException {
+				System.out.println("ICH BIN HIER DRIN");
+//				notifyObservers(message, sender);
+
+				// basically we didn't want to send any response so its null
+				// here
 				return null;
 			}
 		});

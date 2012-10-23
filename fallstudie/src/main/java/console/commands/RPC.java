@@ -8,7 +8,9 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import console.P2PAdapter;
 
 import net.tomp2p.connection.PeerConnection;
+import net.tomp2p.futures.FutureResponse;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import evaluators.P2PIndexQueryEvaluator;
@@ -56,11 +58,19 @@ public class RPC implements Command {
 		
 //		ChannelBuffers.copiedBuffer(ChannelBuffers.BIG_ENDIAN,"HALLLLOOO", "UTF-8");
 		Number160 destination = peer.getPeerBean().getStorage().findPeerIDForResponsibleContent(contentHash);
-		ChannelBuffer cb = ChannelBuffers.copiedBuffer("Halllllooooo".getBytes());
-		System.out.println("Die Peer ID ist: " + destination);
+//		ChannelBuffer cb = ChannelBuffers.copiedBuffer("Halllllooooo".getBytes());
+//		System.out.println("Die Peer ID ist: " + destination);
 		PeerAddress pa = evaluator.getP2PAdapter().getPeerAddress(destination);
-		System.out.println(pa);
-		peer.getDirectDataRPC().send(pa, cb, false, peer.createPeerConnection(pa, 5000).getChannelCreator(), false);
+//		System.out.println(pa);
+//		peer.getDirectDataRPC().send(pa, cb, false, peer.createPeerConnection(pa, 5000).getChannelCreator(), false);
+		
+		SendDirectBuilder sendBuilder = peer.sendDirect();
+		// connections is a pool of cached connections + creator for new ones
+		
+		sendBuilder.setConnection(peer.createPeerConnection(pa, 5000));
+		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer("Hallo".getBytes()));
+		final FutureResponse response = sendBuilder.start();
+		response.awaitUninterruptibly();
 
 	}
 
