@@ -33,6 +33,7 @@ public class RPC implements Command {
 
 
 		String input = scanner.next();
+		String message = scanner.next();
 		
 		Number160 contentHash = Number160.createHash(input);
 
@@ -68,7 +69,7 @@ public class RPC implements Command {
 		// connections is a pool of cached connections + creator for new ones
 		
 		sendBuilder.setConnection(peer.createPeerConnection(pa, 5000));
-		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer("Hallo".getBytes()));
+		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
 		final FutureResponse response = sendBuilder.start();
 		response.awaitUninterruptibly();
 		System.out.println("Ich habe fertig!");
