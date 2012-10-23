@@ -1,5 +1,6 @@
 package console;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -46,13 +47,10 @@ public class Connection {
 			IOException {
 
 		this.peer = createPeer(localPort, -1);
-
 		FutureBootstrap fb = this.peer.bootstrap()
 				.setInetAddress(InetAddress.getByName(ip)).setPorts(remotePort)
 				.start();
-
 		fb.awaitUninterruptibly();
-
 		return true;
 	}
 
@@ -125,8 +123,7 @@ public class Connection {
 			id = gen.nextInt(50000);
 		}
 
-		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port);
-
+		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port).setFileMessageLogger(new File("log.txt"));
 		return peer.makeAndListen();
 	}
 

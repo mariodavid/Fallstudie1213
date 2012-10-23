@@ -71,7 +71,7 @@ public class RPC implements Command {
 		
 		sendBuilder.setConnection(peer.createPeerConnection(pa, 5000));
 		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
-		final FutureResponse response = sendBuilder.start().awaitUninterruptibly();;
+		final FutureResponse response = sendBuilder.start().awaitUninterruptibly();
 		System.out.println(response.getBuffer().toString("UTF-8"));
 
 	}
