@@ -28,9 +28,9 @@ public class RPC implements Command {
 
 		Number160 contentHash = Number160.createHash(input);
 
-		Number160 destination = peer.getPeerBean().getStorage()
-				.findPeerIDForResponsibleContent(contentHash);
-		String response = evaluator.getP2PAdapter().sendMessage(destination,
+//		Number160 destination = peer.getPeerBean().getStorage()
+//				.findPeerIDForResponsibleContent(contentHash);
+		String response = evaluator.getP2PAdapter().sendMessage(contentHash,
 				message);
 
 		System.out.println(response);
