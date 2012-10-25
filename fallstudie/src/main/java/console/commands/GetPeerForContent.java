@@ -2,9 +2,10 @@ package console.commands;
 
 import java.util.Scanner;
 
+import luposdate.evaluators.P2PIndexQueryEvaluator;
+
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
-import evaluators.P2PIndexQueryEvaluator;
 
 public class GetPeerForContent implements Command {
 	public void execute(Scanner scanner, Peer peer,

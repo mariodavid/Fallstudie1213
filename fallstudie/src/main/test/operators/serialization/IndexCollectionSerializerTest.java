@@ -2,7 +2,7 @@ package operators.serialization;
 
 import static org.junit.Assert.assertEquals;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
-import operators.serialization.IndexCollectionSerializer;
+import luposdate.operators.serialization.IndexCollectionSerializer;
 
 import org.json.JSONException;
 import org.json.JSONObject;

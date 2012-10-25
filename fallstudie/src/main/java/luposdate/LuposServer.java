@@ -1,15 +1,16 @@
-package test;
+package luposdate;
 
 import java.util.Collection;
 import java.util.LinkedList;
+
+import p2p.P2PAdapter;
 
 import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.bindings.BindingsMap;
 import lupos.datastructures.items.literal.LiteralFactory;
 import lupos.datastructures.items.literal.LiteralFactory.MapType;
 import lupos.datastructures.items.literal.URILiteral;
-import console.P2PAdapter;
-import evaluators.P2PIndexQueryEvaluator;
+import luposdate.evaluators.P2PIndexQueryEvaluator;
 
 public class LuposServer {
 

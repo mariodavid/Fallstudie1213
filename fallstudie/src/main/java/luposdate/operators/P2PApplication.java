@@ -1,4 +1,4 @@
-package operators;
+package luposdate.operators;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -12,27 +12,27 @@ import lupos.engine.operators.application.Application;
 
 /**
  * Diese Klasse wird mit zusammen mit dem Triple Pattern verschickt und dann bei
- * dem EmpfŠnger von dem ResultOperator aufgerufen (call Methode). Wir befinden
- * uns nach der Zeichnung an der Position (3), also direkt bevor der EmpfŠnger
- * sein Ergebnis an den Sender zurŸckliefern will.
+ * dem Empfï¿½nger von dem ResultOperator aufgerufen (call Methode). Wir befinden
+ * uns nach der Zeichnung an der Position (3), also direkt bevor der Empfï¿½nger
+ * sein Ergebnis an den Sender zurï¿½ckliefern will.
  * 
  * 				Teil Anfragegraph 
  * -------- (1) ------------------> (2) ----------- 
- * |Sender|								|EmpfŠnger| 
+ * |Sender|								|Empfï¿½nger| 
  * -------- (4) <------------------ (3) ----------- 
  * 				Anfrage Result
  * 
  * Dazu kann man dem Result Operator (@see
  * lupos.engine.operators.singleinput.Result) sogenannte Applikationen zur
- * VerfŸgung stellen, die bei einem call Methodenaufruf alle abgearbeitet werden
+ * Verfï¿½gung stellen, die bei einem call Methodenaufruf alle abgearbeitet werden
  * und bei denen wiederrum call aufgerufen wird. So kann man verschiedene
- * FunktionalitŠten in einem Result Operator zur VerfŸgung stellen. Eine
- * Applikation soll dann das RŸcksenden durchfŸhren
+ * Funktionalitï¿½ten in einem Result Operator zur Verfï¿½gung stellen. Eine
+ * Applikation soll dann das Rï¿½cksenden durchfï¿½hren
  * 
  * In der Call Methode ist das Ergebnis der Teilanfrage dann drin und soll an
- * den ŸrsprŸnglichen Sender zurŸck geschickt werden. Dazu muss der
- * ursprŸngliche Sender beim versenden in dieser Klasse irgendwie seine Quell IP
- * festlegen, damit der EmpfŠnger an diese dann zurŸckschicken kann.
+ * den ï¿½rsprï¿½nglichen Sender zurï¿½ck geschickt werden. Dazu muss der
+ * ursprï¿½ngliche Sender beim versenden in dieser Klasse irgendwie seine Quell IP
+ * festlegen, damit der Empfï¿½nger an diese dann zurï¿½ckschicken kann.
  * 
  */
 public class P2PApplication implements Application {
@@ -40,7 +40,7 @@ public class P2PApplication implements Application {
 	public void call(QueryResult res) {
 		/*
 		 * Anfrageresultat (QueryResult res) kommt an (wir befinden uns auf der
-		 * Empfangsseite und wollen jetzt wieder zurŸck schicken). Nun muss das
+		 * Empfangsseite und wollen jetzt wieder zurï¿½ck schicken). Nun muss das
 		 * queryresult an den sender verschickt werden Zum Serialisieren des
 		 * QueryResult kann im Packet Endpoint.server/client.format/formatreader
 		 * die Klassen verwendet werden: Serialisierung:

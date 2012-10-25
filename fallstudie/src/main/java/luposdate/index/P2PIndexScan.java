@@ -1,4 +1,4 @@
-package index;
+package luposdate.index;
 
 import java.util.Collection;
 
@@ -16,7 +16,7 @@ import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
 /**
- * ist fŸr die ein oder mehrere Tripelmuster auszufŸhren
+ * ist fï¿½r die ein oder mehrere Tripelmuster auszufï¿½hren
  * 
  * @author Mario David, Sebastian Walther
  * 
@@ -35,19 +35,19 @@ public class P2PIndexScan extends BasicIndex {
 	}
 
 	/**
-	 * tripelpattern muss ausgewertet werden. Dazu muss das P2P Netzwerk Ÿber
+	 * tripelpattern muss ausgewertet werden. Dazu muss das P2P Netzwerk ï¿½ber
 	 * die "indices" variable angesprochenw werden.
 	 * 
 	 * Als Eingabe kommt: "?s rdf:type ?class" z.b
 	 * 
-	 * Als Ergebnis soll dann zurŸckgegeben werden: "?s=<Hallo>, ?class=<Test>"
+	 * Als Ergebnis soll dann zurï¿½ckgegeben werden: "?s=<Hallo>, ?class=<Test>"
 	 * "?s=<Hallo2>, ?class=<Test2>" "?s=<Hallo>, ?class=<Test3>" ...
 	 * 
-	 * Bindings ist normalerweise leer, au§er wenn die graph operation in der
+	 * Bindings ist normalerweise leer, auï¿½er wenn die graph operation in der
 	 * SPARQL Anfrage verwendet wird. Dabei werden dann bei den bindings an
 	 * gegebene Variablen direkt werte gebunden. Dann muss im tripelmuster
 	 * nachgeschaut werden, ob diese variable existiert und ggf. ersetzt werden
-	 * durch den Ÿbergebenen wert. Die Variablen die Ÿbergeben werden mŸssen
+	 * durch den ï¿½bergebenen wert. Die Variablen die ï¿½bergeben werden mï¿½ssen
 	 * dann im Ergebnis auch auftauchen
 	 */
 	@Override

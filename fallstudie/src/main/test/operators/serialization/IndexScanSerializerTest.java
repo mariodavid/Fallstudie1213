@@ -1,7 +1,6 @@
 package operators.serialization;
 
 import static org.junit.Assert.assertEquals;
-import index.P2PIndexScan;
 
 import java.util.LinkedList;
 
@@ -10,7 +9,8 @@ import lupos.datastructures.items.literal.LazyLiteral;
 import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
 import lupos.engine.operators.tripleoperator.TriplePattern;
-import operators.serialization.IndexScanSerializer;
+import luposdate.index.P2PIndexScan;
+import luposdate.operators.serialization.IndexScanSerializer;
 
 import org.json.JSONException;
 import org.json.JSONObject;

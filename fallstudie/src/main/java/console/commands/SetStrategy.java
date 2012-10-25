@@ -2,9 +2,11 @@ package console.commands;
 
 import java.util.Scanner;
 
+import p2p.distribution.DistributionFactory;
+
+import luposdate.evaluators.P2PIndexQueryEvaluator;
+
 import net.tomp2p.p2p.Peer;
-import distribution.DistributionFactory;
-import evaluators.P2PIndexQueryEvaluator;
 
 public class SetStrategy implements Command {
 

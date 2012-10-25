@@ -1,4 +1,4 @@
-package distribution;
+package p2p.distribution;
 
 /**
  * This class creates Strategies for the distribution of RDF Triple within the

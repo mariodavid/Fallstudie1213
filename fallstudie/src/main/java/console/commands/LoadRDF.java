@@ -5,8 +5,9 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.util.Scanner;
 
+import luposdate.evaluators.P2PIndexQueryEvaluator;
+
 import net.tomp2p.p2p.Peer;
-import evaluators.P2PIndexQueryEvaluator;
 
 
 /**

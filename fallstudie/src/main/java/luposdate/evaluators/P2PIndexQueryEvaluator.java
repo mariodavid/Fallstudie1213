@@ -21,15 +21,14 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package evaluators;
+package luposdate.evaluators;
 
-import index.P2PIndexCollection;
-import index.P2PIndices;
 
 import java.util.Collection;
 import java.util.Date;
 
-import logicalOptimization.P2PRulePackage;
+import p2p.P2PAdapter;
+
 import lupos.datastructures.dbmergesortedds.heap.Heap;
 import lupos.datastructures.dbmergesortedds.tosort.ToSort;
 import lupos.datastructures.items.literal.LiteralFactory;
@@ -42,7 +41,9 @@ import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
 import lupos.misc.Tuple;
-import console.P2PAdapter;
+import luposdate.index.P2PIndexCollection;
+import luposdate.index.P2PIndices;
+import luposdate.logicalOptimization.P2PRulePackage;
 
 public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 
