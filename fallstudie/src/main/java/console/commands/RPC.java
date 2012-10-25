@@ -21,58 +21,17 @@ public class RPC implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
-//		for (PeerAddress p : peer.getPeerBean().getPeerMap().getAll()) {
-//			try {
-//				FutureData futureData = peer.send(p, scanner.next());
-//
-//				futureData.awaitUninterruptibly();
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//			}
-//
-//		}
-
-
 		String input = scanner.next();
 		String message = scanner.next();
-		
+
 		Number160 contentHash = Number160.createHash(input);
 
+		Number160 destination = peer.getPeerBean().getStorage()
+				.findPeerIDForResponsibleContent(contentHash);
+		String response = evaluator.getP2PAdapter().sendMessage(destination,
+				message);
 
-//		// FutureTracker ft = peer.getTracker(contentHash).start();
-//		//
-//		// ft.awaitUninterruptibly();
-//		
-//		// finds the peer id for the given content hash
-//		Number160 destination = peer.getPeerBean().getStorage()
-//				.findPeerIDForResponsibleContent(contentHash);
-//
-//
-//		// if destination is null, no peer is responsible for this content
-//		// in this case, the destination is this node
-//		if (destination == null) {
-//			System.out.println("Der null fall ist aufgetreten");
-//			destination = peer.getPeerID();
-//		}
-//
-//		System.out.println(destination);
-//		evaluator.getP2PAdapter().send(input, destination);
-		
-//		ChannelBuffers.copiedBuffer(ChannelBuffers.BIG_ENDIAN,"HALLLLOOO", "UTF-8");
-		Number160 destination = peer.getPeerBean().getStorage().findPeerIDForResponsibleContent(contentHash);
-//		ChannelBuffer cb = ChannelBuffers.copiedBuffer("Halllllooooo".getBytes());
-//		System.out.println("Die Peer ID ist: " + destination);
-		PeerAddress pa = evaluator.getP2PAdapter().getPeerAddress(destination);
-//		System.out.println(pa);
-//		peer.getDirectDataRPC().send(pa, cb, false, peer.createPeerConnection(pa, 5000).getChannelCreator(), false);
-		
-		SendDirectBuilder sendBuilder = peer.sendDirect();
-		// connections is a pool of cached connections + creator for new ones
-		
-		sendBuilder.setConnection(peer.createPeerConnection(pa, 5000));
-		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
-		final FutureResponse response = sendBuilder.start().awaitUninterruptibly();
-		System.out.println(response.getBuffer().toString("UTF-8"));
+		System.out.println(response);
 
 	}
 
