@@ -1,4 +1,4 @@
-package console;
+package p2p;
 
 import java.io.File;
 import java.io.IOException;

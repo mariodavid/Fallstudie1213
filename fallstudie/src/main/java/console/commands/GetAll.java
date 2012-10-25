@@ -2,9 +2,10 @@ package console.commands;
 
 import java.util.Scanner;
 
+import luposdate.evaluators.P2PIndexQueryEvaluator;
+
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
-import evaluators.P2PIndexQueryEvaluator;
 
 public class GetAll implements Command {
 	private FutureDHT	future;

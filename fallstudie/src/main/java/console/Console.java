@@ -4,7 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 
-import test.LuposServer;
+import luposdate.LuposServer;
+
+import p2p.Connection;
+import p2p.P2PAdapter;
+
 import console.commands.*;
 
 

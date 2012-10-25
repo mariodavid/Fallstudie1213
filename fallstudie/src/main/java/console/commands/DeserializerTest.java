@@ -1,7 +1,5 @@
 package console.commands;
 
-import index.P2PIndexCollection;
-import index.P2PIndexScan;
 
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -12,8 +10,10 @@ import lupos.engine.operators.application.Output;
 import lupos.engine.operators.messages.BoundVariablesMessage;
 import lupos.engine.operators.singleinput.Result;
 import lupos.engine.operators.tripleoperator.TriplePattern;
+import luposdate.evaluators.P2PIndexQueryEvaluator;
+import luposdate.index.P2PIndexCollection;
+import luposdate.index.P2PIndexScan;
 import net.tomp2p.p2p.Peer;
-import evaluators.P2PIndexQueryEvaluator;
 
 public class DeserializerTest implements Command {
 	public void execute(Scanner scanner, Peer peer,

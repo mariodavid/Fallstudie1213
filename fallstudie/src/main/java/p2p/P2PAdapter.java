@@ -1,15 +1,10 @@
-package console;
+package p2p;
 
 import java.io.IOException;
 import java.util.Random;
 import java.util.SortedSet;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.handler.timeout.TimeoutException;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
@@ -23,9 +18,15 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.RawDataReply;
 import net.tomp2p.storage.Data;
-import distribution.DistributionFactory;
-import distribution.DistributionStrategy;
-import evaluators.P2PIndexQueryEvaluator;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.handler.timeout.TimeoutException;
+
+import p2p.distribution.DistributionFactory;
+import p2p.distribution.DistributionStrategy;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 public class P2PAdapter {
 
@@ -139,9 +140,11 @@ public class P2PAdapter {
 					.start();
 			future.awaitUninterruptibly();
 			if (future.isSuccess()) {
-				for (Data result : future.getDataMap().values())
-					if (result.getObject().getClass() == PeerAddress.class)
+				for (Data result : future.getDataMap().values()) {
+					if (result.getObject().getClass() == PeerAddress.class) {
 						return (PeerAddress) result.getObject();
+					}
+				}
 			} else {
 				System.out.println("PeerAddress nicht vorhanden!");
 				return null;

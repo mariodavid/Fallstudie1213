@@ -1,7 +1,5 @@
-package logicalOptimization;
+package luposdate.logicalOptimization;
 
-import index.P2PIndexCollection;
-import index.P2PIndexScan;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -14,6 +12,8 @@ import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
+import luposdate.index.P2PIndexCollection;
+import luposdate.index.P2PIndexScan;
 
 
 
@@ -24,8 +24,8 @@ import lupos.optimizations.logical.rules.generated.runtime.Rule;
  * Teilgraphen verschickt.
  * 
  * Somit stellt diese Klasse die Basisimplementierung dar. Diese kann als
- * Referenz dienen fŸr die verschiedenen Optimierungen bei denen Teilgraphen
- * verschickt werden und diese kšnnen dann in Benchmarks gegeneinander
+ * Referenz dienen fï¿½r die verschiedenen Optimierungen bei denen Teilgraphen
+ * verschickt werden und diese kï¿½nnen dann in Benchmarks gegeneinander
  * "antreten"
  * 
  */
