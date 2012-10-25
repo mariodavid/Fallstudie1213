@@ -1,4 +1,4 @@
-package test;
+package operators.serialization;
 
 import static org.junit.Assert.assertEquals;
 import index.P2PIndexScan;
