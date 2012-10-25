@@ -2,6 +2,7 @@ package operators.serialization;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 
 import lupos.datastructures.items.Variable;
@@ -24,14 +25,16 @@ public class IndexScanSerializerTest {
 
 	@Before
 	public void setUp() throws Exception {
-		this.indexScan = new P2PIndexScan(new IndexCollection());
+		IndexCollection indexCollection = new IndexCollection();
+
+		this.indexScan = new P2PIndexScan(indexCollection);
 
 		LinkedList<TriplePattern> patterns = new LinkedList<TriplePattern>();
 		patterns.add(new TriplePattern(new Variable("s"), LazyLiteral
 				.getLiteral("<p>"), new Variable("o")));
 		indexScan.setTriplePatterns(patterns);
 
-		this.serializer = new IndexScanSerializer();
+		this.serializer = new IndexScanSerializer(indexCollection);
 
 	}
 
@@ -45,11 +48,9 @@ public class IndexScanSerializerTest {
 			JSONObject obj = new JSONObject(actual);
 			assertEquals(P2PIndexScan.class.getName(), obj.get("type"));
 			assertEquals(obj.get("node_id"), node_id);
-			// assertEquals(indexScan.getTriplePattern(),
-			// obj.get("triple_pattern"));
+
 
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -61,10 +62,22 @@ public class IndexScanSerializerTest {
 		String serializedString = this.serializer.serialize(indexScan, node_id);
 
 		try {
-			P2PIndexScan actual = (P2PIndexScan) this.serializer
+			P2PIndexScan actualIndexScan = (P2PIndexScan) this.serializer
 					.deserialize(serializedString);
 
-			assertEquals(actual.getClass(), indexScan.getClass());
+			assertEquals(actualIndexScan.getClass(), indexScan.getClass());
+
+			Iterator<TriplePattern> actualIterator = this.indexScan
+					.getTriplePattern().iterator();
+			Iterator<TriplePattern> expectedIterator = actualIndexScan
+					.getTriplePattern().iterator();
+
+			while (actualIterator.hasNext()) {
+				TriplePattern actual = actualIterator.next();
+				TriplePattern expected = expectedIterator.next();
+				assertEquals(expected.getItems(), actual.getItems());
+
+			}
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
