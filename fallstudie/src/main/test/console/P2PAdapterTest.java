@@ -27,7 +27,7 @@ import p2p.P2PAdapter;
 
 public class P2PAdapterTest {
 	// general
-	private static final int NODES = 20;
+	private static final int NODES = 50;
 	private Peer[] peers;
 	private P2PAdapter[] p2pAdapter = new P2PAdapter[NODES];
 	Peer master = null;
@@ -53,9 +53,6 @@ public class P2PAdapterTest {
 	public void testExecute() throws IOException, InterruptedException {
 		Random gen = new Random();
 		Number160 contentKey = Number160.createHash("anyKey");
-		
-		Number160 responsiblePeer = p2pAdapter[gen.nextInt(NODES-1)].getNodeIDfromContentKey(contentKey);
-		System.out.println("peer: " + responsiblePeer);
 		String testMessage = "HAAAAALLLLLLLLOOOO";
 		String response = p2pAdapter[gen.nextInt(NODES-1)].sendMessage(contentKey,
 				testMessage);
