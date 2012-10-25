@@ -213,7 +213,7 @@ public class P2PAdapter {
 		SortedSet<PeerAddress> route = fRoute.getRoutingPath();
 		peer.getConnectionBean().getConnectionReservation()
 				.release(channel.getChannelCreator());
-
+		
 		System.out.println("Dieser Knoten ist dafuer zustaendig: "
 				+ route.first());
 		return route.first();

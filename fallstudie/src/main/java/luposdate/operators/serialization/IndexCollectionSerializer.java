@@ -30,7 +30,7 @@ public class IndexCollectionSerializer implements OperatorSerializer {
 		json = new JSONObject(serialiezedOperator);
 		try {
 			String className = (String) json.get("type");
-			System.out.println(className);
+
 			IndexCollection indexCollection = (IndexCollection) Class.forName(
 					className).newInstance();
 

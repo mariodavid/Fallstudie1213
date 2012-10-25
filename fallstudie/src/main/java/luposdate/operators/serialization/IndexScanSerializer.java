@@ -1,19 +1,29 @@
 package luposdate.operators.serialization;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedList;
 
 import lupos.datastructures.items.Item;
+import lupos.datastructures.items.Variable;
+import lupos.datastructures.items.literal.LazyLiteral;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.index.BasicIndex;
+import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 public class IndexScanSerializer implements OperatorSerializer {
 
-	private JSONObject	json;
+	private JSONObject				json;
+	private final IndexCollection	indexCollection;
+
+	public IndexScanSerializer(IndexCollection indexCollection) {
+		this.indexCollection = indexCollection;
+	}
 
 	public String serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
@@ -23,18 +33,18 @@ public class IndexScanSerializer implements OperatorSerializer {
 			json.put("type", operator.getClass().getName());
 			json.put("node_id", node_id);
 
-			Collection<JSONObject> allTriplePattern = new LinkedList<JSONObject>();
+			Collection<JSONObject> triplePatterns = new LinkedList<JSONObject>();
 
 			for (TriplePattern triplePattern : indexScan.getTriplePattern()) {
 				JSONObject tripleJson = new JSONObject();
 				Collection<JSONObject> tripleItems = createTriplePatternItemsArray(triplePattern);
-				
+
 				tripleJson.put("items", tripleItems);
-				
-				allTriplePattern.add(tripleJson);
+
+				triplePatterns.add(tripleJson);
 			}
 
-			json.put("triple_pattern", allTriplePattern);
+			json.put("triple_pattern", triplePatterns);
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
@@ -70,26 +80,87 @@ public class IndexScanSerializer implements OperatorSerializer {
 
 	public BasicOperator deserialize(String serialiezedOperator)
 			throws JSONException {
-		// json = new JSONObject(serialiezedOperator);
-		// try {
-		// String className = (String) json.get("type");
-		// System.out.println(className);
-		// IndexCollection indexCollection = (IndexCollection) Class.forName(
-		// className).newInstance();
-		//
-		// return indexCollection;
-		// } catch (InstantiationException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (IllegalAccessException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// } catch (ClassNotFoundException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+
+		json = new JSONObject(serialiezedOperator);
+		try {
+			String className = (String) json.get("type");
+
+			BasicIndex indexScan = (BasicIndex) Class.forName(className)
+					.getConstructor(IndexCollection.class)
+					.newInstance(this.indexCollection);
+
+			Collection<TriplePattern> triplePatterns = createTriplePatternsListFromJSON(json);
+			indexScan.setTriplePatterns(triplePatterns);
+
+			return indexScan;
+		} catch (InstantiationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		return null;
+	}
+
+	private Collection<TriplePattern> createTriplePatternsListFromJSON(
+			JSONObject json) {
+
+		Collection<TriplePattern> result = new LinkedList<TriplePattern>();
+
+		try {
+			JSONArray triplePatternsJson = (JSONArray) json
+					.get("triple_pattern");
+
+			for (int i = 0; i < triplePatternsJson.length(); i++) {
+
+				JSONObject triplePatternJson = triplePatternsJson
+						.getJSONObject(i);
+
+				JSONArray itemsJson = (JSONArray) triplePatternJson
+						.get("items");
+
+				Item[] items = new Item[3];
+
+				for (int h = 0; h < 3; h++) {
+					JSONObject itemJson = itemsJson.getJSONObject(h);
+
+					if (itemJson.getString("type").equals("variable")) {
+						items[h] = new Variable(itemJson.getString("name"));
+					} else {
+						items[h] = LazyLiteral.getLiteral(itemJson
+								.getString("value"));
+
+					}
+				}
+
+				TriplePattern triplePattern = new TriplePattern(items[0],
+						items[1], items[2]);
+				result.add(triplePattern);
+			}
+
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		return result;
 	}
 
 }
