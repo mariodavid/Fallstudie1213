@@ -11,28 +11,37 @@ import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.peers.Number160;
 
+/**
+ * Diese Klasse dient zur Initialisierung des Peers und der Verbindung mit dem
+ * ganzen Netzwerk.
+ */
 public class Connection {
-
+	/** Standard Port. */
 	private static final int DEFAULT_PORT = 4000;
+	/** Peer Referenz. */
 	private Peer peer;
 
+	/**
+	 * Gibt den Peer zurück.
+	 * 
+	 * @return den Peer
+	 */
 	public Peer getPeer() {
 		return peer;
 	}
 
 	/**
-	 * a connection is established via a given ip and port, so that this
-	 * connection tries to communicate to the peer to peer network by
-	 * bootstrapping to this ip
+	 * Es wird ein Peer Objekt erzeugt mit den angegebenen lokalen Port. Danach
+	 * verbindet sich dieser Knoten mit einem anderen Konoten dessen IP+Port
+	 * zusätzlich übergeben wird.
 	 * 
 	 * @param ip
-	 * @param port
-	 * @return true, if connection was established successfully
-	 * 
-	 * @throws Exception
-	 * @throws UnknownHostException
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 *            IP eines anderen Knoten
+	 * @param remotePort
+	 *            Port eines anderen Knoten
+	 * @param localPort
+	 *            lokaler Port
+	 * @return true, wenn das Erzeugen des Knotens erfolgreich war
 	 */
 	public boolean connect(String ip, int remotePort, int localPort)
 			throws Exception, UnknownHostException, ClassNotFoundException,
@@ -47,13 +56,10 @@ public class Connection {
 	}
 
 	/**
-	 * a connection is established via a broadcast request on the DEFAULT_PORT
+	 * Ohne Angaben von Parameter wird ein Peer auf dem Standard Port erzeugt
+	 * und ein anderer Knoten im Netzwerk via Broadcast gesucht.
 	 * 
-	 * @return true, if connection was established successfully
-	 * 
-	 * @throws Exception
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * @return true, wenn das Erzeugen des Knotens erfolgreich war
 	 */
 	public boolean connect() throws Exception, ClassNotFoundException,
 			IOException {
@@ -66,14 +72,14 @@ public class Connection {
 		return true;
 	}
 
-
 	/**
-	 * a peer object is created with the given parameters. if the id is -1, a
-	 * random id is chosen
+	 * Erzeugt ein Peer Objekt mit den angegebenen Parametern.
 	 * 
 	 * @param port
+	 *            Port
 	 * @param id
-	 * @throws Exception
+	 *            ID des Knotens
+	 * @return den fertigen Peer
 	 */
 	private Peer createPeer(int port, int id) throws Exception {
 
@@ -82,7 +88,8 @@ public class Connection {
 			id = gen.nextInt(50000);
 		}
 
-		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port).setFileMessageLogger(new File("log.txt"));
+		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port)
+				.setFileMessageLogger(new File("log.txt"));
 		return peer.makeAndListen();
 	}
 

@@ -15,8 +15,14 @@ import luposdate.evaluators.P2PIndexQueryEvaluator;
 
 import net.tomp2p.p2p.Peer;
 
+/**
+ * Führt eine Anfrage aus.
+ */
 public class Query implements Command {
 
+	/* (non-Javadoc)
+	 * @see console.commands.Command#execute(java.util.Scanner, net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
+	 */
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
@@ -44,6 +50,9 @@ public class Query implements Command {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see console.commands.Command#getDescription()
+	 */
 	public String getDescription() {
 		return "[key] gets a value from a given key";
 	}

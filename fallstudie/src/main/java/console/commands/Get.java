@@ -10,17 +10,22 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
 
+/**
+ * Führt ein GET-Befehl im P2P-Netzwerk aus.
+ */
 public class Get implements Command {
+	/** Future Objekt. */
 	private FutureDHT future;
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#execute(java.util.Scanner,
+	 * net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
+	 */
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 		String key = scanner.next();
-		future = peer.get(Number160.createHash(key)).start();
-		Number160 contentKey = Number160.createHash("<s> <p> <o> .");
-		// future =
-		// peer.get(Number160.createHash(key)).setContentKey(contentKey)
-		// .start();
 		future = peer.get(Number160.createHash(key)).setAll().start();
 		future.awaitUninterruptibly();
 
@@ -32,6 +37,14 @@ public class Get implements Command {
 
 	}
 
+	/**
+	 * Prints the results.
+	 * 
+	 * @param peer
+	 *            the peer
+	 * @param key
+	 *            the key
+	 */
 	private void printResults(Peer peer, Number160 key) {
 		try {
 			for (Data result : future.getDataMap().values()) {
@@ -58,6 +71,11 @@ public class Get implements Command {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#getDescription()
+	 */
 	public String getDescription() {
 		return "[key] gets a value from a given key";
 	}

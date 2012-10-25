@@ -11,13 +11,12 @@ import net.tomp2p.p2p.Peer;
 
 
 /**
- * Loads an given rdf file into the network via a given distribution strategy
- * 
- * @author Mario David, Sebastian Walther, Andreas Haller, Thomas Kiencke
+ * Läd eine RDF Datei ein und speichert die Triple in das Netzwerk
  * 
  */
 public class LoadRDF implements Command {
 
+	/** The filename. */
 	private String	filename;
 
 	/*
@@ -63,11 +62,11 @@ public class LoadRDF implements Command {
 
 
 	/**
-	 * parses a http file and decompresses it if required
-	 * 
+	 * parses a http file and decompresses it if required.
+	 *
 	 * @return the scanner object for walking through the data
-	 * @throws IOException
-	 * @throws MalformedURLException
+	 * @throws IOException Signals that an I/O exception has occurred.
+	 * @throws MalformedURLException the malformed url exception
 	 */
 	private Scanner parseHttp() throws IOException,
 			MalformedURLException {
@@ -82,11 +81,10 @@ public class LoadRDF implements Command {
 	}
 
 	/**
-	 * parses a local file and decompresses it if required
-	 * 
+	 * parses a local file and decompresses it if required.
+	 *
 	 * @return the scanner object for walking through the data
-	 * @throws IOException
-	 * @throws MalformedURLException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private Scanner parseFile() throws IOException {
 
@@ -99,11 +97,11 @@ public class LoadRDF implements Command {
 	}
 
 	/**
-	 * decompresses a given input stream if required and is an bzip2 compression
-	 * 
+	 * decompresses a given input stream if required and is an bzip2 compression.
+	 *
+	 * @param in the in
 	 * @return the decompressed input stream
-	 * @throws IOException
-	 * @throws MalformedURLException
+	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	private InputStream decompressIfRequired(InputStream in) 
 			throws IOException {
@@ -115,6 +113,9 @@ public class LoadRDF implements Command {
 	return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see console.commands.Command#getDescription()
+	 */
 	public String getDescription() {
 //		return "[filename / URL] [strategy] loads a rdf file from the given filename / url into the p2p network."
 //				+ "the data format of the file has to be N-TRIPLE like from http://downloads.dbpedia.org/, "

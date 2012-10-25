@@ -11,23 +11,27 @@ import p2p.P2PAdapter;
 
 import console.commands.*;
 
-
+/**
+ * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
+ * die Konsole den Einstiegspunkt der Software dar.
+ */
 public class Console {
+	/** Verbindung. */
+	private final Connection connection;
+	/** Lupos-Server. */
+	private final LuposServer server;
 
-	private final Connection	connection;
-	private final LuposServer	server;
-
+	/**
+	 * Konstruktor.
+	 */
 	public Console(Connection connection, LuposServer server) {
 		this.connection = connection;
 		this.server = server;
 	}
 
 	/**
-	 * starts the console when a connection is already established. reads
-	 * commands from std in and executes them
-	 * 
-	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * Startet die Konsole wenn ebreits eine Verbindung besteht. Es werden hier
+	 * die Befehle von der Standard Eingabe gelesen und verarbeitet.
 	 */
 	public void start() throws ClassNotFoundException, IOException {
 		System.out
@@ -53,20 +57,16 @@ public class Console {
 	}
 
 	/**
-	 * this method generates objects for all available commands and returns them
-	 * in a collection
-	 * 
-	 * @return the available commands
+	 * Diese Methode erzeugt Instanzen für alle Befehle und gibt diese ein eine
+	 * Collection.
 	 */
 	private HashMap<String, Command> generateCommands() {
 		HashMap<String, Command> commands = new HashMap<String, Command>();
 
 		commands.put("add", new Add());
 		commands.put("get", new Get());
-		commands.put("getall", new GetAll());
 		commands.put("put", new Put());
 		commands.put("remove", new Remove());
-		commands.put("removeall", new RemoveAll());
 		commands.put("quit", new Quit());
 		commands.put("getallnodes", new GetAllNodes());
 		commands.put("getlocalstorage", new GetLocalStorage());
@@ -75,22 +75,19 @@ public class Console {
 		commands.put("getexamplequeries", new GetExampleQueries());
 		commands.put("getpeerforcontent", new GetPeerForContent());
 		commands.put("test", new DeserializerTest());
-		commands.put("rpc", new RPC());
+		commands.put("sendMessage", new SendMessage());
+		commands.put("sm", new SendMessage());
+		// commands.put("loadrdf", new LoadRDF());
 
-//		commands.put("loadrdf", new LoadRDF());
-		
 		commands.put("help", new Help(commands.values()));
-		
+
 		return commands;
 	}
 
 	/**
-	 * the entry point of the application. depending on the command line
-	 * arguments the connection is established via broadcast or a given ip:port
-	 * combination to connect to the network
-	 * 
-	 * @param args
-	 * @throws Exception
+	 * Der Eingangspunkt zu der Applikation. Abhängig von den Parametern wird
+	 * eine Verbindung per Broadcast oder zu einer bestimmten IP(Port)
+	 * hergestellt.
 	 */
 	public static void main(String[] args) throws Exception {
 
@@ -100,28 +97,27 @@ public class Console {
 		Console console = new Console(connection, server);
 
 		switch (args.length) {
-			case 0:
-				connection.connect();
-				P2PAdapter config = new P2PAdapter(
-						connection.getPeer(), server.getEvaluator());
-				server.start(config);
-				console.start();
-				break;
+		// Standardfall: Broadcast und Port ist 4001
+		case 0:
+			connection.connect();
+			P2PAdapter config = new P2PAdapter(connection.getPeer(),
+					server.getEvaluator());
+			server.start(config);
+			console.start();
+			break;
+		// IP + remote Port + local Port
+		case 3:
+			String ip = args[0];
+			int remotePort = Integer.parseInt(args[1]);
+			int localPort = Integer.parseInt(args[2]);
 
-			case 3:
-				String ip = args[0];
-				int remotePort = Integer.parseInt(args[1]);
-				int localPort = Integer.parseInt(args[2]);
+			connection.connect(ip, remotePort, localPort);
+			console.start();
+			break;
 
-				connection.connect(ip, remotePort, localPort);
-				console.start();
-				break;
-
-			default:
-				System.out.println("usage: program [ip] [port]");
-				break;
+		default:
+			System.out.println("usage: program [ip] [port]");
+			break;
 		}
-
 	}
-
 }

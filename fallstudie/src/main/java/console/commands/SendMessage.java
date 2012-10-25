@@ -6,8 +6,17 @@ import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
 
-public class RPC implements Command {
+/**
+ * Sendet eine Nachricht an einen gegebenen location Key.
+ */
+public class SendMessage implements Command {
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#execute(java.util.Scanner,
+	 * net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
+	 */
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
@@ -16,8 +25,6 @@ public class RPC implements Command {
 
 		Number160 contentHash = Number160.createHash(input);
 
-//		Number160 destination = peer.getPeerBean().getStorage()
-//				.findPeerIDForResponsibleContent(contentHash);
 		String response = evaluator.getP2PAdapter().sendMessage(contentHash,
 				message);
 
@@ -25,8 +32,13 @@ public class RPC implements Command {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#getDescription()
+	 */
 	public String getDescription() {
-		return "[text] sends a broadcast message to all nodes in its local peer map";
+		return "[locationKey] [text] sends a message to the node, which is responsible for the locationKey";
 	}
 
 }
