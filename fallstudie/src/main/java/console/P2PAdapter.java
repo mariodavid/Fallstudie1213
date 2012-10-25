@@ -170,28 +170,19 @@ public class P2PAdapter {
 		return response.getBuffer().toString("UTF-8");
 	}
 
-	public PeerAddress getPeerAddressTest(Number160 destination) {
-		final FutureChannelCreator channel = peer.getConnectionBean()
-				.getConnectionReservation().reserve(2);
-
-		final boolean success = channel.awaitUninterruptibly(5000);
-		if (!success) {
-			peer.getConnectionBean().getConnectionReservation()
-					.release(channel.getChannelCreator());
-			throw new TimeoutException(
-					"Could not find nearest peers. (Timeout)");
+	public Number160 getNodeIDfromContentKey(Number160 contentKey) {
+		Number160 responsiblePeer = null;
+		try {
+			FutureDHT future = peer.put(contentKey).setData(new Data(new DummyObject())).start()
+					.awaitUninterruptibly();
+			System.out.println("Succ?: " + future.isSuccess());
+			responsiblePeer = peer.getPeerBean().getStorage()
+					.findPeerIDForResponsibleContent(contentKey);
+			peer.remove(contentKey).setAll().start().awaitUninterruptibly();
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
-		// this is a little akward. But Thomas said he may improve this
-		// in future generation of TomP2P
-		final FutureRouting fRoute = peer.getDistributedRouting().route(
-				destination, null, null,
-				net.tomp2p.message.Message.Type.REQUEST_1, 3, 5, 5, 5, 2, true,
-				channel.getChannelCreator());
-		fRoute.awaitUninterruptibly(5000);
-		final SortedSet<PeerAddress> route = fRoute.getRoutingPath();
-		peer.getConnectionBean().getConnectionReservation()
-				.release(channel.getChannelCreator());
-		// fall tritt nicht ein
-		return route.first();
+		return responsiblePeer;
+
 	}
 }

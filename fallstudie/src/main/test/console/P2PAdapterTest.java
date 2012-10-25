@@ -51,11 +51,8 @@ public class P2PAdapterTest {
 	public void testExecute() throws IOException, InterruptedException {
 		Random gen = new Random();
 		Number160 contentKey = Number160.createHash("anyKey");
-		peers[gen.nextInt(NODES-1)].put(contentKey).setData(new Data("anyData")).start()
-				.awaitUninterruptibly();
-
-		Number160 responsiblePeer = peers[gen.nextInt(NODES-1)].getPeerBean().getStorage()
-				.findPeerIDForResponsibleContent(contentKey);
+		
+		Number160 responsiblePeer = p2pAdapter[gen.nextInt(NODES-1)].getNodeIDfromContentKey(contentKey);
 		System.out.println("peer: " + responsiblePeer);
 		String testMessage = "HAAAAALLLLLLLLOOOO";
 		String response = p2pAdapter[gen.nextInt(NODES-1)].sendMessage(responsiblePeer,
