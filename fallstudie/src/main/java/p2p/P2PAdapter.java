@@ -45,7 +45,7 @@ public class P2PAdapter {
 		this.evaluator = evaluator;
 		this.peer = peer;
 		listenForDataMessages();
-		//addPeerAddressToP2PNetwork();
+		// addPeerAddressToP2PNetwork();
 		initDistributionStrategy();
 	}
 
@@ -190,7 +190,8 @@ public class P2PAdapter {
 		final SortedSet<PeerAddress> route = fRoute.getRoutingPath();
 		peer.getConnectionBean().getConnectionReservation()
 				.release(channel.getChannelCreator());
-		System.out.println("Dieser Knoten ist dafuer zustaendig: " + route.first());
+		System.out.println("Dieser Knoten ist dafuer zustaendig: "
+				+ route.first());
 		return route.first();
 	}
 
