@@ -3,6 +3,8 @@ package operators.serialization;
 import static org.junit.Assert.assertEquals;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
 import lupos.engine.operators.singleinput.Result;
+import luposdate.operators.serialization.ResultSerializer;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;

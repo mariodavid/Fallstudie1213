@@ -1,4 +1,4 @@
-package operators.serialization;
+package luposdate.operators.serialization;
 
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.singleinput.Result;
