@@ -57,7 +57,7 @@ public class P2PAdapterTest {
 		Number160 responsiblePeer = p2pAdapter[gen.nextInt(NODES-1)].getNodeIDfromContentKey(contentKey);
 		System.out.println("peer: " + responsiblePeer);
 		String testMessage = "HAAAAALLLLLLLLOOOO";
-		String response = p2pAdapter[gen.nextInt(NODES-1)].sendMessage(responsiblePeer,
+		String response = p2pAdapter[gen.nextInt(NODES-1)].sendMessage(contentKey,
 				testMessage);
 		System.out.println("Antwort: " + response);
 		assertEquals(response, "Deine Nachricht war: " + testMessage);
