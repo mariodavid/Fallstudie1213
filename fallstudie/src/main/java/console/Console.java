@@ -90,6 +90,7 @@ public class Console {
 		commands.put("getpeerforcontent", new GetPeerForContent());
 		commands.put("test", new DeserializerTest());
 		commands.put("rpc", new RPC());
+
 //		commands.put("loadrdf", new LoadRDF());
 		
 		commands.put("help", new Help(commands.values()));

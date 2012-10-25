@@ -17,7 +17,7 @@ import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.singleinput.Result;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
-import operatoren.SubGraphContainer;
+import operators.SubGraphContainer;
 
 /**
  * genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung

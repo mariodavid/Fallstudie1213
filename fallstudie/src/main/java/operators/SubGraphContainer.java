@@ -1,4 +1,4 @@
-package operatoren;
+package operators;
 
 import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.queryresult.QueryResult;
@@ -56,6 +56,8 @@ public class SubGraphContainer extends BasicIndex {
 		// hier wird jetzt tatsaechlich losgeschickt (serialisiert usw.)
 		// Schritt 1....
 		
+		// Schritt 1.1 serialisierung
+		// ...
 		
 		
 		
