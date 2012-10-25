@@ -2,17 +2,30 @@ package console;
 
 import java.io.IOException;
 import java.util.Random;
+import java.util.SortedSet;
 
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.handler.timeout.TimeoutException;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+
+import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.FutureBootstrap;
+import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
+import net.tomp2p.futures.FutureResponse;
+import net.tomp2p.futures.FutureRouting;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
-import net.tomp2p.p2p.RequestP2PConfiguration;
+import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.rpc.RawDataReply;
 import net.tomp2p.storage.Data;
 import distribution.DistributionFactory;
 import distribution.DistributionStrategy;
+import evaluators.P2PIndexQueryEvaluator;
 
 public class P2PAdapter {
 
@@ -21,17 +34,26 @@ public class P2PAdapter {
 	 * = OneKeyDistribution (h(s),h(p),h(o)) 2 = TwoKeyDistribution
 	 * (h(sp),h(po),h(so)) 3 = ThreeKeyDistribution (h(spo))
 	 */
-	private static final int	DEFAULT_DISTRIBUTION_STRATEGY	= 1;
-	public Peer					peer;
-	public DistributionStrategy	distributionStrategy;
+	private static final int DEFAULT_DISTRIBUTION_STRATEGY = 1;
+	public static final int IDLE_TCP_Millis = 5000;
+	public P2PIndexQueryEvaluator evaluator;
+	public Peer peer;
+	public DistributionStrategy distributionStrategy;
 
-	public P2PAdapter(Peer peer) {
+	public P2PAdapter(Peer peer, P2PIndexQueryEvaluator evaluator) {
+		this.evaluator = evaluator;
 		this.peer = peer;
-		/*
-		 * Am Anfang wird das PeerAdress Objekt in das Netzwerk gespeichert, so
-		 * dass jeder Knoten dazu in der Lage ist anhand der peer id die exakte
-		 * Adresse des Knoten heraus zu bekommen.
-		 */
+		listenForDataMessages();
+		addPeerAddressToP2PNetwork();
+		initDistributionStrategy();
+	}
+
+	/**
+	 * Am Anfang wird das PeerAdress Objekt in das Netzwerk gespeichert, so dass
+	 * jeder Knoten dazu in der Lage ist anhand der peer id die exakte Adresse
+	 * des Knoten heraus zu bekommen.
+	 */
+	private void addPeerAddressToP2PNetwork() {
 		try {
 			peer.put(Number160.createHash(peer.getPeerID() + ""))
 					.setData(new Data(peer.getPeerAddress())).start()
@@ -39,7 +61,28 @@ public class P2PAdapter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		initDistributionStrategy();
+	}
+
+	private void listenForDataMessages() {
+		this.peer.setRawDataReply(new RawDataReply() {
+
+			public ChannelBuffer reply(final PeerAddress sender,
+					final ChannelBuffer requestBuffer)
+					throws InvalidProtocolBufferException {
+				String receivedMessage = requestBuffer.toString("UTF-8");
+				System.out.println(receivedMessage);
+
+				/**
+				 * AN DIESER STELLE MUSS DIE ANKOMMENDE NACHRICHT VERARBEITET
+				 * WERDEN!!!
+				 */
+
+				// momentan wird einfach die Nachricht zurück geschickt
+				return ChannelBuffers
+						.wrappedBuffer(("Deine Nachricht war: " + receivedMessage)
+								.getBytes());
+			}
+		});
 	}
 
 	public Peer getPeer() {
@@ -80,10 +123,8 @@ public class P2PAdapter {
 		try {
 			peer = maker.makeAndListen();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		FutureBootstrap fb = peer.bootstrap().setBroadcast().setPorts(4000)
 				.start();
@@ -91,29 +132,16 @@ public class P2PAdapter {
 
 	}
 
-	public void send(String msg, Number160 destination) {
-
-		RequestP2PConfiguration config = new RequestP2PConfiguration(1, 5, 0);
-		FutureDHT future = peer.send(destination).setObject(msg)
-				.setRequestP2PConfiguration(config).start();
-
-		future.awaitUninterruptibly();
-
-	}
-	
 	public PeerAddress getPeerAddress(Number160 destination) {
 		try {
-			FutureDHT future = peer.get(Number160.createHash(destination.toString())).setAll().start();
+			FutureDHT future = peer
+					.get(Number160.createHash(destination.toString())).setAll()
+					.start();
 			future.awaitUninterruptibly();
 			if (future.isSuccess()) {
-				for (Data result : future.getDataMap().values()) {
-					if (result.getObject().getClass() == PeerAddress.class) {
+				for (Data result : future.getDataMap().values())
+					if (result.getObject().getClass() == PeerAddress.class)
 						return (PeerAddress) result.getObject();
-					} else {
-						System.out.println("Unbekannter Fehler 1!");
-						return null;
-					}
-				}
 			} else {
 				System.out.println("PeerAddress nicht vorhanden!");
 				return null;
@@ -123,8 +151,47 @@ public class P2PAdapter {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		System.out.println("Unbekannter Fehler 2!");
+		// fall tritt nicht ein
 		return null;
 	}
 
+	public String sendMessage(Number160 destination, String message) {
+		SendDirectBuilder sendBuilder = peer.sendDirect();
+
+		PeerAddress pa = this.getPeerAddress(destination);
+		PeerConnection pc = peer.createPeerConnection(pa, IDLE_TCP_Millis);
+		sendBuilder.setConnection(pc);
+		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
+
+		final FutureResponse response = sendBuilder.start()
+				.awaitUninterruptibly();
+
+		pc.close();
+		return response.getBuffer().toString("UTF-8");
+	}
+
+	public PeerAddress getPeerAddressTest(Number160 destination) {
+		final FutureChannelCreator channel = peer.getConnectionBean()
+				.getConnectionReservation().reserve(2);
+
+		final boolean success = channel.awaitUninterruptibly(5000);
+		if (!success) {
+			peer.getConnectionBean().getConnectionReservation()
+					.release(channel.getChannelCreator());
+			throw new TimeoutException(
+					"Could not find nearest peers. (Timeout)");
+		}
+		// this is a little akward. But Thomas said he may improve this
+		// in future generation of TomP2P
+		final FutureRouting fRoute = peer.getDistributedRouting().route(
+				destination, null, null,
+				net.tomp2p.message.Message.Type.REQUEST_1, 3, 5, 5, 5, 2, true,
+				channel.getChannelCreator());
+		fRoute.awaitUninterruptibly(5000);
+		final SortedSet<PeerAddress> route = fRoute.getRoutingPath();
+		peer.getConnectionBean().getConnectionReservation()
+				.release(channel.getChannelCreator());
+		// fall tritt nicht ein
+		return route.first();
+	}
 }

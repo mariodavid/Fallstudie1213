@@ -27,10 +27,10 @@ public class DeserializerTest {
 		// LuposServer server = new LuposServer();
 
 		connection.connect();
-		P2PAdapter adapter = new P2PAdapter(connection.getPeer());
+		P2PIndexQueryEvaluator evaluator = new P2PIndexQueryEvaluator();
+		P2PAdapter adapter = new P2PAdapter(connection.getPeer(), evaluator);
 		// server.start(config);
 
-		P2PIndexQueryEvaluator evaluator = new P2PIndexQueryEvaluator();
 		evaluator.setP2PAdapter(adapter);
 
 		Collection<URILiteral> defaultGraphs = new LinkedList<URILiteral>();

@@ -5,24 +5,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import test.LuposServer;
-import console.commands.Add;
-import console.commands.Command;
-import console.commands.DeserializerTest;
-import console.commands.Get;
-import console.commands.GetAll;
-import console.commands.GetAllNodes;
-import console.commands.GetExampleQueries;
-import console.commands.GetLocalStorage;
-import console.commands.GetPeerForContent;
-import console.commands.Help;
-import console.commands.Put;
-import console.commands.Query;
-import console.commands.Quit;
-import console.commands.RPC;
-import console.commands.Remove;
-import console.commands.RemoveAll;
-import console.commands.SendMessage;
-import console.commands.SetStrategy;
+import console.commands.*;
 
 
 public class Console {
@@ -82,7 +65,6 @@ public class Console {
 		commands.put("removeall", new RemoveAll());
 		commands.put("quit", new Quit());
 		commands.put("getallnodes", new GetAllNodes());
-		commands.put("sendmessage", new SendMessage());
 		commands.put("getlocalstorage", new GetLocalStorage());
 		commands.put("query", new Query());
 		commands.put("setstrategy", new SetStrategy());
@@ -117,7 +99,7 @@ public class Console {
 			case 0:
 				connection.connect();
 				P2PAdapter config = new P2PAdapter(
-						connection.getPeer());
+						connection.getPeer(), server.getEvaluator());
 				server.start(config);
 				console.start();
 				break;
