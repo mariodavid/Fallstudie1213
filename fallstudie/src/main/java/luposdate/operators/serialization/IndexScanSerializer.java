@@ -1,4 +1,4 @@
-package operators.serialization;
+package luposdate.operators.serialization;
 
 import java.util.Collection;
 import java.util.LinkedList;

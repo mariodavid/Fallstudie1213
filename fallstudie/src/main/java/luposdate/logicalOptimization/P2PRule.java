@@ -1,7 +1,5 @@
-package logicalOptimization;
+package luposdate.logicalOptimization;
 
-import index.P2PIndexCollection;
-import index.P2PIndexScan;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -17,25 +15,27 @@ import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.singleinput.Result;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
-import operators.SubGraphContainer;
+import luposdate.index.P2PIndexCollection;
+import luposdate.index.P2PIndexScan;
+import luposdate.operators.SubGraphContainer;
 
 /**
  * genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung
  * des Anfragegraphen. Bei P2PRuleGlobalJoin war alles noch zentralistisch. Hier
- * sollen nun Optimierungen eingefŸhrt werden, bei denen dann Teilgraphen
+ * sollen nun Optimierungen eingefï¿½hrt werden, bei denen dann Teilgraphen
  * verschickt werden.
  * 
  * Wir befinden uns in der Kommunikation an der Stelle (1)
  * 
  * Teil Anfragegraph -------- (1) ------------------> (2) ----------- |Sender|
- * |EmpfŠnger| -------- (4) <------------------ (3) ----------- Anfrage Result
+ * |Empfï¿½nger| -------- (4) <------------------ (3) ----------- Anfrage Result
  * 
  * Idee von Sven: Man sollte nun eine Klasse erstellen, die von
  * IndexScanOperators erbt (wahrscheinlich die Klasse) und es wird nun eine
  * einzelne IndexScanOperator die hier auftriff durch diese geerbte Klasse
  * ersetzt. Diese Klasse hat jetzt mehrere Operatoren in sich, so dass neben der
- * IndexScanOperator auch ein Result Operator enthŠlt. Dieser Result Operator
- * enthŠlt die P2PApplication klasse als Application. Diese drei Operatoren
+ * IndexScanOperator auch ein Result Operator enthï¿½lt. Dieser Result Operator
+ * enthï¿½lt die P2PApplication klasse als Application. Diese drei Operatoren
  * werden von der von IndexCollection erbenden Klasse verschickt und das
  * Ergebnis wird wieder entgegen genommen.
  */

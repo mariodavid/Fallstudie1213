@@ -1,4 +1,4 @@
-package distribution;
+package p2p.distribution;
 
 import java.io.IOException;
 

@@ -1,4 +1,4 @@
-package logicalOptimization;
+package luposdate.logicalOptimization;
 
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
 import lupos.optimizations.logical.rules.generated.runtime.RulePackage;

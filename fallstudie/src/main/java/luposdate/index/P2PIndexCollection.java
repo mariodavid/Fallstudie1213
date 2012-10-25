@@ -1,4 +1,4 @@
-package index;
+package luposdate.index;
 
 import java.util.Collection;
 

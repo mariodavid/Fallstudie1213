@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import lupos.datastructures.items.Triple;
+import luposdate.LuposServer;
 
 import net.tomp2p.examples.ExampleUtils;
 import net.tomp2p.futures.FutureDHT;
@@ -21,7 +22,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import test.LuposServer;
+import p2p.P2PAdapter;
+
 
 public class P2PAdapterTest {
 	// general

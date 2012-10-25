@@ -1,8 +1,10 @@
-package index;
+package luposdate.index;
 
 import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
+
+import p2p.P2PAdapter;
 
 import lupos.datastructures.items.Triple;
 import lupos.datastructures.items.literal.URILiteral;
@@ -10,10 +12,9 @@ import lupos.engine.operators.index.Indices;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.storage.Data;
-import console.P2PAdapter;
 
 /**
- * ist fŸr die Verwaltung des eigentlichen Index zustŠndig.
+ * ist fï¿½r die Verwaltung des eigentlichen Index zustï¿½ndig.
  * 
  * 
  * @author Mario David, Sebastian Walther
@@ -26,10 +27,10 @@ public class P2PIndices extends Indices {
 
 
 	/**
-	 * uri literals sind fŸr benannte graphen zustŠndig bzw. fŸr die default
-	 * graphen, dann sind sie fŸr die datensŠtze
+	 * uri literals sind fï¿½r benannte graphen zustï¿½ndig bzw. fï¿½r die default
+	 * graphen, dann sind sie fï¿½r die datensï¿½tze
 	 * 
-	 * hier ist wichtig, dass fŸr jedes P2PIndices ein neues P2PNetzwerk
+	 * hier ist wichtig, dass fï¿½r jedes P2PIndices ein neues P2PNetzwerk
 	 * erstellt wird, wobei jedes P2P Netzwerk dann einer Datenbank entspricht,
 	 * die angesprochen werden kann
 	 * 

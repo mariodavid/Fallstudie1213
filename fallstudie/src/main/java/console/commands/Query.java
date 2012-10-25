@@ -11,9 +11,9 @@ import lupos.gui.Demo_Applet;
 import lupos.gui.GUI;
 import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
 import lupos.gui.operatorgraph.viewer.Viewer;
+import luposdate.evaluators.P2PIndexQueryEvaluator;
 
 import net.tomp2p.p2p.Peer;
-import evaluators.P2PIndexQueryEvaluator;
 
 public class Query implements Command {
 

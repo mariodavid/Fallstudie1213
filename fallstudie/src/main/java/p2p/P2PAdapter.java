@@ -1,15 +1,10 @@
-package console;
+package p2p;
 
 import java.io.IOException;
 import java.util.Random;
 import java.util.SortedSet;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.handler.timeout.TimeoutException;
-
-import com.google.protobuf.InvalidProtocolBufferException;
-
+import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
@@ -23,9 +18,16 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.RawDataReply;
 import net.tomp2p.storage.Data;
-import distribution.DistributionFactory;
-import distribution.DistributionStrategy;
-import evaluators.P2PIndexQueryEvaluator;
+
+import org.jboss.netty.buffer.ChannelBuffer;
+import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.handler.timeout.TimeoutException;
+
+import p2p.distribution.DistributionFactory;
+import p2p.distribution.DistributionStrategy;
+
+import com.google.protobuf.InvalidProtocolBufferException;
+
 
 public class P2PAdapter {
 
@@ -139,9 +141,11 @@ public class P2PAdapter {
 					.start();
 			future.awaitUninterruptibly();
 			if (future.isSuccess()) {
-				for (Data result : future.getDataMap().values())
-					if (result.getObject().getClass() == PeerAddress.class)
+				for (Data result : future.getDataMap().values()) {
+					if (result.getObject().getClass() == PeerAddress.class) {
 						return (PeerAddress) result.getObject();
+					}
+				}
 			} else {
 				System.out.println("PeerAddress nicht vorhanden!");
 				return null;
@@ -170,6 +174,31 @@ public class P2PAdapter {
 		return response.getBuffer().toString("UTF-8");
 	}
 
+	public PeerAddress getPeerAddressTest(Number160 destination) {
+		final FutureChannelCreator channel = peer.getConnectionBean()
+				.getConnectionReservation().reserve(2);
+
+		final boolean success = channel.awaitUninterruptibly(5000);
+		if (!success) {
+			peer.getConnectionBean().getConnectionReservation()
+					.release(channel.getChannelCreator());
+			throw new TimeoutException(
+					"Could not find nearest peers. (Timeout)");
+		}
+		// this is a little akward. But Thomas said he may improve this
+		// in future generation of TomP2P
+		final FutureRouting fRoute = peer.getDistributedRouting().route(
+				destination, null, null,
+				net.tomp2p.message.Message.Type.REQUEST_1, 3, 5, 5, 5, 2, true,
+				channel.getChannelCreator());
+		fRoute.awaitUninterruptibly(5000);
+		final SortedSet<PeerAddress> route = fRoute.getRoutingPath();
+		peer.getConnectionBean().getConnectionReservation()
+				.release(channel.getChannelCreator());
+		// fall tritt nicht ein
+		return route.first();
+	}
+	
 	public Number160 getNodeIDfromContentKey(Number160 contentKey) {
 		Number160 responsiblePeer = null;
 		try {
