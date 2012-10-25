@@ -3,20 +3,8 @@ package console.commands;
 import java.util.Scanner;
 
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
-
-import p2p.P2PAdapter;
-
-
-import net.tomp2p.connection.PeerConnection;
-import net.tomp2p.futures.FutureResponse;
 import net.tomp2p.p2p.Peer;
-import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
-import net.tomp2p.peers.PeerAddress;
-import net.tomp2p.storage.Data;
 
 public class RPC implements Command {
 

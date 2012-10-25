@@ -45,23 +45,7 @@ public class P2PAdapter {
 		this.evaluator = evaluator;
 		this.peer = peer;
 		listenForDataMessages();
-		// addPeerAddressToP2PNetwork();
 		initDistributionStrategy();
-	}
-
-	/**
-	 * Am Anfang wird das PeerAdress Objekt in das Netzwerk gespeichert, so dass
-	 * jeder Knoten dazu in der Lage ist anhand der peer id die exakte Adresse
-	 * des Knoten heraus zu bekommen.
-	 */
-	private void addPeerAddressToP2PNetwork() {
-		try {
-			peer.put(Number160.createHash(peer.getPeerID() + ""))
-					.setData(new Data(peer.getPeerAddress())).start()
-					.awaitUninterruptibly();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private void listenForDataMessages() {
@@ -132,36 +116,11 @@ public class P2PAdapter {
 		fb.awaitUninterruptibly();
 
 	}
-
-	public PeerAddress getPeerAddress(Number160 destination) {
-		try {
-			FutureDHT future = peer
-					.get(Number160.createHash(destination.toString())).setAll()
-					.start();
-			future.awaitUninterruptibly();
-			if (future.isSuccess()) {
-				for (Data result : future.getDataMap().values()) {
-					if (result.getObject().getClass() == PeerAddress.class) {
-						return (PeerAddress) result.getObject();
-					}
-				}
-			} else {
-				System.out.println("PeerAddress nicht vorhanden!");
-				return null;
-			}
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		// fall tritt nicht ein
-		return null;
-	}
-
-	public String sendMessage(Number160 destination, String message) {
+	
+	public String sendMessage(Number160 locationKey, String message) {
 		SendDirectBuilder sendBuilder = peer.sendDirect();
 
-		PeerAddress pa = this.getPeerAddressTest(destination);
+		PeerAddress pa = this.getPeerAddressFromLocationKey(locationKey);
 		PeerConnection pc = peer.createPeerConnection(pa, IDLE_TCP_Millis);
 		sendBuilder.setConnection(pc);
 		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
@@ -173,7 +132,7 @@ public class P2PAdapter {
 		return response.getBuffer().toString("UTF-8");
 	}
 
-	public PeerAddress getPeerAddressTest(Number160 destination) {
+	public PeerAddress getPeerAddressFromLocationKey(Number160 destination) {
 		FutureChannelCreator channel = peer.getConnectionBean()
 				.getConnectionReservation().reserve(2);
 		boolean success = channel.awaitUninterruptibly(5000);
@@ -190,32 +149,9 @@ public class P2PAdapter {
 		final SortedSet<PeerAddress> route = fRoute.getRoutingPath();
 		peer.getConnectionBean().getConnectionReservation()
 				.release(channel.getChannelCreator());
+		
 		System.out.println("Dieser Knoten ist dafuer zustaendig: "
 				+ route.first());
 		return route.first();
-	}
-
-	public Number160 getNodeIDfromContentKey(Number160 contentKey) {
-
-		// Number160 responsiblePeer = getPeerAddressTest(contentKey);
-		// try {
-		// FutureDHT future = peer.put(contentKey).setData(new Data(new
-		// DummyObject())).start()
-		// .awaitUninterruptibly();
-		// System.out.println("Succ?: " + future.isSuccess());
-		// try {
-		// Thread.sleep(5000);
-		// } catch (InterruptedException e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
-		// responsiblePeer = peer.getPeerBean().getStorage()
-		// .findPeerIDForResponsibleContent(contentKey);
-		// peer.remove(contentKey).setAll().start().awaitUninterruptibly();
-		// } catch (IOException e) {
-		// e.printStackTrace();
-		// }
-		return null;
-
 	}
 }
