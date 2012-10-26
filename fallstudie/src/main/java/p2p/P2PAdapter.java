@@ -214,8 +214,6 @@ public class P2PAdapter {
 		peer.getConnectionBean().getConnectionReservation()
 				.release(channel.getChannelCreator());
 		
-		System.out.println("Dieser Knoten ist dafuer zustaendig: "
-				+ route.first());
 		return route.first();
 	}
 }

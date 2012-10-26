@@ -23,9 +23,12 @@ public class SendMessage implements Command {
 		String input = scanner.next();
 		String message = scanner.next();
 
-		Number160 contentHash = Number160.createHash(input);
+		Number160 locationKey = Number160.createHash(input);
 
-		String response = evaluator.getP2PAdapter().sendMessage(contentHash,
+		System.out.println("Dieser Knoten ist dafuer zustaendig: "
+				+ evaluator.getP2PAdapter().getPeerAddressFromLocationKey(locationKey));
+		
+		String response = evaluator.getP2PAdapter().sendMessage(locationKey,
 				message);
 
 		System.out.println(response);

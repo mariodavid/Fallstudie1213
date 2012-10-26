@@ -35,7 +35,7 @@ public class Console {
 	 */
 	public void start() throws ClassNotFoundException, IOException {
 		System.out
-				.println("\n############ KONSOLENMODUS GESTARTET ############");
+				.println("############ KONSOLENMODUS GESTARTET ############");
 		System.out.println("Type \"help\" for possible commands");
 		String input = null;
 		Scanner scanner = new Scanner(System.in);
@@ -77,6 +77,7 @@ public class Console {
 		commands.put("test", new DeserializerTest());
 		commands.put("sendMessage", new SendMessage());
 		commands.put("sm", new SendMessage());
+		commands.put("getmyid", new GetMyID());
 		// commands.put("loadrdf", new LoadRDF());
 
 		commands.put("help", new Help(commands.values()));
