@@ -5,29 +5,21 @@ import java.util.Random;
 import java.util.SortedSet;
 
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
-import net.tomp2p.futures.FutureResponse;
 import net.tomp2p.futures.FutureRouting;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.p2p.RequestP2PConfiguration;
-import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
-import net.tomp2p.rpc.RawDataReply;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.timeout.TimeoutException;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 /**
  * Der P2P Adapter stellt das Bindeglied zwischen dem P2P Netzwerk und dem
