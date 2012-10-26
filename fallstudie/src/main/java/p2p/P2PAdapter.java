@@ -8,13 +8,16 @@ import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
+import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.futures.FutureResponse;
 import net.tomp2p.futures.FutureRouting;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
+import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
+import net.tomp2p.rpc.ObjectDataReply;
 import net.tomp2p.rpc.RawDataReply;
 
 import org.jboss.netty.buffer.ChannelBuffer;
@@ -67,23 +70,15 @@ public class P2PAdapter {
 	 * Nachrichten werden hier verarbeitet. Die Kommunikation läuft über Netty.
 	 */
 	private void listenForDataMessages() {
-		this.peer.setRawDataReply(new RawDataReply() {
-
-			public ChannelBuffer reply(final PeerAddress sender,
-					final ChannelBuffer requestBuffer)
-					throws InvalidProtocolBufferException {
-				String receivedMessage = requestBuffer.toString("UTF-8");
-				System.out.println(receivedMessage);
-
+		peer.setObjectDataReply(new ObjectDataReply() {
+			public Object reply(PeerAddress sender, Object request)
+					throws Exception {
 				/**
 				 * AN DIESER STELLE MUSS DIE ANKOMMENDE NACHRICHT VERARBEITET
 				 * WERDEN!!!
 				 */
-
-				// momentan wird einfach die Nachricht zurück geschickt
-				return ChannelBuffers
-						.wrappedBuffer(("Deine Nachricht war: " + receivedMessage)
-								.getBytes());
+				System.out.println(request);
+				return "Deine Nachricht war: " + request;
 			}
 		});
 	}
@@ -173,18 +168,18 @@ public class P2PAdapter {
 	 * @return die Antwort auf die Nachricht als String.
 	 */
 	public String sendMessage(Number160 locationKey, String message) {
-		SendDirectBuilder sendBuilder = peer.sendDirect();
+		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
+				1, 10, 0);
+		FutureDHT futureDHT = peer.send(locationKey).setObject(message)
+				.setRequestP2PConfiguration(requestP2PConfiguration)
+				.setRefreshSeconds(0).setDirectReplication(false).start();
+		futureDHT.awaitUninterruptibly();
 
-		PeerAddress pa = this.getPeerAddressFromLocationKey(locationKey);
-		PeerConnection pc = peer.createPeerConnection(pa, TIMEOUT);
-		sendBuilder.setConnection(pc);
-		sendBuilder.setBuffer(ChannelBuffers.wrappedBuffer(message.getBytes()));
+		for (Object object : futureDHT.getRawDirectData2().values()) {
+			return object.toString();
+		}
 
-		final FutureResponse response = sendBuilder.start()
-				.awaitUninterruptibly();
-		pc.close();
-
-		return response.getBuffer().toString("UTF-8");
+		return null;
 	}
 
 	/**
@@ -192,7 +187,8 @@ public class P2PAdapter {
 	 * Keys. Dabei wird zunächst eine Route durch das gesamte Netzwerk gesucht
 	 * und dann der letzte Knoten zurückgegeben.
 	 * 
-	 * @param locationKey der Location Key
+	 * @param locationKey
+	 *            der Location Key
 	 * @return die Addresse des zuständigen Knoten als PeerAddress Obejkt
 	 */
 	public PeerAddress getPeerAddressFromLocationKey(Number160 locationKey) {
@@ -205,7 +201,7 @@ public class P2PAdapter {
 			throw new TimeoutException(
 					"Could not find nearest peers. (Timeout)");
 		}
-		
+
 		FutureRouting fRoute = peer.getDistributedRouting().route(locationKey,
 				null, null, net.tomp2p.message.Message.Type.REQUEST_1, 3, 5, 5,
 				5, 2, true, channel.getChannelCreator());
@@ -213,7 +209,7 @@ public class P2PAdapter {
 		SortedSet<PeerAddress> route = fRoute.getRoutingPath();
 		peer.getConnectionBean().getConnectionReservation()
 				.release(channel.getChannelCreator());
-		
+
 		return route.first();
 	}
 }
