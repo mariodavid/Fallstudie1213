@@ -10,18 +10,18 @@ public class ResultSerializer implements OperatorSerializer {
 
 	private JSONObject json;
 	private String dest_ip;
-	private int request_id;
+	private final int request_id;
 
 	/**
 	 * Use: public ResultSerializer(String dest_ip, int request_id)
 	 */
 	public ResultSerializer() {
-		dest_ip = "0.0.0.0";
+		setDestinationIp("0.0.0.0");
 		request_id = 0;
 	}
 
 	public ResultSerializer(String dest_ip, int request_id) {
-		this.dest_ip = dest_ip;
+		this.setDestinationIp(dest_ip);
 		this.request_id = request_id;
 	}
 	public String serialize(BasicOperator operator, int node_id) {
@@ -30,7 +30,7 @@ public class ResultSerializer implements OperatorSerializer {
 		try {
 			json.put("type", result.getClass().getName());
 			json.put("node_id", node_id);
-			json.put("dest_ip", this.dest_ip);
+			json.put("dest_ip", this.getDestinationIp());
 			json.put("request_id", this.request_id);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -58,5 +58,13 @@ public class ResultSerializer implements OperatorSerializer {
 		}
 		// className).newInstance();
 		return null;
+	}
+
+	private String getDestinationIp() {
+		return dest_ip;
+	}
+
+	private void setDestinationIp(String dest_ip) {
+		this.dest_ip = dest_ip;
 	}
 }

@@ -19,10 +19,14 @@ import org.json.JSONObject;
 public class IndexScanSerializer implements OperatorSerializer {
 
 	private JSONObject				json;
-	private final IndexCollection	indexCollection;
+	private IndexCollection	indexCollection;
+
+	public IndexScanSerializer() {
+		// TODO Auto-generated constructor stub
+	}
 
 	public IndexScanSerializer(IndexCollection indexCollection) {
-		this.indexCollection = indexCollection;
+		this.setIndexCollection(indexCollection);
 	}
 
 	public String serialize(BasicOperator operator, int node_id) {
@@ -87,7 +91,7 @@ public class IndexScanSerializer implements OperatorSerializer {
 
 			BasicIndex indexScan = (BasicIndex) Class.forName(className)
 					.getConstructor(IndexCollection.class)
-					.newInstance(this.indexCollection);
+					.newInstance(this.getIndexCollection());
 
 			Collection<TriplePattern> triplePatterns = createTriplePatternsListFromJSON(json);
 			indexScan.setTriplePatterns(triplePatterns);
@@ -161,6 +165,14 @@ public class IndexScanSerializer implements OperatorSerializer {
 		}
 
 		return result;
+	}
+
+	private IndexCollection getIndexCollection() {
+		return indexCollection;
+	}
+
+	private void setIndexCollection(IndexCollection indexCollection) {
+		this.indexCollection = indexCollection;
 	}
 
 }
