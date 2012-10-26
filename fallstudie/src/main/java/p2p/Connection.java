@@ -88,8 +88,7 @@ public class Connection {
 			id = gen.nextInt(50000);
 		}
 
-		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port)
-				.setFileMessageLogger(new File("log.txt"));
+		PeerMaker peer = new PeerMaker(Number160.createHash(id)).setPorts(port);
 		return peer.makeAndListen();
 	}
 
