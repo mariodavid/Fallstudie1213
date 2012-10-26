@@ -15,7 +15,15 @@ import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
 import net.tomp2p.p2p.Peer;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class DeserializerTest.
+ */
 public class DeserializerTest implements Command {
+	
+	/* (non-Javadoc)
+	 * @see console.commands.Command#execute(java.util.Scanner, net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
+	 */
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
@@ -71,6 +79,9 @@ public class DeserializerTest implements Command {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see console.commands.Command#getDescription()
+	 */
 	public String getDescription() {
 		return "[key] [value] adds a given key value pair to the data storage. If add is used more than one time, all values will be stored within this key";
 	}

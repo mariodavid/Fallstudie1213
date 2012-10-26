@@ -11,7 +11,17 @@ import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.storage.Data;
 
+/**
+ * Gibt den lokalen Speicher eines Peers aus.
+ */
 public class GetLocalStorage implements Command {
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#execute(java.util.Scanner,
+	 * net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
+	 */
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
@@ -37,8 +47,8 @@ public class GetLocalStorage implements Command {
 						System.out.print(((Triple) result.getObject())
 								.toN3String());
 					} else if (result.getObject().getClass() == PeerAddress.class) {
-						System.out.print("PeerAdress von ID: " + ((PeerAddress) result.getObject())
-								.getID());
+						System.out.print("PeerAdress von ID: "
+								+ ((PeerAddress) result.getObject()).getID());
 					} else {
 						System.out.println("Unbekanntes Format!");
 					}
@@ -56,8 +66,6 @@ public class GetLocalStorage implements Command {
 			}
 
 		}
-		
-		
 
 		System.out.println("local storage size: "
 				+ peer.getPeerBean().getStorage()
@@ -65,6 +73,11 @@ public class GetLocalStorage implements Command {
 						.size());
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#getDescription()
+	 */
 	public String getDescription() {
 
 		return "returns all elements that are in the local peer storage";

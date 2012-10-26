@@ -27,10 +27,10 @@ public class P2PIndices extends Indices {
 
 
 	/**
-	 * uri literals sind f�r benannte graphen zust�ndig bzw. f�r die default
-	 * graphen, dann sind sie f�r die datens�tze
+	 * uri literals sind für benannte graphen zuständig bzw. für die default
+	 * graphen, dann sind sie für die datensätze
 	 * 
-	 * hier ist wichtig, dass f�r jedes P2PIndices ein neues P2PNetzwerk
+	 * hier ist wichtig, dass für jedes P2PIndices ein neues P2PNetzwerk
 	 * erstellt wird, wobei jedes P2P Netzwerk dann einer Datenbank entspricht,
 	 * die angesprochen werden kann
 	 * 

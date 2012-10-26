@@ -36,7 +36,6 @@ public class P2PAdapterTest {
 	public void setup() throws Exception {
 		// create n peers
 		this.peers = ExampleUtils.createAndAttachNodes(NODES, 4505);
-		System.out.println("size: " + peers.length);
 		ExampleUtils.bootstrap(peers);
 		master = peers[0];
 
@@ -56,7 +55,6 @@ public class P2PAdapterTest {
 		String testMessage = "HAAAAALLLLLLLLOOOO";
 		String response = p2pAdapter[gen.nextInt(NODES-1)].sendMessage(contentKey,
 				testMessage);
-		System.out.println("Antwort: " + response);
 		assertEquals(response, "Deine Nachricht war: " + testMessage);
 	}
 
