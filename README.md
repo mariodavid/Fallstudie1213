@@ -3,7 +3,7 @@ Dies ist das Repository für die [Fallstudie](http://www.uni-luebeck.de/index.ph
 
 Diese Fallstudie beschäftigt sich mit dem Bereich des Semantic Web im Zusammenhang mit einem verteilten System (P2P).
 
-Die Open Source Semantic Web Datenbank [Luposdate](https://github.com/luposdate/luposdate) des IFIS wird erweitert, so dass als Datenstore ein P2P Netzwerk verwendet wird. Als P2P Netzwerk wird [TomP2P](https://github.com/tomp2p/TomP2P) verwendet.
+Die Open Source Semantic Web Datenbank [Luposdate](https://github.com/luposdate/luposdate) des IFIS wird so erweitert, dass eine horizontale Skalierung über eine beliebige Anzahl von Knoten möglich ist. Um dieses Ziel zu erreichen wird ein P2P Netzwerk als Datastore für Luposdate verwendet. Zur Implementierung des P2P Netzwerkes wird die Open Source Java Bibliothek [TomP2P](https://github.com/tomp2p/TomP2P) verwendet.
 
 Ziel der Fallstudie ist es, SPARQL Anfragen per Lupodate an das P2P Netzwerk zu senden, wobei diese SPARQL Anfragen ggf. auch aufgeteilt und an die P2P Knoten gesendet werden können, um u.a. lokale Joins zu ermöglichen.
 
