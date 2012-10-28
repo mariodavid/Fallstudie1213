@@ -2,11 +2,9 @@ package console.commands;
 
 import java.util.Scanner;
 
-import p2p.distribution.DistributionFactory;
-
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-
 import net.tomp2p.p2p.Peer;
+import p2p.distribution.DistributionFactory;
 
 /**
  * Verändert die Verteilungsstrategie.
@@ -27,7 +25,8 @@ public class SetStrategy implements Command {
 		evaluator.getP2PAdapter().setDistributionStrategy(
 				DistributionFactory.create(newStrategyNumber));
 
-		System.out.println("Strategy set to:" + newStrategyNumber);
+		Command getStrategyCommand = new GetStrategy();
+		getStrategyCommand.execute(scanner, peer, evaluator);
 	}
 
 	/*
