@@ -50,9 +50,15 @@ public class TwoKeyDistribution extends AbstractDistributionStrategy {
 				+ triple.getObject().originalString();
 	}
 
+	@Override
 	public boolean contains(Triple triple) throws IOException {
 		return isInNetwork(getSP(triple), triple)
 				&& isInNetwork(getSO(triple), triple)
 				&& isInNetwork(getPO(triple), triple);
+	}
+
+	@Override
+	public String toString() {
+		return "2: TwoKeyStrategy [h(SP),h(SO),h(PO)]";
 	}
 }

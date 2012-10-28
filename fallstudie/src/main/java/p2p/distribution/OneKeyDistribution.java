@@ -35,11 +35,17 @@ public class OneKeyDistribution extends AbstractDistributionStrategy {
 
 	}
 
+	@Override
 	public boolean contains(Triple triple) throws IOException {
 		// ggf. optimierung indem man nur ein Fall abprueft
 		return isInNetwork(triple.getSubject().originalString(), triple)
 				&& isInNetwork(triple.getPredicate().originalString(), triple)
 				&& isInNetwork(triple.getObject().originalString(), triple);
+	}
+
+	@Override
+	public String toString() {
+		return "1: OneKeyStrategy [h(S),h(P),h(O)]";
 	}
 
 }
