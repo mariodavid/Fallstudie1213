@@ -83,7 +83,7 @@ public class DeserializerTest implements Command {
 	 * @see console.commands.Command#getDescription()
 	 */
 	public String getDescription() {
-		return "[key] [value] adds a given key value pair to the data storage. If add is used more than one time, all values will be stored within this key";
+		return "Testcase for deserialization of a sub graph from luposdate";
 	}
 
 }
