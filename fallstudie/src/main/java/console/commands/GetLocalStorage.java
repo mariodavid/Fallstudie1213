@@ -25,8 +25,33 @@ public class GetLocalStorage implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
-		System.out.println("local destination hash: " + peer.getPeerID());
-		System.out.println("KEY \t\t\t\t\t        VALUE");
+
+		printHeader(scanner, peer, evaluator);
+
+		printElements(peer);
+
+		printFooter(peer);
+	}
+
+	private void printHeader(Scanner scanner, Peer peer,
+			P2PIndexQueryEvaluator evaluator) {
+
+		Command getMyIdCommand = new GetMyID();
+		getMyIdCommand.execute(scanner, peer, evaluator);
+
+		System.out.println();
+		System.out.println("Key\t\t\t\t\t\tValue");
+	}
+
+	private void printFooter(Peer peer) {
+		System.out.println();
+		System.out.println("local storagesize: "
+				+ peer.getPeerBean().getStorage()
+						.findContentForResponsiblePeerID(peer.getPeerID())
+						.size());
+	}
+
+	private void printElements(Peer peer) {
 		for (Number160 key : peer.getPeerBean().getStorage()
 				.findContentForResponsiblePeerID(peer.getPeerID())) {
 
@@ -66,11 +91,6 @@ public class GetLocalStorage implements Command {
 			}
 
 		}
-
-		System.out.println("local storage size: "
-				+ peer.getPeerBean().getStorage()
-						.findContentForResponsiblePeerID(peer.getPeerID())
-						.size());
 	}
 
 	/*
