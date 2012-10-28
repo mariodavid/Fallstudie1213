@@ -5,11 +5,25 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import luposdate.LuposServer;
-
 import p2p.Connection;
 import p2p.P2PAdapter;
-
-import console.commands.*;
+import console.commands.Add;
+import console.commands.Command;
+import console.commands.DeserializerTest;
+import console.commands.Get;
+import console.commands.GetAllNodes;
+import console.commands.GetExampleQueries;
+import console.commands.GetLocalStorage;
+import console.commands.GetMyID;
+import console.commands.GetPeerForContent;
+import console.commands.GetStrategy;
+import console.commands.Help;
+import console.commands.Put;
+import console.commands.Query;
+import console.commands.Quit;
+import console.commands.Remove;
+import console.commands.SendMessage;
+import console.commands.SetStrategy;
 
 /**
  * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
@@ -17,9 +31,9 @@ import console.commands.*;
  */
 public class Console {
 	/** Verbindung. */
-	private final Connection connection;
+	private final Connection	connection;
 	/** Lupos-Server. */
-	private final LuposServer server;
+	private final LuposServer	server;
 
 	/**
 	 * Konstruktor.
@@ -34,8 +48,8 @@ public class Console {
 	 * die Befehle von der Standard Eingabe gelesen und verarbeitet.
 	 */
 	public void start() throws ClassNotFoundException, IOException {
-		System.out
-				.println("############ KONSOLENMODUS GESTARTET ############");
+		System.out.println();
+		System.out.println("############ Console ############");
 		System.out.println("Type \"help\" for possible commands");
 		String input = null;
 		Scanner scanner = new Scanner(System.in);
@@ -72,6 +86,7 @@ public class Console {
 		commands.put("getlocalstorage", new GetLocalStorage());
 		commands.put("query", new Query());
 		commands.put("setstrategy", new SetStrategy());
+		commands.put("getstrategy", new GetStrategy());
 		commands.put("getexamplequeries", new GetExampleQueries());
 		commands.put("getpeerforcontent", new GetPeerForContent());
 		commands.put("test", new DeserializerTest());
@@ -92,6 +107,7 @@ public class Console {
 	 */
 	public static void main(String[] args) throws Exception {
 
+
 		Connection connection = new Connection();
 		LuposServer server = new LuposServer();
 
@@ -99,26 +115,26 @@ public class Console {
 
 		switch (args.length) {
 		// Standardfall: Broadcast und Port ist 4001
-		case 0:
-			connection.connect();
-			P2PAdapter config = new P2PAdapter(connection.getPeer(),
-					server.getEvaluator());
-			server.start(config);
-			console.start();
-			break;
-		// IP + remote Port + local Port
-		case 3:
-			String ip = args[0];
-			int remotePort = Integer.parseInt(args[1]);
-			int localPort = Integer.parseInt(args[2]);
+			case 0:
+				connection.connect();
+				P2PAdapter config = new P2PAdapter(connection.getPeer(),
+						server.getEvaluator());
+				server.start(config);
+				console.start();
+				break;
+			// IP + remote Port + local Port
+			case 3:
+				String ip = args[0];
+				int remotePort = Integer.parseInt(args[1]);
+				int localPort = Integer.parseInt(args[2]);
 
-			connection.connect(ip, remotePort, localPort);
-			console.start();
-			break;
+				connection.connect(ip, remotePort, localPort);
+				console.start();
+				break;
 
-		default:
-			System.out.println("usage: program [ip] [port]");
-			break;
+			default:
+				System.out.println("usage: program [ip] [port]");
+				break;
 		}
 	}
 }
