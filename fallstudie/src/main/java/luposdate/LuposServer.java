@@ -3,14 +3,13 @@ package luposdate;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import p2p.P2PAdapter;
-
 import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.bindings.BindingsMap;
 import lupos.datastructures.items.literal.LiteralFactory;
 import lupos.datastructures.items.literal.LiteralFactory.MapType;
 import lupos.datastructures.items.literal.URILiteral;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
+import p2p.P2PAdapter;
 
 public class LuposServer {
 
@@ -24,6 +23,7 @@ public class LuposServer {
 
 	public void start(P2PAdapter config) {
 
+		System.out.println("starting up lupos instance...");
 		try {
 			Bindings.instanceClass = BindingsMap.class;
 

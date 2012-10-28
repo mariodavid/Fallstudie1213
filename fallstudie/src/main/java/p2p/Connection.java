@@ -1,6 +1,5 @@
 package p2p;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -47,6 +46,9 @@ public class Connection {
 			throws Exception, UnknownHostException, ClassNotFoundException,
 			IOException {
 
+		System.out.println("starting up p2p to " + ip + ":" + remotePort
+				+ "...");
+
 		this.peer = createPeer(localPort, -1);
 		FutureBootstrap fb = this.peer.bootstrap()
 				.setInetAddress(InetAddress.getByName(ip)).setPorts(remotePort)
@@ -63,6 +65,9 @@ public class Connection {
 	 */
 	public boolean connect() throws Exception, ClassNotFoundException,
 			IOException {
+
+		System.out.println("starting up p2p via broadcast...");
+
 		this.peer = this.createPeer(DEFAULT_PORT, -1);
 
 		FutureBootstrap fb = this.peer.bootstrap().setPorts(DEFAULT_PORT)
