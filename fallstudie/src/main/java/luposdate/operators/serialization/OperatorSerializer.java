@@ -7,8 +7,8 @@ import org.json.JSONObject;
 
 public interface OperatorSerializer {
 
-	public String serialize(BasicOperator operator, int node_id);
-
+	public JSONObject serialize(BasicOperator operator, int node_id)
+			throws JSONException;
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException;
 }

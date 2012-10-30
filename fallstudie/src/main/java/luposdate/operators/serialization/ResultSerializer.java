@@ -24,7 +24,8 @@ public class ResultSerializer implements OperatorSerializer {
 		this.setDestinationIp(dest_ip);
 		this.request_id = request_id;
 	}
-	public String serialize(BasicOperator operator, int node_id) {
+
+	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 		Result result = (Result) operator;
 		try {
@@ -36,7 +37,7 @@ public class ResultSerializer implements OperatorSerializer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		return json.toString();
+		return json;
 	}
 
 	public BasicOperator deserialize(JSONObject serialiezedOperator)

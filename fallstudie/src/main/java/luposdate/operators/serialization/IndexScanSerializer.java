@@ -29,7 +29,7 @@ public class IndexScanSerializer implements OperatorSerializer {
 		this.setIndexCollection(indexCollection);
 	}
 
-	public String serialize(BasicOperator operator, int node_id) {
+	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 
 		BasicIndex indexScan = (BasicIndex) operator;
@@ -53,7 +53,7 @@ public class IndexScanSerializer implements OperatorSerializer {
 			e.printStackTrace();
 		}
 
-		return json.toString();
+		return json;
 	}
 
 	private Collection<JSONObject> createTriplePatternItemsArray(

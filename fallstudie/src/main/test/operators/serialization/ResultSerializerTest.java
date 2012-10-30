@@ -30,9 +30,8 @@ public class ResultSerializerTest {
 	public void testSerialize() {
 
 		int node_id = 123;
-		String actual = this.serializer.serialize(result, node_id);
 		try {
-			JSONObject obj = new JSONObject(actual);
+			JSONObject obj = this.serializer.serialize(result, node_id);
 			assertEquals(obj.get("type"), Result.class.getName());
 			assertEquals(obj.get("node_id"), node_id);
 			assertEquals(obj.get("dest_ip"), this.dest_ip);
@@ -47,9 +46,8 @@ public class ResultSerializerTest {
 	public void testSerializeDefault() {
 
 		int node_id = 123;
-		String actual = this.serializerDefault.serialize(result, node_id);
 		try {
-			JSONObject obj = new JSONObject(actual);
+			JSONObject obj = this.serializerDefault.serialize(result, node_id);
 			assertEquals(obj.get("type"), Result.class.getName());
 			assertEquals(obj.get("node_id"), node_id);
 			assertEquals(obj.get("dest_ip"), "0.0.0.0");
@@ -64,11 +62,10 @@ public class ResultSerializerTest {
 	public void testDeserialize() {
 
 		int node_id = 123;
-		String serializedString = this.serializer.serialize(result, node_id);
 
 		try {
 			Result actual = (Result) this.serializer
-					.deserialize(new JSONObject(serializedString));
+					.deserialize(this.serializer.serialize(result, node_id));
 			
 			assertEquals(actual.getClass(), result.getClass());
 

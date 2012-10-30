@@ -43,9 +43,8 @@ public class IndexScanSerializerTest {
 
 		int node_id = 123;
 
-		String actual = this.serializer.serialize(indexScan, node_id);
 		try {
-			JSONObject obj = new JSONObject(actual);
+			JSONObject obj = this.serializer.serialize(indexScan, node_id);
 			assertEquals(P2PIndexScan.class.getName(), obj.get("type"));
 			assertEquals(obj.get("node_id"), node_id);
 
@@ -59,11 +58,10 @@ public class IndexScanSerializerTest {
 	public void testDeserialize() {
 
 		int node_id = 123;
-		String serializedString = this.serializer.serialize(indexScan, node_id);
 
 		try {
 			P2PIndexScan actualIndexScan = (P2PIndexScan) this.serializer
-					.deserialize(new JSONObject(serializedString));
+					.deserialize(this.serializer.serialize(indexScan, node_id));
 
 			assertEquals(actualIndexScan.getClass(), indexScan.getClass());
 
