@@ -68,7 +68,7 @@ public class ResultSerializerTest {
 
 		try {
 			Result actual = (Result) this.serializer
-					.deserialize(serializedString);
+					.deserialize(new JSONObject(serializedString));
 			
 			assertEquals(actual.getClass(), result.getClass());
 

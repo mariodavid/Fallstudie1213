@@ -63,7 +63,7 @@ public class IndexScanSerializerTest {
 
 		try {
 			P2PIndexScan actualIndexScan = (P2PIndexScan) this.serializer
-					.deserialize(serializedString);
+					.deserialize(new JSONObject(serializedString));
 
 			assertEquals(actualIndexScan.getClass(), indexScan.getClass());
 

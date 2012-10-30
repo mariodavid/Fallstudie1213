@@ -47,7 +47,7 @@ public class IndexCollectionSerializerTest {
 
 		try {
 			IndexCollection actual = (IndexCollection) this.serializer
-					.deserialize(serializedString);
+					.deserialize(new JSONObject(serializedString));
 
 			assertEquals(actual.getClass(), indexCollection.getClass());
 
