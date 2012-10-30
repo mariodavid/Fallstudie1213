@@ -1,9 +1,12 @@
 package p2p;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedList;
 import java.util.Random;
 import java.util.SortedSet;
 
+import lupos.datastructures.items.Triple;
 import lupos.engine.operators.BasicOperator;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import luposdate.operators.serialization.SubGraphDeserializer;
@@ -17,6 +20,7 @@ import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
+import net.tomp2p.storage.Data;
 
 import org.jboss.netty.handler.timeout.TimeoutException;
 
@@ -28,7 +32,7 @@ import p2p.distribution.DistributionStrategy;
  * Lupos-Server dar. Daher gibt es in dieser Klasse sowohl eine Refenz vom Peer
  * Objekt, sowie von der Lupos Evaluator Instanz.
  */
-public class P2PAdapter {
+public class P2PAdapter implements DataStoreAdapter {
 	/**
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
@@ -89,7 +93,7 @@ public class P2PAdapter {
 	 * 
 	 * @return den Peer
 	 */
-	public Peer getPeer() {
+	private Peer getPeer() {
 		return peer;
 	}
 
@@ -103,20 +107,15 @@ public class P2PAdapter {
 		this.peer = peer;
 	}
 
-	/**
-	 * Gibt die Verteilungsstrategie zurück.
-	 * 
-	 * @return die Verteilungsstrategie
+	/* (non-Javadoc)
+	 * @see p2p.DataStoreAdapter#getDistributionStrategy()
 	 */
 	public DistributionStrategy getDistributionStrategy() {
 		return distributionStrategy;
 	}
 
-	/**
-	 * Setzt die Verteilungsstrategie.
-	 * 
-	 * @param distributionStrategy
-	 *            die neue Verteilungsstrategie
+	/* (non-Javadoc)
+	 * @see p2p.DataStoreAdapter#setDistributionStrategy(p2p.distribution.DistributionStrategy)
 	 */
 	public void setDistributionStrategy(
 			DistributionStrategy distributionStrategy) {
@@ -212,5 +211,67 @@ public class P2PAdapter {
 				.release(channel.getChannelCreator());
 
 		return route.first();
+	}
+
+	/* (non-Javadoc)
+	 * @see p2p.DataStoreAdapter#get(java.lang.String)
+	 */
+	public Collection<Triple> get(String key) {
+
+		Collection<Triple> result = new LinkedList<Triple>();
+
+		// perform p2p operation
+		FutureDHT future = this.getPeer().get(Number160.createHash(key))
+				.setAll().start();
+		future.awaitUninterruptibly();
+
+		// add all p2p results to the result collection
+		for (Data r : future.getDataMap().values()) {
+			try {
+				result.add((Triple) r.getObject());
+
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see p2p.DataStoreAdapter#add(lupos.datastructures.items.Triple)
+	 */
+	public boolean add(Triple triple) {
+		try {
+			this.getDistributionStrategy().distribute(triple);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return false;
+		}
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see p2p.DataStoreAdapter#remove(lupos.datastructures.items.Triple)
+	 */
+	public boolean remove(Triple triple) {
+		try {
+			this.getDistributionStrategy().remove(triple);
+		} catch (IOException e) {
+			return false;
+		}
+		return true;
+	}
+	
+	/* (non-Javadoc)
+	 * @see p2p.DataStoreAdapter#contains(lupos.datastructures.items.Triple)
+	 */
+	public boolean contains(Triple triple) {
+		try {
+			return this.getDistributionStrategy().contains(triple);
+		} catch (IOException e) {
+			return false;
+		}
 	}
 }

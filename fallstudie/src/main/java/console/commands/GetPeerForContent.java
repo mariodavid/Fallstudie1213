@@ -2,6 +2,8 @@ package console.commands;
 
 import java.util.Scanner;
 
+import p2p.P2PAdapter;
+
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 
 import net.tomp2p.p2p.Peer;
@@ -23,7 +25,7 @@ public class GetPeerForContent implements Command {
 
 		Number160 locationKey = Number160.createHash(input);
 		
-		PeerAddress destination = evaluator.getP2PAdapter().getPeerAddressFromLocationKey(locationKey);
+		PeerAddress destination = ((P2PAdapter) evaluator.getP2PAdapter()).getPeerAddressFromLocationKey(locationKey);
 
 		System.out.println("location key: " + locationKey);
 		System.out.println("destination hash: " + destination);
