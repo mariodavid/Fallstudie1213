@@ -10,7 +10,7 @@ public class IndexCollectionSerializer implements OperatorSerializer {
 
 	private JSONObject	json;
 
-	public String serialize(BasicOperator operator, int node_id) {
+	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 
 		IndexCollection indexCollection = (IndexCollection) operator;
@@ -22,12 +22,12 @@ public class IndexCollectionSerializer implements OperatorSerializer {
 			e.printStackTrace();
 		}
 
-		return json.toString();
+		return json;
 	}
 
-	public BasicOperator deserialize(String serialiezedOperator)
+	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
-		json = new JSONObject(serialiezedOperator);
+		json = serialiezedOperator;
 		try {
 			String className = (String) json.get("type");
 

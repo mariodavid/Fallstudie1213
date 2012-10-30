@@ -25,9 +25,9 @@ public class IndexCollectionSerializerTest {
 	public void testSerialize() {
 
 		int node_id = 123;
-		String actual = this.serializer.serialize(indexCollection, node_id);
 		try {
-			JSONObject obj = new JSONObject(actual);
+			JSONObject obj = this.serializer
+					.serialize(indexCollection, node_id);
 			assertEquals(obj.get("type"), IndexCollection.class.getName());
 			assertEquals(obj.get("node_id"), node_id);
 			assertEquals(obj.get("root"), true);
@@ -42,12 +42,11 @@ public class IndexCollectionSerializerTest {
 	public void testDeserialize() {
 
 		int node_id = 123;
-		String serializedString = this.serializer.serialize(indexCollection,
-				node_id);
 
 		try {
 			IndexCollection actual = (IndexCollection) this.serializer
-					.deserialize(serializedString);
+					.deserialize(this.serializer.serialize(indexCollection,
+							node_id));
 
 			assertEquals(actual.getClass(), indexCollection.getClass());
 
