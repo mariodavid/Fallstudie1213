@@ -2,6 +2,8 @@ package console.commands;
 
 import java.util.Scanner;
 
+import p2p.P2PAdapter;
+
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
@@ -26,9 +28,9 @@ public class SendMessage implements Command {
 		Number160 locationKey = Number160.createHash(input);
 
 		System.out.println("Dieser Knoten ist dafuer zustaendig: "
-				+ evaluator.getP2PAdapter().getPeerAddressFromLocationKey(locationKey));
+				+ ((P2PAdapter) evaluator.getP2PAdapter()).getPeerAddressFromLocationKey(locationKey));
 		
-		String response = evaluator.getP2PAdapter().sendMessage(locationKey,
+		String response = ((P2PAdapter) evaluator.getP2PAdapter()).sendMessage(locationKey,
 				message);
 
 		System.out.println(response);

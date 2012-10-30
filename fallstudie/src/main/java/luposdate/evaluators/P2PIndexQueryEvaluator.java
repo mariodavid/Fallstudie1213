@@ -27,6 +27,7 @@ package luposdate.evaluators;
 import java.util.Collection;
 import java.util.Date;
 
+import p2p.DataStoreAdapter;
 import p2p.P2PAdapter;
 
 import lupos.datastructures.dbmergesortedds.heap.Heap;
@@ -49,7 +50,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 
 	private P2PAdapter	p2pAdapter;
 
-	public P2PAdapter getP2PAdapter() {
+	public DataStoreAdapter getP2PAdapter() {
 		return p2pAdapter;
 	}
 
