@@ -4,7 +4,9 @@ import java.io.IOException;
 import java.util.Random;
 import java.util.SortedSet;
 
+import lupos.engine.operators.BasicOperator;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
+import luposdate.operators.serialization.SubGraphDeserializer;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
@@ -69,6 +71,13 @@ public class P2PAdapter {
 				 * AN DIESER STELLE MUSS DIE ANKOMMENDE NACHRICHT VERARBEITET
 				 * WERDEN!!!
 				 */
+
+				BasicOperator rootNode = SubGraphDeserializer
+						.deserialize((String) request);
+
+				evaluator.setRootNode(rootNode);
+				evaluator.evaluateQuery();
+
 				System.out.println(request);
 				return "Deine Nachricht war: " + request;
 			}
