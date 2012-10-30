@@ -82,10 +82,10 @@ public class IndexScanSerializer implements OperatorSerializer {
 		return itemJson;
 	}
 
-	public BasicOperator deserialize(String serialiezedOperator)
+	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 
-		json = new JSONObject(serialiezedOperator);
+		json = serialiezedOperator;
 		try {
 			String className = (String) json.get("type");
 

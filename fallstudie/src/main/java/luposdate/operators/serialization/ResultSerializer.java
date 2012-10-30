@@ -39,9 +39,10 @@ public class ResultSerializer implements OperatorSerializer {
 		return json.toString();
 	}
 
-	public BasicOperator deserialize(String serialiezedOperator)
+	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
-		json = new JSONObject(serialiezedOperator);
+		// TODO: weg machen diese unnötige zuweisung
+		json = serialiezedOperator;
 		String className = (String) json.get("type");
 		try {
 			Result result = (Result) Class.forName(className).newInstance();
