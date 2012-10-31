@@ -3,9 +3,6 @@ package luposdate.operators;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.client.formatreader.MIMEFormatReader;
@@ -19,6 +16,9 @@ import luposdate.operators.serialization.IndexCollectionSerializer;
 import luposdate.operators.serialization.IndexScanSerializer;
 import luposdate.operators.serialization.OperatorSerializer;
 import luposdate.operators.serialization.ResultSerializer;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * enthaelt die Operatoren, die alle an den Empfaengerknoten verschickt werden
