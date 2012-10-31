@@ -22,20 +22,20 @@ import luposdate.operators.SubGraphContainer;
 /**
  * genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung
  * des Anfragegraphen. Bei P2PRuleGlobalJoin war alles noch zentralistisch. Hier
- * sollen nun Optimierungen eingef�hrt werden, bei denen dann Teilgraphen
+ * sollen nun Optimierungen eingeführt werden, bei denen dann Teilgraphen
  * verschickt werden.
  * 
  * Wir befinden uns in der Kommunikation an der Stelle (1)
  * 
  * Teil Anfragegraph -------- (1) ------------------> (2) ----------- |Sender|
- * |Empf�nger| -------- (4) <------------------ (3) ----------- Anfrage Result
+ * |Empfänger| -------- (4) <------------------ (3) ----------- Anfrage Result
  * 
  * Idee von Sven: Man sollte nun eine Klasse erstellen, die von
  * IndexScanOperators erbt (wahrscheinlich die Klasse) und es wird nun eine
  * einzelne IndexScanOperator die hier auftriff durch diese geerbte Klasse
  * ersetzt. Diese Klasse hat jetzt mehrere Operatoren in sich, so dass neben der
- * IndexScanOperator auch ein Result Operator enth�lt. Dieser Result Operator
- * enth�lt die P2PApplication klasse als Application. Diese drei Operatoren
+ * IndexScanOperator auch ein Result Operator enthält. Dieser Result Operator
+ * enthält die P2PApplication klasse als Application. Diese drei Operatoren
  * werden von der von IndexCollection erbenden Klasse verschickt und das
  * Ergebnis wird wieder entgegen genommen.
  */

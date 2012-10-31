@@ -2,6 +2,7 @@ package luposdate.operators.serialization;
 
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
+import lupos.engine.operators.index.memoryindex.MemoryIndex;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,7 +32,8 @@ public class IndexCollectionSerializer implements OperatorSerializer {
 		try {
 			String className = (String) json.get("type");
 
-			IndexCollection indexCollection = (IndexCollection) Class.forName(
+			MemoryIndex indexCollection = (MemoryIndex) Class
+					.forName(
 					className).newInstance();
 
 			return indexCollection;

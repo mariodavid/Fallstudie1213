@@ -112,14 +112,17 @@ public class Console {
 		LuposServer server = new LuposServer();
 
 		Console console = new Console(connection, server);
+		P2PAdapter config = null;
 
 		switch (args.length) {
 		// Standardfall: Broadcast und Port ist 4001
 			case 0:
 				connection.connect();
-				P2PAdapter config = new P2PAdapter(connection.getPeer(),
-						server.getEvaluator());
+				config = new P2PAdapter(connection.getPeer());
 				server.start(config);
+
+				config.setEvaluator(server.getEvaluator());
+
 				console.start();
 				break;
 			// IP + remote Port + local Port
@@ -129,6 +132,12 @@ public class Console {
 				int localPort = Integer.parseInt(args[2]);
 
 				connection.connect(ip, remotePort, localPort);
+
+				config = new P2PAdapter(connection.getPeer());
+				server.start(config);
+
+				config.setEvaluator(server.getEvaluator());
+
 				console.start();
 				break;
 

@@ -1,15 +1,27 @@
 package p2p;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
-import lupos.engine.operators.BasicOperator;
+import lupos.datastructures.items.Variable;
+import lupos.datastructures.items.literal.LazyLiteral;
+import lupos.engine.operators.application.Output;
+import lupos.engine.operators.messages.BoundVariablesMessage;
+import lupos.engine.operators.singleinput.Result;
+import lupos.engine.operators.tripleoperator.TriplePattern;
+import lupos.gui.Demo_Applet;
+import lupos.gui.GUI;
+import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
+import lupos.gui.operatorgraph.viewer.Viewer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-import luposdate.operators.serialization.SubGraphDeserializer;
+import luposdate.index.P2PIndexCollection;
+import luposdate.index.P2PIndexScan;
+import luposdate.operators.P2PApplication;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
@@ -26,6 +38,7 @@ import org.jboss.netty.handler.timeout.TimeoutException;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
+import xpref.XPref;
 
 /**
  * Der P2P Adapter stellt das Bindeglied zwischen dem P2P Netzwerk und dem
@@ -44,7 +57,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	public P2PIndexQueryEvaluator evaluator;
 	/** Peer Referenz. */
 	public Peer peer;
-	/** aktuelle Strategie. */
+	/** aktuelle Verteilungsstrategie. */
 	public DistributionStrategy distributionStrategy;
 
 	/**
@@ -56,13 +69,16 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * @param evaluator
 	 *            Lupos Evaluator
 	 */
-	public P2PAdapter(Peer peer, P2PIndexQueryEvaluator evaluator) {
-		this.evaluator = evaluator;
+	public P2PAdapter(Peer peer) {
 		this.peer = peer;
 		listenForDataMessages();
 		initDistributionStrategy();
 	}
 
+	public void setEvaluator(P2PIndexQueryEvaluator evaluator) {
+		this.evaluator = evaluator;
+	}
+	
 	/**
 	 * Beim Aufrufen dieser Methode wird ein Listener erzeugt. Ankommende
 	 * Nachrichten werden hier verarbeitet. Die Kommunikation läuft über Netty.
@@ -76,14 +92,75 @@ public class P2PAdapter implements DataStoreAdapter {
 				 * WERDEN!!!
 				 */
 
-				BasicOperator rootNode = SubGraphDeserializer
-						.deserialize((String) request);
+				P2PApplication p2pApplication = new P2PApplication(sender
+						.getInetAddress().getHostAddress());
+				// BasicOperator rootNode = SubGraphDeserializer
+				// .deserialize(
+				// (String) request, p2pApplication);
 
-				evaluator.setRootNode(rootNode);
+				P2PIndexCollection collection = new P2PIndexCollection(
+						evaluator.getDataset());
+
+				P2PIndexScan indexScan = new P2PIndexScan(collection);
+				collection.addSucceedingOperator(indexScan);
+
+				LinkedList<TriplePattern> patterns = new LinkedList<TriplePattern>();
+
+				// url ausdenken
+				patterns.add(new TriplePattern(new Variable("s"), LazyLiteral
+						.getLiteral("<p>"), new Variable("o")));
+				indexScan.setTriplePatterns(patterns);
+
+				Result result = new Result();
+
+				// TODO: hier muss jetzt die P2P Application rein, damit dann
+				// auch
+				// tatsaechlich zuruck geschickt wird und nicht einfach nur
+				// ausgegeben
+				// wird
+				result.addApplication(new Output());
+				result.addApplication(p2pApplication);
+
+				indexScan.addSucceedingOperator(result);
+
+				// erzeugt die Vorgaenger der Collection, wie bei
+				// addSucceedingOperator
+				// (rekursiv fuer den gesamten Baum)
+				collection.setParents();
+
+				// erkennt zyklen im op graphen (vermutlich nicht relevant,
+				// evtl. bei
+				// spaeteren erweiterungen relevant)
+				collection.detectCycles();
+
+				// berechnet an welcher stelle welche variablen gebunden sind
+				// und
+				// gebunden sein koennen
+				collection.sendMessage(new BoundVariablesMessage());
+
+				// uebergabe des root node an den evaluator zur ausfuehrung
+				evaluator.setRootNode(collection);
+
+				// evaluator.setRootNode(rootNode);
 				evaluator.evaluateQuery();
 
+				// while (!p2pApplication.isReady()) {
+				// Thread.sleep(10);
+				// }
+
+				try {
+					XPref.getInstance(Demo_Applet.class
+							.getResource("/preferencesMenu.xml"));
+				} catch (Exception e) {
+					XPref.getInstance(new URL("file:"
+							+ GUI.class.getResource("/preferencesMenu.xml")
+									.getFile()));
+				}
+				new Viewer(new GraphWrapperBasicOperator(evaluator
+						.getRootNode()), "test", true, false);
+
 				System.out.println(request);
-				return "Deine Nachricht war: " + request;
+				return p2pApplication.getResult();
 			}
 		});
 	}

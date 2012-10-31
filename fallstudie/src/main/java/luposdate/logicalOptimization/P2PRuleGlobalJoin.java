@@ -24,8 +24,8 @@ import luposdate.index.P2PIndexScan;
  * Teilgraphen verschickt.
  * 
  * Somit stellt diese Klasse die Basisimplementierung dar. Diese kann als
- * Referenz dienen f�r die verschiedenen Optimierungen bei denen Teilgraphen
- * verschickt werden und diese k�nnen dann in Benchmarks gegeneinander
+ * Referenz dienen für die verschiedenen Optimierungen bei denen Teilgraphen
+ * verschickt werden und diese können dann in Benchmarks gegeneinander
  * "antreten"
  * 
  */

@@ -9,6 +9,7 @@ public interface OperatorSerializer {
 
 	public JSONObject serialize(BasicOperator operator, int node_id)
 			throws JSONException;
+
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException;
 }

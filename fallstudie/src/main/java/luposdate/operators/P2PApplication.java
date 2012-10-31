@@ -1,5 +1,6 @@
 package luposdate.operators;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.Set;
@@ -34,6 +35,22 @@ import lupos.engine.operators.application.Application;
  */
 public class P2PApplication implements Application {
 
+	private final String	dest_ip;
+
+	private String			result;
+
+	public P2PApplication(String dest_ip) {
+		this.dest_ip = dest_ip;
+
+	}
+
+	public boolean isReady() {
+		return result != null;
+	}
+
+	public String getResult() {
+		return result;
+	}
 	public void call(QueryResult res) {
 		/*
 		 * Anfrageresultat (QueryResult res) kommt an (wir befinden uns auf der
@@ -50,7 +67,7 @@ public class P2PApplication implements Application {
 		Formatter formatter = new XMLFormatter();
 
 		// hier kommt die Implementierung fur das P2P Netz hin
-		OutputStream os = null;
+		OutputStream os = new ByteArrayOutputStream();
 
 
 		// TODO: schlecht, weil hier das Iteratorkonzept verletzt wird. es muss
@@ -59,6 +76,8 @@ public class P2PApplication implements Application {
 
 		try {
 			formatter.writeResult(os, variables, res);
+
+			result = os.toString();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

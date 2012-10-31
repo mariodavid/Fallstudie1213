@@ -13,6 +13,7 @@ import lupos.engine.operators.tripleoperator.TriplePattern;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
+import luposdate.operators.P2PApplication;
 import net.tomp2p.p2p.Peer;
 
 // TODO: Auto-generated Javadoc
@@ -51,6 +52,7 @@ public class DeserializerTest implements Command {
 		// tatsaechlich zuruck geschickt wird und nicht einfach nur ausgegeben
 		// wird
 		result.addApplication(new Output());
+		result.addApplication(new P2PApplication("192.168.0.121"));
 
 		indexScan.addSucceedingOperator(result);
 
