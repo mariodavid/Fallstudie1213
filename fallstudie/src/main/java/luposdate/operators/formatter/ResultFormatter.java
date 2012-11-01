@@ -6,25 +6,43 @@ import lupos.engine.operators.singleinput.Result;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Implementiert die Formatierung für den Result Operator.
+ */
 public class ResultFormatter implements OperatorFormatter {
 
+	/** The json. */
 	private JSONObject json;
+	
+	/** The dest_ip. */
 	private String dest_ip;
+	
+	/** The request_id. */
 	private final int request_id;
 
 	/**
-	 * Use: public ResultSerializer(String dest_ip, int request_id)
+	 * Use: public ResultSerializer(String dest_ip, int request_id).
 	 */
 	public ResultFormatter() {
 		setDestinationIp("0.0.0.0");
 		request_id = 0;
 	}
 
+	/**
+	 * Instantiates a new result formatter.
+	 *
+	 * @param dest_ip the dest_ip
+	 * @param request_id the request_id
+	 */
 	public ResultFormatter(String dest_ip, int request_id) {
 		this.setDestinationIp(dest_ip);
 		this.request_id = request_id;
 	}
 
+	/* (non-Javadoc)
+	 * @see luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine.operators.BasicOperator, int)
+	 */
 	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 		Result result = (Result) operator;
@@ -40,6 +58,9 @@ public class ResultFormatter implements OperatorFormatter {
 		return json;
 	}
 
+	/* (non-Javadoc)
+	 * @see luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.JSONObject)
+	 */
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 		// TODO: weg machen diese unnötige zuweisung
@@ -62,10 +83,20 @@ public class ResultFormatter implements OperatorFormatter {
 		return null;
 	}
 
+	/**
+	 * Gets the destination ip.
+	 *
+	 * @return the destination ip
+	 */
 	private String getDestinationIp() {
 		return dest_ip;
 	}
 
+	/**
+	 * Sets the destination ip.
+	 *
+	 * @param dest_ip the new destination ip
+	 */
 	private void setDestinationIp(String dest_ip) {
 		this.dest_ip = dest_ip;
 	}

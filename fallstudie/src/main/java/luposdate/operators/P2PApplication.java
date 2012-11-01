@@ -11,6 +11,7 @@ import lupos.endpoint.server.format.Formatter;
 import lupos.endpoint.server.format.XMLFormatter;
 import lupos.engine.operators.application.Application;
 
+// TODO: Auto-generated Javadoc
 /**
  * Diese Klasse wird mit zusammen mit dem Triple Pattern verschickt und dann bei
  * dem Empfänger von dem ResultOperator aufgerufen (call Methode). Wir befinden
@@ -35,22 +36,43 @@ import lupos.engine.operators.application.Application;
  */
 public class P2PApplication implements Application {
 
+	/** The dest_ip. */
 	private final String	dest_ip;
 
+	/** The result. */
 	private String			result;
 
+	/**
+	 * Instantiates a new p2 p application.
+	 *
+	 * @param dest_ip the dest_ip
+	 */
 	public P2PApplication(String dest_ip) {
 		this.dest_ip = dest_ip;
 
 	}
 
+	/**
+	 * Checks if is ready.
+	 *
+	 * @return true, if is ready
+	 */
 	public boolean isReady() {
 		return result != null;
 	}
 
+	/**
+	 * Gets the result.
+	 *
+	 * @return the result
+	 */
 	public String getResult() {
 		return result;
 	}
+	
+	/* (non-Javadoc)
+	 * @see lupos.engine.operators.application.Application#call(lupos.datastructures.queryresult.QueryResult)
+	 */
 	public void call(QueryResult res) {
 		/*
 		 * Anfrageresultat (QueryResult res) kommt an (wir befinden uns auf der
@@ -84,21 +106,33 @@ public class P2PApplication implements Application {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.engine.operators.application.Application#start(lupos.engine.operators.application.Application.Type)
+	 */
 	public void start(Type type) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.engine.operators.application.Application#stop()
+	 */
 	public void stop() {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.engine.operators.application.Application#deleteResult(lupos.datastructures.queryresult.QueryResult)
+	 */
 	public void deleteResult(QueryResult res) {
 		// TODO Auto-generated method stub
 
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.engine.operators.application.Application#deleteResult()
+	 */
 	public void deleteResult() {
 		// TODO Auto-generated method stub
 

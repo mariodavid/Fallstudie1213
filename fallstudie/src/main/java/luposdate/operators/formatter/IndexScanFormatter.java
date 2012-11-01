@@ -16,19 +16,37 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// TODO: Auto-generated Javadoc
+/**
+ * Implementiert die Formatierung für den IndexScan Operator.
+ */
 public class IndexScanFormatter implements OperatorFormatter {
 
+	/** The json. */
 	private JSONObject				json;
+	
+	/** The index collection. */
 	private IndexCollection	indexCollection;
 
+	/**
+	 * Instantiates a new index scan formatter.
+	 */
 	public IndexScanFormatter() {
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Instantiates a new index scan formatter.
+	 *
+	 * @param indexCollection the index collection
+	 */
 	public IndexScanFormatter(IndexCollection indexCollection) {
 		this.setIndexCollection(indexCollection);
 	}
 
+	/* (non-Javadoc)
+	 * @see luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine.operators.BasicOperator, int)
+	 */
 	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 
@@ -56,6 +74,13 @@ public class IndexScanFormatter implements OperatorFormatter {
 		return json;
 	}
 
+	/**
+	 * Creates the triple pattern items array.
+	 *
+	 * @param triplePattern the triple pattern
+	 * @return the collection
+	 * @throws JSONException the jSON exception
+	 */
 	private Collection<JSONObject> createTriplePatternItemsArray(
 			TriplePattern triplePattern) throws JSONException {
 		Collection<JSONObject> tripleItems = new LinkedList<JSONObject>();
@@ -67,6 +92,13 @@ public class IndexScanFormatter implements OperatorFormatter {
 		return tripleItems;
 	}
 
+	/**
+	 * Creates the triple pattern item as json string.
+	 *
+	 * @param item the item
+	 * @return the jSON object
+	 * @throws JSONException the jSON exception
+	 */
 	private JSONObject createTriplePatternItemAsJsonString(Item item)
 			throws JSONException {
 		JSONObject itemJson = new JSONObject();
@@ -82,6 +114,9 @@ public class IndexScanFormatter implements OperatorFormatter {
 		return itemJson;
 	}
 
+	/* (non-Javadoc)
+	 * @see luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.JSONObject)
+	 */
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 
@@ -123,6 +158,12 @@ public class IndexScanFormatter implements OperatorFormatter {
 		return null;
 	}
 
+	/**
+	 * Creates the triple patterns list from json.
+	 *
+	 * @param json the json
+	 * @return the collection
+	 */
 	private Collection<TriplePattern> createTriplePatternsListFromJSON(
 			JSONObject json) {
 
@@ -167,10 +208,20 @@ public class IndexScanFormatter implements OperatorFormatter {
 		return result;
 	}
 
+	/**
+	 * Gets the index collection.
+	 *
+	 * @return the index collection
+	 */
 	private IndexCollection getIndexCollection() {
 		return indexCollection;
 	}
 
+	/**
+	 * Sets the index collection.
+	 *
+	 * @param indexCollection the new index collection
+	 */
 	private void setIndexCollection(IndexCollection indexCollection) {
 		this.indexCollection = indexCollection;
 	}

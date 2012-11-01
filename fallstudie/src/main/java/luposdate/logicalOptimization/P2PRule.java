@@ -20,7 +20,7 @@ import luposdate.index.P2PIndexScan;
 import luposdate.operators.SubGraphContainer;
 
 /**
- * genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung
+ * Genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung
  * des Anfragegraphen. Bei P2PRuleGlobalJoin war alles noch zentralistisch. Hier
  * sollen nun Optimierungen eingeführt werden, bei denen dann Teilgraphen
  * verschickt werden.
@@ -41,11 +41,24 @@ import luposdate.operators.SubGraphContainer;
  */
 public class P2PRule extends Rule {
 
+	/** The Op3. */
 	private lupos.engine.operators.BasicOperator[]	Op3		= null;
+	
+	/** The Op2. */
 	private lupos.engine.operators.index.BasicIndex	Op2		= null;
+	
+	/** The Op1. */
 	private lupos.engine.operators.BasicOperator	Op1		= null;
+	
+	/** The _dim_0. */
 	private int										_dim_0	= -1;
 
+	/**
+	 * _check private0.
+	 *
+	 * @param _op the _op
+	 * @return true, if successful
+	 */
 	private boolean _checkPrivate0(BasicOperator _op) {
 		if (!(_op instanceof lupos.engine.operators.index.BasicIndex)) {
 			return false;
@@ -84,6 +97,12 @@ public class P2PRule extends Rule {
 		return false;
 	}
 
+	/**
+	 * _check private1.
+	 *
+	 * @param _op the _op
+	 * @return true, if successful
+	 */
 	private boolean _checkPrivate1(BasicOperator _op) {
 		if (!(_op instanceof lupos.engine.operators.BasicOperator)) {
 			return false;
@@ -94,11 +113,17 @@ public class P2PRule extends Rule {
 		return true;
 	}
 
+	/**
+	 * Instantiates a new p2 p rule.
+	 */
 	public P2PRule() {
 		this.startOpClass = lupos.engine.operators.index.BasicIndex.class;
 		this.ruleName = "P2PRule";
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.optimizations.logical.rules.generated.runtime.Rule#check(lupos.engine.operators.BasicOperator)
+	 */
 	@Override
 	protected boolean check(BasicOperator _op) {
 		if (this._checkPrivate0(_op)) {
@@ -107,6 +132,9 @@ public class P2PRule extends Rule {
 		return false;
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.optimizations.logical.rules.generated.runtime.Rule#replace(java.util.HashMap)
+	 */
 	@Override
 	protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
 		int _label_a_count;
@@ -165,9 +193,9 @@ public class P2PRule extends Rule {
 
 	/**
 	 * hier wird der normale index scan operator (p2pIndexScan) durch einen
-	 * SubGraphContainer ersetzt
-	 * 
-	 * @param indexScan
+	 * SubGraphContainer ersetzt.
+	 *
+	 * @param indexScan the index scan
 	 */
 	private void replaceIndexScanOperatorWithSubGraphContainer(
 			BasicIndex indexScan) {
@@ -214,6 +242,13 @@ public class P2PRule extends Rule {
 
 	}
 
+	/**
+	 * Adds the new connections.
+	 *
+	 * @param _label_a the _label_a
+	 * @param Join1 the join1
+	 * @param Index1 the index1
+	 */
 	private void addNewConnections(int[] _label_a,
 			lupos.engine.operators.multiinput.join.Join Join1,
 			lupos.engine.operators.index.BasicIndex Index1) {
@@ -239,6 +274,11 @@ public class P2PRule extends Rule {
 		Index1.addPrecedingOperator(this.Op1);
 	}
 
+	/**
+	 * Removes the obsolete connections.
+	 *
+	 * @return the int[]
+	 */
 	private int[] removeObsoleteConnections() {
 		// remove obsolete connections...
 		int[] _label_a = null;

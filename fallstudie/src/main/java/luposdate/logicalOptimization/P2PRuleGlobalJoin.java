@@ -17,6 +17,7 @@ import luposdate.index.P2PIndexScan;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * Diese Klasse ist jetzt die logische Optimierung, die durch den Ruleeditor
  * generiert wurde. Hier findet die Transformation der Anfragegraphen statt. Zu
@@ -31,11 +32,24 @@ import luposdate.index.P2PIndexScan;
  */
 public class P2PRuleGlobalJoin extends Rule {
 
+    /** The Op3. */
     private lupos.engine.operators.BasicOperator[] Op3 = null;
+    
+    /** The Op2. */
     private lupos.engine.operators.index.BasicIndex Op2 = null;
+    
+    /** The Op1. */
     private lupos.engine.operators.BasicOperator Op1 = null;
+    
+    /** The _dim_0. */
     private int _dim_0 = -1;
 
+    /**
+     * _check private0.
+     *
+     * @param _op the _op
+     * @return true, if successful
+     */
     private boolean _checkPrivate0(BasicOperator _op) {
         if(!(_op instanceof lupos.engine.operators.index.BasicIndex)) {
             return false;
@@ -73,6 +87,12 @@ public class P2PRuleGlobalJoin extends Rule {
         return false;
     }
 
+    /**
+     * _check private1.
+     *
+     * @param _op the _op
+     * @return true, if successful
+     */
     private boolean _checkPrivate1(BasicOperator _op) {
         if(!(_op instanceof lupos.engine.operators.BasicOperator)) {
             return false;
@@ -84,11 +104,17 @@ public class P2PRuleGlobalJoin extends Rule {
     }
 
 
+    /**
+     * Instantiates a new p2 p rule global join.
+     */
     public P2PRuleGlobalJoin() {
         this.startOpClass = lupos.engine.operators.index.BasicIndex.class;
         this.ruleName = "P2PRule";
     }
 
+    /* (non-Javadoc)
+     * @see lupos.optimizations.logical.rules.generated.runtime.Rule#check(lupos.engine.operators.BasicOperator)
+     */
     @Override
 	protected boolean check(BasicOperator _op) {
        if (this._checkPrivate0(_op)) {
@@ -97,6 +123,9 @@ public class P2PRuleGlobalJoin extends Rule {
        return false;
     }
 
+    /* (non-Javadoc)
+     * @see lupos.optimizations.logical.rules.generated.runtime.Rule#replace(java.util.HashMap)
+     */
     @Override
 	protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
         // remove obsolete connections...

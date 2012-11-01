@@ -5,8 +5,8 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import luposdate.LuposServer;
-import p2p.Connection;
 import p2p.P2PAdapter;
+import p2p.P2PConnection;
 import console.commands.Add;
 import console.commands.Command;
 import console.commands.DeserializerTest;
@@ -31,14 +31,14 @@ import console.commands.SetStrategy;
  */
 public class Console {
 	/** Verbindung. */
-	private final Connection	connection;
+	private final P2PConnection	connection;
 	/** Lupos-Server. */
 	private final LuposServer	server;
 
 	/**
 	 * Konstruktor.
 	 */
-	public Console(Connection connection, LuposServer server) {
+	public Console(P2PConnection connection, LuposServer server) {
 		this.connection = connection;
 		this.server = server;
 	}
@@ -108,7 +108,7 @@ public class Console {
 	public static void main(String[] args) throws Exception {
 
 
-		Connection connection = new Connection();
+		P2PConnection connection = new P2PConnection();
 		LuposServer server = new LuposServer();
 
 		Console console = new Console(connection, server);
