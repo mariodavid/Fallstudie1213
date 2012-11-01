@@ -3,17 +3,13 @@ package console.commands;
 import java.net.URL;
 import java.util.Scanner;
 
-import xpref.XPref;
-
-import lupos.endpoint.server.DebugEndpoint;
-import lupos.endpoint.server.Endpoint;
 import lupos.gui.Demo_Applet;
 import lupos.gui.GUI;
 import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
 import lupos.gui.operatorgraph.viewer.Viewer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-
 import net.tomp2p.p2p.Peer;
+import xpref.XPref;
 
 /**
  * Führt eine Anfrage aus.
