@@ -1,4 +1,4 @@
-package operators.serialization;
+package operators.formatter;
 
 import static org.junit.Assert.assertEquals;
 
@@ -11,17 +11,17 @@ import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import luposdate.index.P2PIndexScan;
-import luposdate.operators.serialization.IndexScanSerializer;
+import luposdate.operators.formatter.IndexScanFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IndexScanSerializerTest {
+public class IndexScanFormatterTest {
 
 	private BasicIndex			indexScan;
-	private IndexScanSerializer	serializer;
+	private IndexScanFormatter	serializer;
 
 	@Before
 	public void setUp() throws Exception {
@@ -34,7 +34,7 @@ public class IndexScanSerializerTest {
 				.getLiteral("<p>"), new Variable("o")));
 		indexScan.setTriplePatterns(patterns);
 
-		this.serializer = new IndexScanSerializer(indexCollection);
+		this.serializer = new IndexScanFormatter(indexCollection);
 
 	}
 

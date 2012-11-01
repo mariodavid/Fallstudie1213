@@ -19,7 +19,7 @@ import p2p.P2PAdapter;
 
 public class P2PAdapterTest {
 	// general
-	private static final int NODES = 50;
+	private static final int	NODES		= 3;
 	private Peer[] peers;
 	private final P2PAdapter[] p2pAdapter = new P2PAdapter[NODES];
 	Peer master = null;
@@ -36,9 +36,11 @@ public class P2PAdapterTest {
 		for (int i = 0; i < peers.length; i++) {
 			lup = new LuposServer();
 			p2pAdapter[i] = new P2PAdapter(peers[i]);
-			p2pAdapter[i].setEvaluator(lup.getEvaluator());
 
 			lup.start(p2pAdapter[i]);
+
+			p2pAdapter[i].setEvaluator(lup.getEvaluator());
+
 		}
 	}
 
@@ -46,10 +48,10 @@ public class P2PAdapterTest {
 	public void testExecute() throws IOException, InterruptedException {
 		Random gen = new Random();
 		Number160 contentKey = Number160.createHash("anyKey");
-		String testMessage = "HAAAAALLLLLLLLOOOO";
+		String testMessage = "{\"edges\":[{\"to\":2,\"from\":1},{\"to\":3,\"from\":2}],\"nodes\":[{\"root\":true,\"type\":\"luposdate.index.P2PIndexCollection\",\"node_id\":1},{\"type\":\"luposdate.index.P2PIndexScan\",\"triple_pattern\":[{\"items\":[{\"name\":\"s\",\"type\":\"variable\"},{\"value\":\"<p>\",\"type\":\"literal\"},{\"name\":\"o\",\"type\":\"variable\"}]}],\"node_id\":2},{\"request_id\":0,\"dest_ip\":\"0.0.0.0\",\"type\":\"lupos.engine.operators.singleinput.Result\",\"node_id\":3}]}";
 		String response = p2pAdapter[gen.nextInt(NODES-1)].sendMessage(contentKey,
 				testMessage);
-		assertEquals(response, "Deine Nachricht war: " + testMessage);
+		assertEquals(response, testMessage);
 	}
 
 	@After

@@ -1,23 +1,23 @@
-package operators.serialization;
+package operators.formatter;
 
 import static org.junit.Assert.assertEquals;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
-import luposdate.operators.serialization.IndexCollectionSerializer;
+import luposdate.operators.formatter.IndexCollectionFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class IndexCollectionSerializerTest {
+public class IndexCollectionFormatterTest {
 
 	private IndexCollection				indexCollection;
-	private IndexCollectionSerializer	serializer;
+	private IndexCollectionFormatter	serializer;
 
 	@Before
 	public void setUp() throws Exception {
 		this.indexCollection = new lupos.engine.operators.index.memoryindex.IndexCollection();
-		this.serializer = new IndexCollectionSerializer();
+		this.serializer = new IndexCollectionFormatter();
 
 	}
 

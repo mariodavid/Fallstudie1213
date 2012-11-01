@@ -1,19 +1,19 @@
-package operators.serialization;
+package operators.formatter;
 
 import static org.junit.Assert.assertEquals;
 import lupos.engine.operators.singleinput.Result;
-import luposdate.operators.serialization.ResultSerializer;
+import luposdate.operators.formatter.ResultFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
 
-public class ResultSerializerTest {
+public class ResultFormatterTest {
 
 	private Result result;
-	private ResultSerializer serializerDefault;
-	private ResultSerializer serializer;
+	private ResultFormatter serializerDefault;
+	private ResultFormatter serializer;
 	private String dest_ip;
 	private int request_id;
 
@@ -22,8 +22,8 @@ public class ResultSerializerTest {
 		this.request_id = 55;
 		this.dest_ip = "127.0.0.0";
 		this.result = new lupos.engine.operators.singleinput.Result();
-		this.serializer = new ResultSerializer(dest_ip, request_id);
-		this.serializerDefault = new ResultSerializer();
+		this.serializer = new ResultFormatter(dest_ip, request_id);
+		this.serializerDefault = new ResultFormatter();
 	}
 
 	@Test
