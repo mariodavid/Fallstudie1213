@@ -29,6 +29,7 @@ import net.tomp2p.rpc.ObjectDataReply;
 import net.tomp2p.storage.Data;
 
 import org.jboss.netty.handler.timeout.TimeoutException;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
@@ -110,19 +111,6 @@ public class P2PAdapter implements DataStoreAdapter {
 				evaluator.evaluateQuery();
 
 
-				// SubGraphContainerSerializer serialzer = new
-				// SubGraphContainerSerializer();
-				//
-				// JSONObject serializedGraph;
-				// try {
-				// serializedGraph = serialzer.serialize(rootNode, 0);
-				//
-				// System.out.println(serializedGraph.toString());
-				// } catch (JSONException e) {
-				// // TODO Auto-generated catch block
-				// e.printStackTrace();
-				// }
-
 				try {
 					XPref.getInstance(Demo_Applet.class
 							.getResource("/preferencesMenu.xml"));
@@ -133,6 +121,21 @@ public class P2PAdapter implements DataStoreAdapter {
 				}
 				new Viewer(new GraphWrapperBasicOperator(evaluator
 						.getRootNode()), "test", true, false);
+
+				SubGraphContainerFormatter serialzer = new SubGraphContainerFormatter();
+
+				JSONObject serializedGraph;
+				try {
+					serializedGraph = serialzer.serialize(rootNode, 0);
+
+					System.out.println("reserialized response: "
+							+ serializedGraph.toString());
+
+					return serializedGraph.toString();
+				} catch (JSONException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 
 
 				// return p2pApplication.getResult();
