@@ -44,7 +44,7 @@ public class SubGraphContainer extends BasicIndex {
 	 * und auf das Ergebnis gewartet und zurueckgegeben
 	 * 
 	 * die logik, welcher Knoten diesen Graphen jetzt empfangen soll, ist hier
-	 * nicht enhalten. Dies geschiet au�en und wird diesem opertator nur
+	 * nicht enhalten. Dies geschiet außen und wird diesem opertator nur
 	 * mitgeteilt an welchen knoten es gehen soll (ip). entweder implizit (ueber
 	 * rootNodeOfSubGraph (result operator) oder explizit durch String ip als
 	 * Parameter)
