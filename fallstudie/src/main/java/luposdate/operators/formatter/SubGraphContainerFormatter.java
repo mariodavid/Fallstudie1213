@@ -20,21 +20,40 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// TODO: Auto-generated Javadoc
+/**
+ * The Class SubGraphContainerFormatter.
+ */
 public class SubGraphContainerFormatter implements OperatorFormatter {
 
+	/** The id_counter. */
 	private int				id_counter;
+	
+	/** The root. */
 	private BasicOperator	root;
 
+	/** The dataset. */
 	private Dataset			dataset;
 
+	/**
+	 * Instantiates a new sub graph container formatter.
+	 *
+	 * @param dataset the dataset
+	 */
 	public SubGraphContainerFormatter(Dataset dataset) {
 		this.dataset = dataset;
 	}
 
+	/**
+	 * Instantiates a new sub graph container formatter.
+	 */
 	public SubGraphContainerFormatter() {
 	}
 
 
+	/* (non-Javadoc)
+	 * @see luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine.operators.BasicOperator, int)
+	 */
 	public JSONObject serialize(BasicOperator operator, int node_id)
 			throws JSONException {
 		Collection<JSONObject> nodesJSON = new LinkedList<JSONObject>();
@@ -55,6 +74,14 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 	}
 
 
+	/**
+	 * Serialize node.
+	 *
+	 * @param node the node
+	 * @param nodesJSON the nodes json
+	 * @param edgesJSON the edges json
+	 * @param parent_id the parent_id
+	 */
 	private void serializeNode(BasicOperator node,
 			Collection<JSONObject> nodesJSON, Collection<JSONObject> edgesJSON,
 			int parent_id) {
@@ -96,6 +123,9 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.JSONObject)
+	 */
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 		root = null;
@@ -110,6 +140,13 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		return root;
 	}
 
+	/**
+	 * Deserialize edges.
+	 *
+	 * @param edgesJson the edges json
+	 * @param nodes the nodes
+	 * @throws JSONException the jSON exception
+	 */
 	private void deserializeEdges(JSONArray edgesJson,
 			HashMap<Integer, BasicOperator> nodes)
 			throws JSONException {
@@ -153,6 +190,14 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 
 	}
 
+	/**
+	 * Deserialize nodes.
+	 *
+	 * @param rootJson the root json
+	 * @param dataset the dataset
+	 * @return the hash map
+	 * @throws JSONException the jSON exception
+	 */
 	private HashMap<Integer, BasicOperator> deserializeNodes(
 			JSONObject rootJson, Dataset dataset) throws JSONException {
 

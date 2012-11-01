@@ -9,15 +9,29 @@ import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
+//TODO: Klasse erklären
+/**
+ * The Class P2PIndexCollection.
+ */
 public class P2PIndexCollection extends IndexCollection {
 
+	/**
+	 * Instantiates a new p2 p index collection.
+	 *
+	 * @param dataset the dataset
+	 */
 	public P2PIndexCollection(Dataset dataset) {
 		super();
 		this.dataset = dataset;
 	}
 
 	/**
-	 * wird verwendet, wenn der Operatorgraph aufgebaut wird
+	 * Wird verwendet, wenn der Operatorgraph aufgebaut wird.
+	 *
+	 * @param succeedingOperator the succeeding operator
+	 * @param triplePattern the triple pattern
+	 * @param data the data
+	 * @return the basic index
 	 */
 	@Override
 	public BasicIndex newIndex(OperatorIDTuple succeedingOperator,
@@ -26,7 +40,10 @@ public class P2PIndexCollection extends IndexCollection {
 	}
 
 	/**
-	 * Fabrikmethode zum erstellen einer neuen P2PIndexCollection
+	 * Fabrikmethode zum erstellen einer neuen P2PIndexCollection.
+	 *
+	 * @param dataset the dataset
+	 * @return the index collection
 	 */
 	@Override
 	public IndexCollection newInstance(Dataset dataset) {

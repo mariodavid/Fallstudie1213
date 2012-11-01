@@ -15,19 +15,30 @@ import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
+// TODO: Klasse erklären
 /**
- * ist für die ein oder mehrere Tripelmuster auszuführen
- * 
- * @author Mario David, Sebastian Walther
- * 
+ * ist für die ein oder mehrere Tripelmuster auszuführen.
  */
 public class P2PIndexScan extends BasicIndex {
 
+	/**
+	 * Instantiates a new p2 p index scan.
+	 *
+	 * @param indexCollection the index collection
+	 */
 	public P2PIndexScan(IndexCollection indexCollection) {
 		super(indexCollection);
 		// TODO Auto-generated constructor stub
 	}
 
+	/**
+	 * Instantiates a new p2 p index scan.
+	 *
+	 * @param succeedingOperator the succeeding operator
+	 * @param triplePattern the triple pattern
+	 * @param data the data
+	 * @param indexCollection the index collection
+	 */
 	public P2PIndexScan(OperatorIDTuple succeedingOperator,
 			Collection<TriplePattern> triplePattern, Item data,
 			IndexCollection indexCollection) {
@@ -49,6 +60,10 @@ public class P2PIndexScan extends BasicIndex {
 	 * nachgeschaut werden, ob diese variable existiert und ggf. ersetzt werden
 	 * durch den übergebenen wert. Die Variablen die übergeben werden müssen
 	 * dann im Ergebnis auch auftauchen
+	 *
+	 * @param indices the indices
+	 * @param bindings the bindings
+	 * @return the query result
 	 */
 	@Override
 	public QueryResult join(Indices indices, Bindings bindings) {
@@ -73,6 +88,13 @@ public class P2PIndexScan extends BasicIndex {
 		return result;
 	}
 
+	/**
+	 * Adds the variables to bindings.
+	 *
+	 * @param items the items
+	 * @param t the t
+	 * @return the bindings
+	 */
 	private Bindings addVariablesToBindings(Item[] items, Triple t) {
 		Bindings b = Bindings.createNewInstance();
 		for (int i = 0; i < items.length; i++) {
@@ -86,6 +108,12 @@ public class P2PIndexScan extends BasicIndex {
 		return b;
 	}
 
+	/**
+	 * Generate key.
+	 *
+	 * @param items the items
+	 * @return the string
+	 */
 	private String generateKey(Item[] items) {
 		StringBuilder key = new StringBuilder();
 

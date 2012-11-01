@@ -11,17 +11,31 @@ import lupos.datastructures.items.literal.URILiteral;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import p2p.P2PAdapter;
 
+/**
+ * In dieser Klasse wird eine Lupos Instanz gestartet.
+ */
 public class LuposServer {
 
+	/** Evaluator. */
+	private P2PIndexQueryEvaluator evaluator;
 
-	private P2PIndexQueryEvaluator	evaluator;
-
+	/**
+	 * Gibt den Evaluator zurück.
+	 * 
+	 * @return evaluator
+	 */
 	public P2PIndexQueryEvaluator getEvaluator() {
 		return evaluator;
 	}
 
-
-	public void start(P2PAdapter config) {
+	/**
+	 * An dieser Stellt wird die Lupos Instanz gestartet. Zusätzlich wird die
+	 * Verbindung von dem Evauator zum P2PAdapter hergestellt.
+	 * 
+	 * @param p2pAdapter
+	 *            den p2pAdapter
+	 */
+	public void start(P2PAdapter p2pAdapter) {
 
 		System.out.println("starting up lupos instance...");
 		try {
@@ -29,7 +43,7 @@ public class LuposServer {
 
 			evaluator = new P2PIndexQueryEvaluator();
 
-			evaluator.setP2PAdapter(config);
+			evaluator.setP2PAdapter(p2pAdapter);
 			Collection<URILiteral> defaultGraphs = new LinkedList<URILiteral>();
 
 			LiteralFactory.setType(MapType.NOCODEMAP);
@@ -38,14 +52,10 @@ public class LuposServer {
 			Collection<URILiteral> namedGraphs = new LinkedList<URILiteral>();
 			evaluator.prepareInputData(defaultGraphs, namedGraphs);
 
-		
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-
 	}
-
 
 }

@@ -36,6 +36,7 @@ import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
 import xpref.XPref;
 
+// TODO: Auto-generated Javadoc
 /**
  * Der P2P Adapter stellt das Bindeglied zwischen dem P2P Netzwerk und dem
  * Lupos-Server dar. Daher gibt es in dieser Klasse sowohl eine Refenz vom Peer
@@ -59,11 +60,8 @@ public class P2PAdapter implements DataStoreAdapter {
 	/**
 	 * Instanziiert ein neuen P2P Adapter. Als Übergabewert wird swohl die Peer
 	 * Referenz als auch die Lupos Evaluator Referenz.
-	 * 
-	 * @param peer
-	 *            der Knoten
-	 * @param evaluator
-	 *            Lupos Evaluator
+	 *
+	 * @param peer der Knoten
 	 */
 	public P2PAdapter(Peer peer) {
 		this.peer = peer;
@@ -71,6 +69,11 @@ public class P2PAdapter implements DataStoreAdapter {
 		initDistributionStrategy();
 	}
 
+	/**
+	 * Sets the evaluator.
+	 *
+	 * @param evaluator the new evaluator
+	 */
 	public void setEvaluator(P2PIndexQueryEvaluator evaluator) {
 		this.evaluator = evaluator;
 	}
@@ -332,5 +335,14 @@ public class P2PAdapter implements DataStoreAdapter {
 		} catch (IOException e) {
 			return false;
 		}
+	}
+
+	/**
+	 * Gibt den Evaluator zurück
+	 *
+	 * @return den Evaluator
+	 */
+	public P2PIndexQueryEvaluator getEvaluator() {
+		return this.evaluator;
 	}
 }

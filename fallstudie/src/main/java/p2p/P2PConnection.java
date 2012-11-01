@@ -14,7 +14,7 @@ import net.tomp2p.peers.Number160;
  * Diese Klasse dient zur Initialisierung des Peers und der Verbindung mit dem
  * ganzen Netzwerk.
  */
-public class Connection {
+public class P2PConnection {
 	/** Standard Port. */
 	private static final int DEFAULT_PORT = 4000;
 	/** Peer Referenz. */

@@ -9,23 +9,50 @@ import luposdate.index.P2PIndexCollection;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * Implementiert die Formatierung für den IndexCollection Operator.
+ */
 public class IndexCollectionFormatter implements OperatorFormatter {
 
-	private JSONObject	json;
-	private Dataset		dataset;
+	/** The json. */
+	private JSONObject json;
 
+	/** The dataset. */
+	private Dataset dataset;
+
+	/**
+	 * Gets the dataset.
+	 * 
+	 * @return the dataset
+	 */
 	public Dataset getDataset() {
 		return dataset;
 	}
 
+	/**
+	 * Instantiates a new index collection formatter.
+	 * 
+	 * @param dataset
+	 *            the dataset
+	 */
 	public IndexCollectionFormatter(Dataset dataset) {
 		this.dataset = dataset;
 	}
 
+	/**
+	 * Instantiates a new index collection formatter.
+	 */
 	public IndexCollectionFormatter() {
 		// TODO Auto-generated constructor stub
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine
+	 * .operators.BasicOperator, int)
+	 */
 	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 
@@ -40,6 +67,13 @@ public class IndexCollectionFormatter implements OperatorFormatter {
 		return json;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.
+	 * JSONObject)
+	 */
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 		json = serialiezedOperator;

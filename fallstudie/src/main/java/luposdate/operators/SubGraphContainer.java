@@ -12,6 +12,7 @@ import luposdate.operators.formatter.SubGraphContainerFormatter;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+// TODO: Auto-generated Javadoc
 /**
  * enthaelt die Operatoren, die alle an den Empfaengerknoten verschickt werden
  * sollen.
@@ -20,10 +21,21 @@ import org.json.JSONObject;
  * 
  */
 public class SubGraphContainer extends BasicIndex {
+	
+	/** The root node of sub graph. */
 	IndexCollection rootNodeOfSubGraph;
+	
+	/** The dest_ip. */
 	private final String dest_ip;
 	
 
+	/**
+	 * Instantiates a new sub graph container.
+	 *
+	 * @param rootNodeOfOuterGraph the root node of outer graph
+	 * @param rootNodeOfSubGraph the root node of sub graph
+	 * @param dest_ip the dest_ip
+	 */
 	public SubGraphContainer(IndexCollection rootNodeOfOuterGraph,
 			IndexCollection rootNodeOfSubGraph, String dest_ip) {
 		super(rootNodeOfOuterGraph);
@@ -33,6 +45,9 @@ public class SubGraphContainer extends BasicIndex {
 
 	}
 
+	/* (non-Javadoc)
+	 * @see lupos.engine.operators.index.BasicIndex#join(lupos.engine.operators.index.Indices, lupos.datastructures.bindings.Bindings)
+	 */
 	@Override
 	public QueryResult join(Indices indices, Bindings bindings) {
 		// TODO Auto-generated method stub
@@ -50,10 +65,10 @@ public class SubGraphContainer extends BasicIndex {
 	 * Parameter)
 	 * 
 	 * HIER: Stelle 1 & 4
-	 * 
-	 * @param queryResult
-	 * @param operandID
-	 * @return
+	 *
+	 * @param queryResult the query result
+	 * @param operandID the operand id
+	 * @return the query result
 	 */
 	@Override
 	public QueryResult process(QueryResult queryResult, int operandID) {
