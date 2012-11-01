@@ -3,6 +3,8 @@ package luposdate.operators.formatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
@@ -82,15 +84,8 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		try {
 			nodesJSON.add(serializer.serialize(node, id_counter));
 		} catch (NullPointerException e) {
-			/*
-			 * Operator ist nicht implementert. Es stehen folgende Operatoren
-			 * zur Verfügung: -IndexScanOperator -IndexCollectionOperator
-			 * -ResultOperator
-			 */
-
 			throw new IllegalArgumentException(
 					"Dieser Operator ist bisher nicht serialisierbar");
-			// e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -120,6 +115,9 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 			throws JSONException {
 
 
+		HashMap<BasicOperator, List<OperatorIDTuple>> succedingOperators = new HashMap<BasicOperator, List<OperatorIDTuple>>();
+		HashMap<BasicOperator, List<BasicOperator>> precedingOperators = new HashMap<BasicOperator, List<BasicOperator>>();
+		
 		for (int i = 0; i < edgesJson.length(); i++) {
 
 			JSONObject edgeJson = edgesJson.getJSONObject(i);
@@ -127,9 +125,30 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 			BasicOperator from = nodes.get(edgeJson.getInt("from"));
 			BasicOperator to = nodes.get(edgeJson.getInt("to"));
 
-			from.setSucceedingOperator(new OperatorIDTuple(to, 0));
-			to.setPrecedingOperator(from);
+			if (succedingOperators.get(from) == null) {
+				succedingOperators.put(from, new LinkedList<OperatorIDTuple>());
+			}
 
+			if (precedingOperators.get(to) == null) {
+				precedingOperators.put(to, new LinkedList<BasicOperator>());
+			}
+
+			succedingOperators.get(from).add(new OperatorIDTuple(to, 0));
+			precedingOperators.get(to).add(from);
+
+			// from.setSucceedingOperator(new OperatorIDTuple(to, 0));
+			// to.setPrecedingOperator(from);
+
+		}
+
+		for (Entry<BasicOperator, List<OperatorIDTuple>> from : succedingOperators
+				.entrySet()) {
+			from.getKey().setSucceedingOperators(from.getValue());
+		}
+
+		for (Entry<BasicOperator, List<BasicOperator>> to : precedingOperators
+				.entrySet()) {
+			to.getKey().setPrecedingOperators(to.getValue());
 		}
 
 	}
