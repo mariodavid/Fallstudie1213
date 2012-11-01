@@ -1,4 +1,4 @@
-package luposdate.operators.serialization;
+package luposdate.operators.formatter;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
@@ -16,16 +16,16 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class IndexScanSerializer implements OperatorSerializer {
+public class IndexScanFormatter implements OperatorFormatter {
 
 	private JSONObject				json;
 	private IndexCollection	indexCollection;
 
-	public IndexScanSerializer() {
+	public IndexScanFormatter() {
 		// TODO Auto-generated constructor stub
 	}
 
-	public IndexScanSerializer(IndexCollection indexCollection) {
+	public IndexScanFormatter(IndexCollection indexCollection) {
 		this.setIndexCollection(indexCollection);
 	}
 

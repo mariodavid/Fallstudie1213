@@ -1,4 +1,4 @@
-package luposdate.operators.serialization;
+package luposdate.operators.formatter;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,40 +7,53 @@ import java.util.LinkedList;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.index.BasicIndex;
+import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.IndexCollection;
-import lupos.engine.operators.index.memoryindex.MemoryIndex;
 import lupos.engine.operators.singleinput.Result;
+import luposdate.index.P2PIndexCollection;
+import luposdate.index.P2PIndexScan;
 import luposdate.operators.P2PApplication;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class SubGraphDeserializer {
+public class SubGraphContainerFormatter implements OperatorFormatter {
 
-	private static int	id_counter;
+	private int				id_counter;
+	private BasicOperator	root;
 
-	public static String serialize(BasicOperator graph) {
+	private Dataset			dataset;
 
+	public SubGraphContainerFormatter(Dataset dataset) {
+		this.dataset = dataset;
+	}
+
+	public SubGraphContainerFormatter() {
+	}
+
+
+	public JSONObject serialize(BasicOperator operator, int node_id)
+			throws JSONException {
 		Collection<JSONObject> nodesJSON = new LinkedList<JSONObject>();
 		Collection<JSONObject> edgesJSON = new LinkedList<JSONObject>();
 		id_counter = 0;
 
-		serializeNode(graph, nodesJSON, edgesJSON, id_counter);
-		JSONObject serilizedSubGraph = new JSONObject();
+		serializeNode(operator, nodesJSON, edgesJSON, id_counter);
+		JSONObject serializedSubGraph = new JSONObject();
 
 		try {
-			serilizedSubGraph.put("nodes", nodesJSON);
-			serilizedSubGraph.put("edges", edgesJSON);
+			serializedSubGraph.put("nodes", nodesJSON);
+			serializedSubGraph.put("edges", edgesJSON);
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		// System.out.println(serilizedSubGraph.toString()); // TEST
-		return serilizedSubGraph.toString();
+
+		return serializedSubGraph;
 	}
 
-	private static void serializeNode(BasicOperator node,
+
+	private void serializeNode(BasicOperator node,
 			Collection<JSONObject> nodesJSON, Collection<JSONObject> edgesJSON,
 			int parent_id) {
 		id_counter++;
@@ -52,19 +65,18 @@ public class SubGraphDeserializer {
 				edge.put("to", id_counter);
 				edgesJSON.add(edge);
 			} catch (JSONException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		OperatorSerializer serializer = null;
+		OperatorFormatter serializer = null;
 		if (node instanceof BasicIndex) {
-			serializer = new IndexScanSerializer();
+			serializer = new IndexScanFormatter();
 
 		} else if (node instanceof IndexCollection) {
-			serializer = new IndexCollectionSerializer();
+			serializer = new IndexCollectionFormatter();
 
 		} else if (node instanceof Result) {
-			serializer = new ResultSerializer();
+			serializer = new ResultFormatter();
 
 		}
 		try {
@@ -75,35 +87,38 @@ public class SubGraphDeserializer {
 			 * zur Verfügung: -IndexScanOperator -IndexCollectionOperator
 			 * -ResultOperator
 			 */
-			e.printStackTrace();
+
+			throw new IllegalArgumentException(
+					"Dieser Operator ist bisher nicht serialisierbar");
+			// e.printStackTrace();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 		for (OperatorIDTuple succ : node.getSucceedingOperators()) {
 			serializeNode(succ.getOperator(), nodesJSON, edgesJSON, id_counter);
-
 		}
 	}
 
-	public static BasicOperator deserialize(String serializedGraph)
+	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
-		BasicOperator root = null;
+		root = null;
 
-		JSONObject rootJson = new JSONObject(serializedGraph);
-		HashMap<Integer, BasicOperator> nodes = deserializeNodes(root, rootJson);
+		HashMap<Integer, BasicOperator> nodes = deserializeNodes(
+				serialiezedOperator,
+				dataset);
 
-		JSONArray edgesJson = (JSONArray) rootJson.get("edges");
-		deserializeEdges(edgesJson, nodes, root);
-
-		System.out.println(root);
+		JSONArray edgesJson = (JSONArray) serialiezedOperator.get("edges");
+		deserializeEdges(edgesJson, nodes);
 
 		return root;
 	}
 
-	private static void deserializeEdges(JSONArray edgesJson,
-			HashMap<Integer, BasicOperator> nodes, BasicOperator root)
+	private void deserializeEdges(JSONArray edgesJson,
+			HashMap<Integer, BasicOperator> nodes)
 			throws JSONException {
+
 
 		for (int i = 0; i < edgesJson.length(); i++) {
 
@@ -119,32 +134,30 @@ public class SubGraphDeserializer {
 
 	}
 
-	private static HashMap<Integer, BasicOperator> deserializeNodes(
-			BasicOperator root, JSONObject rootJson) throws JSONException {
+	private HashMap<Integer, BasicOperator> deserializeNodes(
+			JSONObject rootJson, Dataset dataset) throws JSONException {
 
 		HashMap<Integer, BasicOperator> nodes = new HashMap<Integer, BasicOperator>();
 		JSONArray nodesJson = (JSONArray) rootJson.get("nodes");
 
-		OperatorSerializer deserializer;
+		OperatorFormatter deserializer;
 		for (int i = 0; i < nodesJson.length(); i++) {
 
 			JSONObject nodeJson = nodesJson.getJSONObject(i);
 
 			if (nodeJson.getString("type").equals(Result.class.getName())) {
-				deserializer = new ResultSerializer();
+				deserializer = new ResultFormatter();
 				Result node = (Result) deserializer.deserialize(nodeJson);
 				// node.addApplication(new P2PApplication(nodeJson
 				// .getString("dest_ip")));
 				node.addApplication(new P2PApplication("192.168.1.1"));
 
-				// root.getSucceedingOperators().get(0).getOperator()
-				// .setPrecedingOperator(node);
-
 				nodes.put(nodeJson.getInt("node_id"), node);
 
 			} else if (nodeJson.getString("type").equals(
-					BasicIndex.class.getName())) {
-				deserializer = new IndexScanSerializer();
+			// BasicIndex.class.getName())) {
+					P2PIndexScan.class.getName())) {
+				deserializer = new IndexScanFormatter();
 				BasicIndex node = (BasicIndex) deserializer
 						.deserialize(nodeJson);
 
@@ -155,8 +168,9 @@ public class SubGraphDeserializer {
 				nodes.put(nodeJson.getInt("node_id"), node);
 
 			} else if (nodeJson.getString("type").equals(
-					MemoryIndex.class.getName())) {
-				deserializer = new IndexCollectionSerializer();
+			// MemoryIndex.class.getName())) {
+					P2PIndexCollection.class.getName())) {
+				deserializer = new IndexCollectionFormatter(dataset);
 				IndexCollection node = (IndexCollection) deserializer
 						.deserialize(nodeJson);
 
@@ -165,11 +179,13 @@ public class SubGraphDeserializer {
 				nodes.put(nodeJson.getInt("node_id"), node);
 
 			} else {
-				System.out.println("falscher type: "
-						+ nodeJson.getString("type"));
+				throw new IllegalArgumentException(
+						"Dieser Operator ist bisher nicht deserialisierbar");
 			}
 
 		}
 		return nodes;
 	}
+
+
 }

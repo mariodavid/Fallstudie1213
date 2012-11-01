@@ -1,4 +1,4 @@
-package luposdate.operators.serialization;
+package luposdate.operators.formatter;
 
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.singleinput.Result;
@@ -6,7 +6,7 @@ import lupos.engine.operators.singleinput.Result;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class ResultSerializer implements OperatorSerializer {
+public class ResultFormatter implements OperatorFormatter {
 
 	private JSONObject json;
 	private String dest_ip;
@@ -15,12 +15,12 @@ public class ResultSerializer implements OperatorSerializer {
 	/**
 	 * Use: public ResultSerializer(String dest_ip, int request_id)
 	 */
-	public ResultSerializer() {
+	public ResultFormatter() {
 		setDestinationIp("0.0.0.0");
 		request_id = 0;
 	}
 
-	public ResultSerializer(String dest_ip, int request_id) {
+	public ResultFormatter(String dest_ip, int request_id) {
 		this.setDestinationIp(dest_ip);
 		this.request_id = request_id;
 	}

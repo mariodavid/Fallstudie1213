@@ -8,20 +8,14 @@ import java.util.Random;
 import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
-import lupos.datastructures.items.Variable;
-import lupos.datastructures.items.literal.LazyLiteral;
-import lupos.engine.operators.application.Output;
+import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.messages.BoundVariablesMessage;
-import lupos.engine.operators.singleinput.Result;
-import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.gui.Demo_Applet;
 import lupos.gui.GUI;
 import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
 import lupos.gui.operatorgraph.viewer.Viewer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-import luposdate.index.P2PIndexCollection;
-import luposdate.index.P2PIndexScan;
-import luposdate.operators.P2PApplication;
+import luposdate.operators.formatter.SubGraphContainerFormatter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
@@ -35,6 +29,7 @@ import net.tomp2p.rpc.ObjectDataReply;
 import net.tomp2p.storage.Data;
 
 import org.jboss.netty.handler.timeout.TimeoutException;
+import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
@@ -87,65 +82,45 @@ public class P2PAdapter implements DataStoreAdapter {
 		peer.setObjectDataReply(new ObjectDataReply() {
 			public Object reply(PeerAddress sender, Object request)
 					throws Exception {
-				/**
-				 * AN DIESER STELLE MUSS DIE ANKOMMENDE NACHRICHT VERARBEITET
-				 * WERDEN!!!
-				 */
 
-				P2PApplication p2pApplication = new P2PApplication(sender
-						.getInetAddress().getHostAddress());
-				// BasicOperator rootNode = SubGraphDeserializer
-				// .deserialize(
-				// (String) request, p2pApplication);
+				System.out.println("received request: " + request);
 
-				P2PIndexCollection collection = new P2PIndexCollection(
+				SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
 						evaluator.getDataset());
-
-				P2PIndexScan indexScan = new P2PIndexScan(collection);
-				collection.addSucceedingOperator(indexScan);
-
-				LinkedList<TriplePattern> patterns = new LinkedList<TriplePattern>();
-
-				// url ausdenken
-				patterns.add(new TriplePattern(new Variable("s"), LazyLiteral
-						.getLiteral("<p>"), new Variable("o")));
-				indexScan.setTriplePatterns(patterns);
-
-				Result result = new Result();
-
-				// TODO: hier muss jetzt die P2P Application rein, damit dann
-				// auch
-				// tatsaechlich zuruck geschickt wird und nicht einfach nur
-				// ausgegeben
-				// wird
-				result.addApplication(new Output());
-				result.addApplication(p2pApplication);
-
-				indexScan.addSucceedingOperator(result);
+				BasicOperator rootNode = deserializer
+						.deserialize(new JSONObject((String) request));
 
 				// erzeugt die Vorgaenger der Collection, wie bei
 				// addSucceedingOperator
 				// (rekursiv fuer den gesamten Baum)
-				collection.setParents();
+				rootNode.setParents();
 
 				// erkennt zyklen im op graphen (vermutlich nicht relevant,
 				// evtl. bei
 				// spaeteren erweiterungen relevant)
-				collection.detectCycles();
+				rootNode.detectCycles();
 
 				// berechnet an welcher stelle welche variablen gebunden sind
 				// und
 				// gebunden sein koennen
-				collection.sendMessage(new BoundVariablesMessage());
+				rootNode.sendMessage(new BoundVariablesMessage());
 
-				// uebergabe des root node an den evaluator zur ausfuehrung
-				evaluator.setRootNode(collection);
+				evaluator.setRootNode(rootNode);
 
-				// evaluator.setRootNode(rootNode);
 				evaluator.evaluateQuery();
 
-				// while (!p2pApplication.isReady()) {
-				// Thread.sleep(10);
+
+				// SubGraphContainerSerializer serialzer = new
+				// SubGraphContainerSerializer();
+				//
+				// JSONObject serializedGraph;
+				// try {
+				// serializedGraph = serialzer.serialize(rootNode, 0);
+				//
+				// System.out.println(serializedGraph.toString());
+				// } catch (JSONException e) {
+				// // TODO Auto-generated catch block
+				// e.printStackTrace();
 				// }
 
 				try {
@@ -159,9 +134,13 @@ public class P2PAdapter implements DataStoreAdapter {
 				new Viewer(new GraphWrapperBasicOperator(evaluator
 						.getRootNode()), "test", true, false);
 
-				System.out.println(request);
-				return p2pApplication.getResult();
+
+				// return p2pApplication.getResult();
+				return null;
 			}
+
+
+
 		});
 	}
 

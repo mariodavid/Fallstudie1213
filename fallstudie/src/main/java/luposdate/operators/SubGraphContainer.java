@@ -7,7 +7,10 @@ import lupos.endpoint.client.formatreader.XMLFormatReader;
 import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.index.Indices;
-import luposdate.operators.serialization.SubGraphDeserializer;
+import luposdate.operators.formatter.SubGraphContainerFormatter;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 /**
  * enthaelt die Operatoren, die alle an den Empfaengerknoten verschickt werden
@@ -55,7 +58,19 @@ public class SubGraphContainer extends BasicIndex {
 	@Override
 	public QueryResult process(QueryResult queryResult, int operandID) {
 		
-		System.out.println(SubGraphDeserializer.serialize(rootNodeOfSubGraph));
+		SubGraphContainerFormatter serialzer = new SubGraphContainerFormatter();
+		
+		JSONObject serializedGraph;
+		try {
+			serializedGraph = serialzer.serialize(rootNodeOfSubGraph, 0);
+
+			System.out.println(serializedGraph.toString());
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		//System.out.println(SubGraphContainerSerializer.serialize(rootNodeOfSubGraph));
 		// hier wird jetzt tatsaechlich losgeschickt (serialisiert usw.)
 		// Schritt 1....
 
