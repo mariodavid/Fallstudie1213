@@ -2,6 +2,7 @@ package operators.formatter;
 
 import static org.junit.Assert.assertEquals;
 import lupos.engine.operators.singleinput.Result;
+import luposdate.operators.P2PApplication;
 import luposdate.operators.formatter.ResultFormatter;
 
 import org.json.JSONException;
@@ -20,9 +21,8 @@ public class ResultFormatterTest {
 	@Before
 	public void setUp() throws Exception {
 		this.request_id = 55;
-		this.dest_ip = "127.0.0.0";
 		this.result = new lupos.engine.operators.singleinput.Result();
-		this.serializer = new ResultFormatter(dest_ip, request_id);
+		this.serializer = new ResultFormatter(new P2PApplication(), request_id);
 		this.serializerDefault = new ResultFormatter();
 	}
 
@@ -34,7 +34,6 @@ public class ResultFormatterTest {
 			JSONObject obj = this.serializer.serialize(result, node_id);
 			assertEquals(obj.get("type"), Result.class.getName());
 			assertEquals(obj.get("node_id"), node_id);
-			assertEquals(obj.get("dest_ip"), this.dest_ip);
 			assertEquals(obj.get("request_id"), this.request_id);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -50,7 +49,6 @@ public class ResultFormatterTest {
 			JSONObject obj = this.serializerDefault.serialize(result, node_id);
 			assertEquals(obj.get("type"), Result.class.getName());
 			assertEquals(obj.get("node_id"), node_id);
-			assertEquals(obj.get("dest_ip"), "0.0.0.0");
 			assertEquals(obj.get("request_id"), 0);
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block

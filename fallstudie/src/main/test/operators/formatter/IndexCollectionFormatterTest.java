@@ -1,8 +1,9 @@
 package operators.formatter;
 
 import static org.junit.Assert.assertEquals;
-import lupos.engine.operators.index.memoryindex.IndexCollection;
-import luposdate.operators.formatter.IndexCollectionFormatter;
+import luposdate.evaluators.P2PIndexQueryEvaluator;
+import luposdate.index.P2PIndexCollection;
+import luposdate.operators.formatter.P2PIndexCollectionFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -11,13 +12,15 @@ import org.junit.Test;
 
 public class IndexCollectionFormatterTest {
 
-	private IndexCollection				indexCollection;
-	private IndexCollectionFormatter	serializer;
+	private P2PIndexCollection			indexCollection;
+	private P2PIndexCollectionFormatter	serializer;
 
 	@Before
 	public void setUp() throws Exception {
-		this.indexCollection = new lupos.engine.operators.index.memoryindex.IndexCollection();
-		this.serializer = new IndexCollectionFormatter();
+
+		P2PIndexQueryEvaluator evaluator = new P2PIndexQueryEvaluator();
+		this.indexCollection = new P2PIndexCollection(evaluator.getDataset());
+		this.serializer = new P2PIndexCollectionFormatter();
 
 	}
 
@@ -28,7 +31,7 @@ public class IndexCollectionFormatterTest {
 		try {
 			JSONObject obj = this.serializer
 					.serialize(indexCollection, node_id);
-			assertEquals(obj.get("type"), IndexCollection.class.getName());
+			assertEquals(obj.get("type"), indexCollection.getClass().getName());
 			assertEquals(obj.get("node_id"), node_id);
 			assertEquals(obj.get("root"), true);
 
@@ -44,7 +47,7 @@ public class IndexCollectionFormatterTest {
 		int node_id = 123;
 
 		try {
-			IndexCollection actual = (IndexCollection) this.serializer
+			P2PIndexCollection actual = (P2PIndexCollection) this.serializer
 					.deserialize(this.serializer.serialize(indexCollection,
 							node_id));
 

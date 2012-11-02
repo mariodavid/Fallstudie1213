@@ -11,7 +11,7 @@ import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.memoryindex.IndexCollection;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import luposdate.index.P2PIndexScan;
-import luposdate.operators.formatter.IndexScanFormatter;
+import luposdate.operators.formatter.P2PIndexScanFormatter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -21,7 +21,7 @@ import org.junit.Test;
 public class IndexScanFormatterTest {
 
 	private BasicIndex			indexScan;
-	private IndexScanFormatter	serializer;
+	private P2PIndexScanFormatter	serializer;
 
 	@Before
 	public void setUp() throws Exception {
@@ -34,7 +34,7 @@ public class IndexScanFormatterTest {
 				.getLiteral("<p>"), new Variable("o")));
 		indexScan.setTriplePatterns(patterns);
 
-		this.serializer = new IndexScanFormatter(indexCollection);
+		this.serializer = new P2PIndexScanFormatter(indexCollection);
 
 	}
 

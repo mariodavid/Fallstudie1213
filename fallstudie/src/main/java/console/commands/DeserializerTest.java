@@ -52,7 +52,7 @@ public class DeserializerTest implements Command {
 		// tatsaechlich zuruck geschickt wird und nicht einfach nur ausgegeben
 		// wird
 		result.addApplication(new Output());
-		result.addApplication(new P2PApplication("192.168.0.121"));
+		result.addApplication(new P2PApplication());
 
 		indexScan.addSucceedingOperator(result);
 
