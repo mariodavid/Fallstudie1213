@@ -24,12 +24,9 @@ import org.json.JSONObject;
 
 import p2p.P2PAdapter;
 
-// TODO: Auto-generated Javadoc
 /**
  * enthaelt die Operatoren, die alle an den Empfaengerknoten verschickt werden
  * sollen.
- * 
- * @author Mario David, Sebastian Walther
  * 
  */
 public class SubGraphContainer extends BasicIndex {
@@ -76,11 +73,6 @@ public class SubGraphContainer extends BasicIndex {
 	 * wird aufgerufen, wenn der OP ausgefuehrt werden soll hier wird verschickt
 	 * und auf das Ergebnis gewartet und zurueckgegeben
 	 * 
-	 * die logik, welcher Knoten diesen Graphen jetzt empfangen soll, ist hier
-	 * nicht enhalten. Dies geschiet außen und wird diesem opertator nur
-	 * mitgeteilt an welchen knoten es gehen soll (ip). entweder implizit (ueber
-	 * rootNodeOfSubGraph (result operator) oder explizit durch String ip als
-	 * Parameter)
 	 * 
 	 * @param queryResult
 	 *            the query result
