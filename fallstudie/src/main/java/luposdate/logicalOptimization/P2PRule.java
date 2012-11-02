@@ -18,6 +18,7 @@ import lupos.optimizations.logical.rules.generated.runtime.Rule;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
 import luposdate.operators.SubGraphContainer;
+import p2p.P2PAdapter;
 
 /**
  * Genau wie die Klasse P2PRuleGlobalJoin ist dies hier die logische Optimierung
@@ -52,6 +53,8 @@ public class P2PRule extends Rule {
 	
 	/** The _dim_0. */
 	private int										_dim_0	= -1;
+
+	private final P2PAdapter						p2pAdapter;
 
 	/**
 	 * _check private0.
@@ -116,9 +119,10 @@ public class P2PRule extends Rule {
 	/**
 	 * Instantiates a new p2 p rule.
 	 */
-	public P2PRule() {
+	public P2PRule(P2PAdapter p2pAdapter) {
 		this.startOpClass = lupos.engine.operators.index.BasicIndex.class;
 		this.ruleName = "P2PRule";
+		this.p2pAdapter = p2pAdapter;
 	}
 
 	/* (non-Javadoc)
@@ -128,6 +132,7 @@ public class P2PRule extends Rule {
 	protected boolean check(BasicOperator _op) {
 		if (this._checkPrivate0(_op)) {
 			return this.Op2.getTriplePattern().size() > 1;
+			// return true;
 		}
 		return false;
 	}
@@ -182,7 +187,7 @@ public class P2PRule extends Rule {
 		// hier wird der normale index scan operator (p2pIndexScan) durch einen
 		// SubGraphContainer ersetzt
 		replaceIndexScanOperatorWithSubGraphContainer(this.Op2);
-
+		System.out.println("hallo in p2prule");
 		// falls Index1 nur noch ein Triple Pattern enthaelt, muss dieser
 		// bereits jetzt ersetzt werden
 		if (tp2.size() == 1) {
@@ -209,13 +214,28 @@ public class P2PRule extends Rule {
 		// indexScan erfolgen, da dort das Triple Pattern enthalten ist, sodass
 		// man hier h(x) bilden kann und somit das P2PNetzwerk befragen kann
 		String dest_ip = "192.168.1.1";
-		SubGraphContainer container = new SubGraphContainer(
+		SubGraphContainer container = new SubGraphContainer(p2pAdapter,
 				rootNodeOfOuterGraph, rootNodeOfSubGraph, dest_ip);
+
+		HashSet<Variable> variables = new HashSet<Variable>(
+				indexScan.getIntersectionVariables());
+
+		container.setHashableTriplePatterns(indexScan.getTriplePattern());
+
+
+		container.setUnionVariables(variables);
+		container.setIntersectionVariables(variables);
+		container.setTriplePatterns(new LinkedList<TriplePattern>());
 
 		// vorgaenger und nachfolger des urspruenglichen indexScan OPs merken
 		// und am schluss wieder an den neuen graphen ranhaengen
 		Collection<BasicOperator> preds = indexScan.getPrecedingOperators();
 		List<OperatorIDTuple> succs = indexScan.getSucceedingOperators();
+
+		// alle vorgaenger werden durchlaufen und der neue Nachfolger gesetzt
+		for (BasicOperator pred : preds) {
+			pred.getOperatorIDTuple(indexScan).setOperator(container);
+		}
 
 		// neue Verbindungen werden erzeugt
 		indexScan.setSucceedingOperator(new OperatorIDTuple(new Result(), 0));
@@ -228,10 +248,6 @@ public class P2PRule extends Rule {
 		// urspruengliche Nachfolger werden an neuen Graphen angehangen
 		container.setSucceedingOperators(succs);
 
-		// alle vorgaenger weren durchlaufen und der neue Nachfolger gesetzt
-		for (BasicOperator pred : preds) {
-			pred.getOperatorIDTuple(indexScan).setOperator(container);
-		}
 
 		// der neue Vorgaenger von den Nachfolgern von dem urspruenglichen
 		// IndexScan werden durchlaufen und der neue container wird festgelegt

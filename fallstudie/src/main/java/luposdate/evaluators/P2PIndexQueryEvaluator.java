@@ -3,9 +3,6 @@ package luposdate.evaluators;
 import java.util.Collection;
 import java.util.Date;
 
-import p2p.DataStoreAdapter;
-import p2p.P2PAdapter;
-
 import lupos.datastructures.dbmergesortedds.heap.Heap;
 import lupos.datastructures.dbmergesortedds.tosort.ToSort;
 import lupos.datastructures.items.literal.LiteralFactory;
@@ -21,6 +18,8 @@ import lupos.misc.Tuple;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndices;
 import luposdate.logicalOptimization.P2PRulePackage;
+import p2p.DataStoreAdapter;
+import p2p.P2PAdapter;
 
 /**
  * Der P2PIndexQueryEvaluator ist eine spezielle Form eines Evaluators aus
@@ -356,7 +355,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	 */
 	@Override
 	public long logicalOptimization() {
-		P2PRulePackage rp = new P2PRulePackage();
+		P2PRulePackage rp = new P2PRulePackage(this.p2pAdapter);
 		rp.applyRules(this.getRootNode());
 		return super.logicalOptimization();
 	};

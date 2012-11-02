@@ -37,7 +37,7 @@ import lupos.engine.operators.application.Application;
 public class P2PApplication implements Application {
 
 	/** The dest_ip. */
-	private final String	dest_ip;
+	// private String dest_ip;
 
 	/** The result. */
 	private String			result;
@@ -47,18 +47,11 @@ public class P2PApplication implements Application {
 	 *
 	 * @param dest_ip the dest_ip
 	 */
-	public P2PApplication(String dest_ip) {
-		this.dest_ip = dest_ip;
+	// public P2PApplication(String dest_ip) {
+	// this.dest_ip = dest_ip;
+	// }
 
-	}
-
-	/**
-	 * Checks if is ready.
-	 *
-	 * @return true, if is ready
-	 */
-	public boolean isReady() {
-		return result != null;
+	public P2PApplication() {
 	}
 
 	/**
@@ -85,7 +78,6 @@ public class P2PApplication implements Application {
 		 */
 
 		// Schritt 3: Ruecksenden des QueryResults
-
 		Formatter formatter = new XMLFormatter();
 
 		// hier kommt die Implementierung fur das P2P Netz hin
@@ -104,6 +96,7 @@ public class P2PApplication implements Application {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+
 	}
 
 	/* (non-Javadoc)
@@ -137,5 +130,9 @@ public class P2PApplication implements Application {
 		// TODO Auto-generated method stub
 
 	}
+
+	// public void setDestinationIp(String dest_ip) {
+	// this.dest_ip = dest_ip;
+	// }
 
 }

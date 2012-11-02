@@ -1,7 +1,6 @@
 package p2p;
 
 import java.io.IOException;
-import java.net.URL;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
@@ -10,12 +9,10 @@ import java.util.SortedSet;
 import lupos.datastructures.items.Triple;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.messages.BoundVariablesMessage;
-import lupos.gui.Demo_Applet;
-import lupos.gui.GUI;
-import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
-import lupos.gui.operatorgraph.viewer.Viewer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
+import luposdate.operators.P2PApplication;
 import luposdate.operators.formatter.SubGraphContainerFormatter;
+import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
@@ -29,12 +26,10 @@ import net.tomp2p.rpc.ObjectDataReply;
 import net.tomp2p.storage.Data;
 
 import org.jboss.netty.handler.timeout.TimeoutException;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
-import xpref.XPref;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -47,21 +42,25 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
 	 */
-	private static final int DEFAULT_DISTRIBUTION_STRATEGY = 1;
+	private static final int		DEFAULT_DISTRIBUTION_STRATEGY	= 1;
 	/** Timeout in ms. */
-	public static final int TIMEOUT = 5000;
+	public static final int			TIMEOUT							= 5000;
 	/** Lupos Evaluator. */
-	public P2PIndexQueryEvaluator evaluator;
+	public P2PIndexQueryEvaluator	evaluator;
 	/** Peer Referenz. */
-	public Peer peer;
+	public Peer						peer;
 	/** aktuelle Verteilungsstrategie. */
-	public DistributionStrategy distributionStrategy;
+	public DistributionStrategy		distributionStrategy;
+	private Collection<Triple>		result;
+	private String					key;
+	private Boolean					isReady;
 
 	/**
 	 * Instanziiert ein neuen P2P Adapter. Als Übergabewert wird swohl die Peer
 	 * Referenz als auch die Lupos Evaluator Referenz.
-	 *
-	 * @param peer der Knoten
+	 * 
+	 * @param peer
+	 *            der Knoten
 	 */
 	public P2PAdapter(Peer peer) {
 		this.peer = peer;
@@ -71,13 +70,14 @@ public class P2PAdapter implements DataStoreAdapter {
 
 	/**
 	 * Sets the evaluator.
-	 *
-	 * @param evaluator the new evaluator
+	 * 
+	 * @param evaluator
+	 *            the new evaluator
 	 */
 	public void setEvaluator(P2PIndexQueryEvaluator evaluator) {
 		this.evaluator = evaluator;
 	}
-	
+
 	/**
 	 * Beim Aufrufen dieser Methode wird ein Listener erzeugt. Ankommende
 	 * Nachrichten werden hier verarbeitet. Die Kommunikation läuft über Netty.
@@ -89,8 +89,10 @@ public class P2PAdapter implements DataStoreAdapter {
 
 				System.out.println("received request: " + request);
 
+				P2PApplication p2pApplication = new P2PApplication();
 				SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
-						evaluator.getDataset());
+						evaluator.getDataset(), p2pApplication);
+
 				BasicOperator rootNode = deserializer
 						.deserialize(new JSONObject((String) request));
 
@@ -99,14 +101,14 @@ public class P2PAdapter implements DataStoreAdapter {
 				// (rekursiv fuer den gesamten Baum)
 				rootNode.setParents();
 
-				// erkennt zyklen im op graphen (vermutlich nicht relevant,
+				// erkennt zyklen im op graphen (vermutlich nicht
+				// relevant,
 				// evtl. bei
 				// spaeteren erweiterungen relevant)
 				rootNode.detectCycles();
 
-				// berechnet an welcher stelle welche variablen gebunden sind
-				// und
-				// gebunden sein koennen
+				// berechnet an welcher stelle welche variablen gebunden
+				// sind und gebunden sein koennen
 				rootNode.sendMessage(new BoundVariablesMessage());
 
 				evaluator.setRootNode(rootNode);
@@ -114,40 +116,22 @@ public class P2PAdapter implements DataStoreAdapter {
 				evaluator.evaluateQuery();
 
 
-				try {
-					XPref.getInstance(Demo_Applet.class
-							.getResource("/preferencesMenu.xml"));
-				} catch (Exception e) {
-					XPref.getInstance(new URL("file:"
-							+ GUI.class.getResource("/preferencesMenu.xml")
-									.getFile()));
-				}
-				new Viewer(new GraphWrapperBasicOperator(evaluator
-						.getRootNode()), "test", true, false);
+				// try {
+				// XPref.getInstance(Demo_Applet.class
+				// .getResource("/preferencesMenu.xml"));
+				// } catch (Exception e) {
+				// XPref.getInstance(new URL("file:"
+				// + GUI.class.getResource("/preferencesMenu.xml")
+				// .getFile()));
+				// }
+				// new Viewer(new GraphWrapperBasicOperator(evaluator
+				// .getRootNode()), "test", true, false);
 
-				SubGraphContainerFormatter serialzer = new SubGraphContainerFormatter();
-
-				JSONObject serializedGraph;
-				try {
-					serializedGraph = serialzer.serialize(rootNode, 0);
-
-					System.out.println("reserialized response: "
-							+ serializedGraph.toString());
-
-					return serializedGraph.toString();
-				} catch (JSONException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-
-				// return p2pApplication.getResult();
-				return null;
+				return p2pApplication.getResult();
 			}
 
-
-
 		});
+
 	}
 
 	/**
@@ -169,15 +153,20 @@ public class P2PAdapter implements DataStoreAdapter {
 		this.peer = peer;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see p2p.DataStoreAdapter#getDistributionStrategy()
 	 */
 	public DistributionStrategy getDistributionStrategy() {
 		return distributionStrategy;
 	}
 
-	/* (non-Javadoc)
-	 * @see p2p.DataStoreAdapter#setDistributionStrategy(p2p.distribution.DistributionStrategy)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see p2p.DataStoreAdapter#setDistributionStrategy(p2p.distribution.
+	 * DistributionStrategy)
 	 */
 	public void setDistributionStrategy(
 			DistributionStrategy distributionStrategy) {
@@ -244,6 +233,10 @@ public class P2PAdapter implements DataStoreAdapter {
 		return null;
 	}
 
+	public String sendMessage(String locationKey, String message) {
+		return sendMessage(Number160.createHash(locationKey), message);
+	}
+
 	/**
 	 * Diese Methode gibt die Address Informationen zurück anhand eines Location
 	 * Keys. Dabei wird zunächst eine Route durch das gesamte Netzwerk gesucht
@@ -275,33 +268,103 @@ public class P2PAdapter implements DataStoreAdapter {
 		return route.first();
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see p2p.DataStoreAdapter#get(java.lang.String)
 	 */
 	public Collection<Triple> get(String key) {
 
-		Collection<Triple> result = new LinkedList<Triple>();
+		result = new LinkedList<Triple>();
+		isReady = false;
 
 		// perform p2p operation
-		FutureDHT future = this.getPeer().get(Number160.createHash(key))
-				.setAll().start();
-		future.awaitUninterruptibly();
+		FutureDHT future = getPeer().get(Number160.createHash(key)).setAll()
+				.start();
+		future.addListener(new BaseFutureAdapter<FutureDHT>() {
+			public void operationComplete(FutureDHT future) throws Exception {
+				if (future.isSuccess()) {
+					System.out.println("success");
 
-		// add all p2p results to the result collection
-		for (Data r : future.getDataMap().values()) {
+					// add all p2p results to the result collection
+					for (Data r : future.getDataMap().values()) {
+						try {
+							result.add((Triple) r.getObject());
+
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+					isReady = true;
+
+				} else {
+					System.out.println("failure");
+					isReady = true;
+				}
+			}
+		});
+
+		while (!isReady) {
 			try {
-				result.add((Triple) r.getObject());
-
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+
 		return result;
 	}
 
-	/* (non-Javadoc)
+	// public Collection<Triple> get(String key2) {
+	//
+	// this.key = key2;
+	//
+	// result = new LinkedList<Triple>();
+	//
+	// Runnable run = new Runnable() {
+	//
+	//
+	// public void run() {
+	// // perform p2p operation
+	// FutureDHT future = getPeer()
+	// .get(Number160.createHash(key)).setAll().start();
+	// future.awaitUninterruptibly();
+	//
+	// // add all p2p results to the result collection
+	// for (Data r : future.getDataMap().values()) {
+	// try {
+	// result.add((Triple) r.getObject());
+	//
+	// } catch (ClassNotFoundException e) {
+	// e.printStackTrace();
+	// } catch (IOException e) {
+	// e.printStackTrace();
+	// }
+	// }
+	//
+	// }
+	// };
+	// Thread myTherad = new Thread(run);
+	// myTherad.start();
+	//
+	// try {
+	// Thread.sleep(2000);
+	// } catch (InterruptedException e) {
+	// // TODO Auto-generated catch block
+	// e.printStackTrace();
+	// }
+	//
+	// return result;
+	// }
+	//
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see p2p.DataStoreAdapter#add(lupos.datastructures.items.Triple)
 	 */
 	public boolean add(Triple triple) {
@@ -313,8 +376,10 @@ public class P2PAdapter implements DataStoreAdapter {
 		}
 		return true;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see p2p.DataStoreAdapter#remove(lupos.datastructures.items.Triple)
 	 */
 	public boolean remove(Triple triple) {
@@ -325,8 +390,10 @@ public class P2PAdapter implements DataStoreAdapter {
 		}
 		return true;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see p2p.DataStoreAdapter#contains(lupos.datastructures.items.Triple)
 	 */
 	public boolean contains(Triple triple) {
@@ -339,7 +406,7 @@ public class P2PAdapter implements DataStoreAdapter {
 
 	/**
 	 * Gibt den Evaluator zurück
-	 *
+	 * 
 	 * @return den Evaluator
 	 */
 	public P2PIndexQueryEvaluator getEvaluator() {
