@@ -1,6 +1,5 @@
 package luposdate.operators.formatter;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -11,6 +10,7 @@ import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.tripleoperator.TriplePattern;
+import luposdate.index.P2PIndexScan;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,32 +20,38 @@ import org.json.JSONObject;
 /**
  * Implementiert die Formatierung für den IndexScan Operator.
  */
-public class IndexScanFormatter implements OperatorFormatter {
+public class P2PIndexScanFormatter implements OperatorFormatter {
 
 	/** The json. */
-	private JSONObject				json;
-	
+	private JSONObject		json;
+
 	/** The index collection. */
 	private IndexCollection	indexCollection;
+
 
 	/**
 	 * Instantiates a new index scan formatter.
 	 */
-	public IndexScanFormatter() {
+	public P2PIndexScanFormatter() {
 		// TODO Auto-generated constructor stub
 	}
 
 	/**
 	 * Instantiates a new index scan formatter.
-	 *
-	 * @param indexCollection the index collection
+	 * 
+	 * @param indexCollection
+	 *            the index collection
 	 */
-	public IndexScanFormatter(IndexCollection indexCollection) {
+	public P2PIndexScanFormatter(IndexCollection indexCollection) {
 		this.setIndexCollection(indexCollection);
 	}
 
-	/* (non-Javadoc)
-	 * @see luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine.operators.BasicOperator, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine
+	 * .operators.BasicOperator, int)
 	 */
 	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
@@ -76,10 +82,12 @@ public class IndexScanFormatter implements OperatorFormatter {
 
 	/**
 	 * Creates the triple pattern items array.
-	 *
-	 * @param triplePattern the triple pattern
+	 * 
+	 * @param triplePattern
+	 *            the triple pattern
 	 * @return the collection
-	 * @throws JSONException the jSON exception
+	 * @throws JSONException
+	 *             the jSON exception
 	 */
 	private Collection<JSONObject> createTriplePatternItemsArray(
 			TriplePattern triplePattern) throws JSONException {
@@ -94,10 +102,12 @@ public class IndexScanFormatter implements OperatorFormatter {
 
 	/**
 	 * Creates the triple pattern item as json string.
-	 *
-	 * @param item the item
+	 * 
+	 * @param item
+	 *            the item
 	 * @return the jSON object
-	 * @throws JSONException the jSON exception
+	 * @throws JSONException
+	 *             the jSON exception
 	 */
 	private JSONObject createTriplePatternItemAsJsonString(Item item)
 			throws JSONException {
@@ -114,54 +124,32 @@ public class IndexScanFormatter implements OperatorFormatter {
 		return itemJson;
 	}
 
-	/* (non-Javadoc)
-	 * @see luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.JSONObject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.
+	 * JSONObject)
 	 */
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 
 		json = serialiezedOperator;
-		try {
-			String className = (String) json.get("type");
 
-			BasicIndex indexScan = (BasicIndex) Class.forName(className)
-					.getConstructor(IndexCollection.class)
-					.newInstance(this.getIndexCollection());
+		P2PIndexScan indexScan = new P2PIndexScan(indexCollection);
 
-			Collection<TriplePattern> triplePatterns = createTriplePatternsListFromJSON(json);
-			indexScan.setTriplePatterns(triplePatterns);
+		Collection<TriplePattern> triplePatterns = createTriplePatternsListFromJSON(json);
+		indexScan.setTriplePatterns(triplePatterns);
 
-			return indexScan;
-		} catch (InstantiationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalAccessException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IllegalArgumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (SecurityException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (InvocationTargetException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchMethodException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		return indexScan;
 
-		return null;
 	}
 
 	/**
 	 * Creates the triple patterns list from json.
-	 *
-	 * @param json the json
+	 * 
+	 * @param json
+	 *            the json
 	 * @return the collection
 	 */
 	private Collection<TriplePattern> createTriplePatternsListFromJSON(
@@ -210,7 +198,7 @@ public class IndexScanFormatter implements OperatorFormatter {
 
 	/**
 	 * Gets the index collection.
-	 *
+	 * 
 	 * @return the index collection
 	 */
 	private IndexCollection getIndexCollection() {
@@ -219,10 +207,11 @@ public class IndexScanFormatter implements OperatorFormatter {
 
 	/**
 	 * Sets the index collection.
-	 *
-	 * @param indexCollection the new index collection
+	 * 
+	 * @param indexCollection
+	 *            the new index collection
 	 */
-	private void setIndexCollection(IndexCollection indexCollection) {
+	public void setIndexCollection(IndexCollection indexCollection) {
 		this.indexCollection = indexCollection;
 	}
 

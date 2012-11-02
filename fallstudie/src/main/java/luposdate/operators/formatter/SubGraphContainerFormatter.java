@@ -28,20 +28,25 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 
 	/** The id_counter. */
 	private int				id_counter;
-	
+
 	/** The root. */
 	private BasicOperator	root;
 
 	/** The dataset. */
 	private Dataset			dataset;
 
+	private P2PApplication	p2pApplication;
+
 	/**
 	 * Instantiates a new sub graph container formatter.
-	 *
-	 * @param dataset the dataset
+	 * 
+	 * @param dataset
+	 *            the dataset
 	 */
-	public SubGraphContainerFormatter(Dataset dataset) {
+	public SubGraphContainerFormatter(Dataset dataset,
+			P2PApplication p2pApplication) {
 		this.dataset = dataset;
+		this.p2pApplication = p2pApplication;
 	}
 
 	/**
@@ -50,9 +55,12 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 	public SubGraphContainerFormatter() {
 	}
 
-
-	/* (non-Javadoc)
-	 * @see luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine.operators.BasicOperator, int)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * luposdate.operators.formatter.OperatorFormatter#serialize(lupos.engine
+	 * .operators.BasicOperator, int)
 	 */
 	public JSONObject serialize(BasicOperator operator, int node_id)
 			throws JSONException {
@@ -73,14 +81,17 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		return serializedSubGraph;
 	}
 
-
 	/**
 	 * Serialize node.
-	 *
-	 * @param node the node
-	 * @param nodesJSON the nodes json
-	 * @param edgesJSON the edges json
-	 * @param parent_id the parent_id
+	 * 
+	 * @param node
+	 *            the node
+	 * @param nodesJSON
+	 *            the nodes json
+	 * @param edgesJSON
+	 *            the edges json
+	 * @param parent_id
+	 *            the parent_id
 	 */
 	private void serializeNode(BasicOperator node,
 			Collection<JSONObject> nodesJSON, Collection<JSONObject> edgesJSON,
@@ -99,10 +110,10 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		}
 		OperatorFormatter serializer = null;
 		if (node instanceof BasicIndex) {
-			serializer = new IndexScanFormatter();
+			serializer = new P2PIndexScanFormatter();
 
 		} else if (node instanceof IndexCollection) {
-			serializer = new IndexCollectionFormatter();
+			serializer = new P2PIndexCollectionFormatter();
 
 		} else if (node instanceof Result) {
 			serializer = new ResultFormatter();
@@ -111,6 +122,7 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		try {
 			nodesJSON.add(serializer.serialize(node, id_counter));
 		} catch (NullPointerException e) {
+			e.printStackTrace();
 			throw new IllegalArgumentException(
 					"Dieser Operator ist bisher nicht serialisierbar");
 		} catch (JSONException e) {
@@ -123,16 +135,18 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		}
 	}
 
-	/* (non-Javadoc)
-	 * @see luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.JSONObject)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * luposdate.operators.formatter.OperatorFormatter#deserialize(org.json.
+	 * JSONObject)
 	 */
 	public BasicOperator deserialize(JSONObject serialiezedOperator)
 			throws JSONException {
 		root = null;
 
-		HashMap<Integer, BasicOperator> nodes = deserializeNodes(
-				serialiezedOperator,
-				dataset);
+		HashMap<Integer, BasicOperator> nodes = deserializeNodes(serialiezedOperator);
 
 		JSONArray edgesJson = (JSONArray) serialiezedOperator.get("edges");
 		deserializeEdges(edgesJson, nodes);
@@ -142,19 +156,20 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 
 	/**
 	 * Deserialize edges.
-	 *
-	 * @param edgesJson the edges json
-	 * @param nodes the nodes
-	 * @throws JSONException the jSON exception
+	 * 
+	 * @param edgesJson
+	 *            the edges json
+	 * @param nodes
+	 *            the nodes
+	 * @throws JSONException
+	 *             the jSON exception
 	 */
 	private void deserializeEdges(JSONArray edgesJson,
-			HashMap<Integer, BasicOperator> nodes)
-			throws JSONException {
-
+			HashMap<Integer, BasicOperator> nodes) throws JSONException {
 
 		HashMap<BasicOperator, List<OperatorIDTuple>> succedingOperators = new HashMap<BasicOperator, List<OperatorIDTuple>>();
 		HashMap<BasicOperator, List<BasicOperator>> precedingOperators = new HashMap<BasicOperator, List<BasicOperator>>();
-		
+
 		for (int i = 0; i < edgesJson.length(); i++) {
 
 			JSONObject edgeJson = edgesJson.getJSONObject(i);
@@ -171,10 +186,9 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 			}
 
 			succedingOperators.get(from).add(new OperatorIDTuple(to, 0));
+			// succedingOperators.get(from).add(new OperatorIDTuple(to,
+			// edgeJson.getInt("edge_id")));
 			precedingOperators.get(to).add(from);
-
-			// from.setSucceedingOperator(new OperatorIDTuple(to, 0));
-			// to.setPrecedingOperator(from);
 
 		}
 
@@ -192,64 +206,66 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 
 	/**
 	 * Deserialize nodes.
-	 *
-	 * @param rootJson the root json
-	 * @param dataset the dataset
+	 * 
+	 * @param rootJson
+	 *            the root json
+	 * @param dataset
+	 *            the dataset
 	 * @return the hash map
-	 * @throws JSONException the jSON exception
+	 * @throws JSONException
+	 *             the jSON exception
 	 */
-	private HashMap<Integer, BasicOperator> deserializeNodes(
-			JSONObject rootJson, Dataset dataset) throws JSONException {
+	private HashMap<Integer, BasicOperator> deserializeNodes(JSONObject rootJson)
+			throws JSONException {
 
 		HashMap<Integer, BasicOperator> nodes = new HashMap<Integer, BasicOperator>();
 		JSONArray nodesJson = (JSONArray) rootJson.get("nodes");
 
-		OperatorFormatter deserializer;
-		for (int i = 0; i < nodesJson.length(); i++) {
+		HashMap<String, OperatorFormatter> formatters = createFormatters();
 
+		for (int i = 0; i < nodesJson.length(); i++) {
 			JSONObject nodeJson = nodesJson.getJSONObject(i);
 
-			if (nodeJson.getString("type").equals(Result.class.getName())) {
-				deserializer = new ResultFormatter();
-				Result node = (Result) deserializer.deserialize(nodeJson);
-				// node.addApplication(new P2PApplication(nodeJson
-				// .getString("dest_ip")));
-				node.addApplication(new P2PApplication("192.168.1.1"));
+			// get corresponding formatter from hashmap
+			OperatorFormatter formatter = formatters.get(nodeJson
+					.getString("type"));
 
-				nodes.put(nodeJson.getInt("node_id"), node);
+			// add deserialized node to list
+			BasicOperator node = formatter.deserialize(nodeJson);
+			nodes.put(nodeJson.getInt("node_id"), node);
 
-			} else if (nodeJson.getString("type").equals(
-			// BasicIndex.class.getName())) {
-					P2PIndexScan.class.getName())) {
-				deserializer = new IndexScanFormatter();
-				BasicIndex node = (BasicIndex) deserializer
-						.deserialize(nodeJson);
+			// die referenz der index collection wird der index scan instanz
+			// zugewiesen
+			if (node instanceof P2PIndexCollection) {
+				P2PIndexScanFormatter p2pIndexScanFormatter = (P2PIndexScanFormatter) formatters
+						.get(P2PIndexScan.class.getName());
+				p2pIndexScanFormatter
+						.setIndexCollection((P2PIndexCollection) node);
+			}
 
-				if (root != null) {
-					node.setPrecedingOperator(root);
+			try {
+				if (nodeJson.getBoolean("root")) {
+					root = node;
 				}
-
-				nodes.put(nodeJson.getInt("node_id"), node);
-
-			} else if (nodeJson.getString("type").equals(
-			// MemoryIndex.class.getName())) {
-					P2PIndexCollection.class.getName())) {
-				deserializer = new IndexCollectionFormatter(dataset);
-				IndexCollection node = (IndexCollection) deserializer
-						.deserialize(nodeJson);
-
-				root = node;
-
-				nodes.put(nodeJson.getInt("node_id"), node);
-
-			} else {
-				throw new IllegalArgumentException(
-						"Dieser Operator ist bisher nicht deserialisierbar");
+			} catch (JSONException e) {
 			}
 
 		}
 		return nodes;
 	}
 
+	private HashMap<String, OperatorFormatter> createFormatters() {
+
+		HashMap<String, OperatorFormatter> formatters = new HashMap<String, OperatorFormatter>();
+
+		formatters.put(P2PIndexCollection.class.getName(),
+				new P2PIndexCollectionFormatter(dataset));
+		formatters.put(P2PIndexScan.class.getName(),
+				new P2PIndexScanFormatter());
+		formatters.put(Result.class.getName(), new ResultFormatter(
+				p2pApplication));
+
+		return formatters;
+	}
 
 }
