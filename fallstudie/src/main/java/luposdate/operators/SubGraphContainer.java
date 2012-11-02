@@ -37,9 +37,6 @@ public class SubGraphContainer extends BasicIndex {
 	/** The root node of sub graph. */
 	IndexCollection						rootNodeOfSubGraph;
 
-	/** The dest_ip. */
-	private final String				dest_ip;
-
 	private Collection<TriplePattern>	hashableTriplePatterns;
 
 	private final P2PAdapter			p2pAdapter;
@@ -51,16 +48,13 @@ public class SubGraphContainer extends BasicIndex {
 	 *            the root node of outer graph
 	 * @param rootNodeOfSubGraph
 	 *            the root node of sub graph
-	 * @param dest_ip
-	 *            the dest_ip
 	 */
 	public SubGraphContainer(P2PAdapter p2pAdapter,
 			IndexCollection rootNodeOfOuterGraph,
-			IndexCollection rootNodeOfSubGraph, String dest_ip) {
+			IndexCollection rootNodeOfSubGraph) {
 		super(rootNodeOfOuterGraph);
 
 		this.p2pAdapter = p2pAdapter;
-		this.dest_ip = dest_ip;
 		this.rootNodeOfSubGraph = rootNodeOfSubGraph;
 
 	}
@@ -88,8 +82,6 @@ public class SubGraphContainer extends BasicIndex {
 	 * rootNodeOfSubGraph (result operator) oder explizit durch String ip als
 	 * Parameter)
 	 * 
-	 * HIER: Stelle 1 & 4
-	 * 
 	 * @param queryResult
 	 *            the query result
 	 * @param operandID
@@ -103,7 +95,6 @@ public class SubGraphContainer extends BasicIndex {
 
 		JSONObject serializedGraph;
 		try {
-			// hier wird jetzt tatsaechlich losgeschickt (serialisiert usw.)
 			// Schritt 1: Serialisierung
 			serializedGraph = serialzer.serialize(rootNodeOfSubGraph, 0);
 			String key = generateKey();
@@ -120,17 +111,10 @@ public class SubGraphContainer extends BasicIndex {
 				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
 				return deserializier.getQueryResult(is);
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
 			return null;
-			// der InputStrem ist jetzt der tatsaechliche Stream aus dem P2P
-			// Netz
-			// ByteArrayInputStream inputStream = new
-			// ByteArrayInputStream(arg0):
-
-			// return deserializier.getQueryResult(inputStream);
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
