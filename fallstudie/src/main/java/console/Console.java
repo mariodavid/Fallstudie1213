@@ -9,6 +9,7 @@ import p2p.P2PAdapter;
 import p2p.P2PConnection;
 import console.commands.Add;
 import console.commands.Command;
+import console.commands.CreateChannel;
 import console.commands.DeserializerTest;
 import console.commands.Get;
 import console.commands.GetAllNodes;
@@ -93,6 +94,7 @@ public class Console {
 		commands.put("sendMessage", new SendMessage());
 		commands.put("sm", new SendMessage());
 		commands.put("getmyid", new GetMyID());
+		commands.put("cc", new CreateChannel());
 		// commands.put("loadrdf", new LoadRDF());
 
 		commands.put("help", new Help(commands.values()));
