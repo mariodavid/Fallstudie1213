@@ -68,7 +68,9 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 		Collection<JSONObject> edgesJSON = new LinkedList<JSONObject>();
 		id_counter = 0;
 
-		serializeNode(operator, nodesJSON, edgesJSON, id_counter);
+		serializeNode(new OperatorIDTuple(operator, 0), nodesJSON, edgesJSON,
+				id_counter);
+		// serializeNode(operator, nodesJSON, edgesJSON, id_counter);
 		JSONObject serializedSubGraph = new JSONObject();
 
 		try {
@@ -93,34 +95,39 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 	 * @param parent_id
 	 *            the parent_id
 	 */
-	private void serializeNode(BasicOperator node,
+	private void serializeNode(OperatorIDTuple node,
 			Collection<JSONObject> nodesJSON, Collection<JSONObject> edgesJSON,
 			int parent_id) {
 		id_counter++;
+
+		int edge_id = node.getId();
+
+		BasicOperator op = node.getOperator();
 
 		if (parent_id > 0) {
 			JSONObject edge = new JSONObject();
 			try {
 				edge.put("from", parent_id);
 				edge.put("to", id_counter);
+				edge.put("edge_id", edge_id);
 				edgesJSON.add(edge);
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 		OperatorFormatter serializer = null;
-		if (node instanceof BasicIndex) {
+		if (op instanceof BasicIndex) {
 			serializer = new P2PIndexScanFormatter();
 
-		} else if (node instanceof IndexCollection) {
+		} else if (op instanceof IndexCollection) {
 			serializer = new P2PIndexCollectionFormatter();
 
-		} else if (node instanceof Result) {
+		} else if (op instanceof Result) {
 			serializer = new ResultFormatter();
 
 		}
 		try {
-			nodesJSON.add(serializer.serialize(node, id_counter));
+			nodesJSON.add(serializer.serialize(op, id_counter));
 		} catch (NullPointerException e) {
 			e.printStackTrace();
 			throw new IllegalArgumentException(
@@ -130,8 +137,8 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 			e.printStackTrace();
 		}
 
-		for (OperatorIDTuple succ : node.getSucceedingOperators()) {
-			serializeNode(succ.getOperator(), nodesJSON, edgesJSON, id_counter);
+		for (OperatorIDTuple succ : op.getSucceedingOperators()) {
+			serializeNode(succ, nodesJSON, edgesJSON, id_counter);
 		}
 	}
 
@@ -185,9 +192,9 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 				precedingOperators.put(to, new LinkedList<BasicOperator>());
 			}
 
-			succedingOperators.get(from).add(new OperatorIDTuple(to, 0));
-			// succedingOperators.get(from).add(new OperatorIDTuple(to,
-			// edgeJson.getInt("edge_id")));
+			// succedingOperators.get(from).add(new OperatorIDTuple(to, 0));
+			succedingOperators.get(from).add(
+					new OperatorIDTuple(to, edgeJson.getInt("edge_id")));
 			precedingOperators.get(to).add(from);
 
 		}

@@ -209,13 +209,9 @@ public class P2PRule extends Rule {
 		IndexCollection rootNodeOfSubGraph = rootNodeOfOuterGraph
 				.newInstance(rootNodeOfOuterGraph.dataset);
 
-		// TODO: IP Adresse des Empfaengers muss ermittelt werden und an den
-		// neuen SubGraphContainer uebergeben werden. Dies kann ueber den
-		// indexScan erfolgen, da dort das Triple Pattern enthalten ist, sodass
-		// man hier h(x) bilden kann und somit das P2PNetzwerk befragen kann
-		String dest_ip = "192.168.1.1";
+
 		SubGraphContainer container = new SubGraphContainer(p2pAdapter,
-				rootNodeOfOuterGraph, rootNodeOfSubGraph, dest_ip);
+				rootNodeOfOuterGraph, rootNodeOfSubGraph);
 
 		HashSet<Variable> variables = new HashSet<Variable>(
 				indexScan.getIntersectionVariables());
