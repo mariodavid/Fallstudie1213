@@ -38,10 +38,10 @@ import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.timeout.TimeoutException;
 import org.json.JSONObject;
 
-import com.google.protobuf.InvalidProtocolBufferException;
-
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
+
+import com.google.protobuf.InvalidProtocolBufferException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -66,6 +66,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	private Collection<Triple>		result;
 	private String					key;
 	private Boolean					isReady;
+	private Boolean			subGraphStrategy;
 
 	/**
 	 * Instanziiert ein neuen P2P Adapter. Als Übergabewert wird swohl die Peer
@@ -76,8 +77,13 @@ public class P2PAdapter implements DataStoreAdapter {
 	 */
 	public P2PAdapter(Peer peer) {
 		this.peer = peer;
+		this.subGraphStrategy = true;
 		listenForDataMessages();
 		initDistributionStrategy();
+	}
+
+	public void setSubGraphStrategy(Boolean subGraphStrategy) {
+		this.subGraphStrategy = subGraphStrategy;
 	}
 
 	/**
@@ -293,8 +299,9 @@ public class P2PAdapter implements DataStoreAdapter {
 				Scanner inReader = new Scanner(inStream);
 
 				for (int i = 0; i < 1000000; i++) {
-					if (inReader.hasNext())
+					if (inReader.hasNext()) {
 						System.out.println("kam an: " + inReader.nextLine());
+					}
 					try {
 						Thread.sleep(2000);
 					} catch (InterruptedException e) {
@@ -374,8 +381,6 @@ public class P2PAdapter implements DataStoreAdapter {
 		future.addListener(new BaseFutureAdapter<FutureDHT>() {
 			public void operationComplete(FutureDHT future) throws Exception {
 				if (future.isSuccess()) {
-					System.out.println("success");
-
 					// add all p2p results to the result collection
 					for (Data r : future.getDataMap().values()) {
 						try {
@@ -501,5 +506,9 @@ public class P2PAdapter implements DataStoreAdapter {
 	 */
 	public P2PIndexQueryEvaluator getEvaluator() {
 		return this.evaluator;
+	}
+
+	public boolean isSubGraphStrategy() {
+		return subGraphStrategy;
 	}
 }

@@ -14,6 +14,11 @@ public class P2PRulePackage extends RulePackage {
 	 * Instantiates a new p2 p rule package.
 	 */
 	public P2PRulePackage(P2PAdapter p2pAdapter) {
-		this.rules = new Rule[] { new P2PRule(p2pAdapter) };
+		if (p2pAdapter.isSubGraphStrategy()) {
+			this.rules = new Rule[] { new P2PRule(p2pAdapter) };
+		} else {
+			this.rules = new Rule[] { new P2PRuleGlobalJoin() };
+		}
+
 	}
 }

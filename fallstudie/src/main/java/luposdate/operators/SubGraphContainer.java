@@ -101,7 +101,9 @@ public class SubGraphContainer extends BasicIndex {
 			InputStream is;
 			try {
 				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
-				return deserializier.getQueryResult(is);
+				QueryResult queryResult = deserializier.getQueryResult(is);
+				System.out.println("schritt 4: " + queryResult);
+				return queryResult;
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

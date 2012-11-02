@@ -3,6 +3,7 @@ package console.commands;
 import java.net.URL;
 import java.util.Scanner;
 
+import lupos.datastructures.queryresult.QueryResult;
 import lupos.gui.Demo_Applet;
 import lupos.gui.GUI;
 import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
@@ -36,8 +37,9 @@ public class Query implements Command {
 			}
 			new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
 					"test", true, false);
-			
-			System.out.println(evaluator.getResult());
+			QueryResult result = evaluator.getResult();
+
+			System.out.println(result);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

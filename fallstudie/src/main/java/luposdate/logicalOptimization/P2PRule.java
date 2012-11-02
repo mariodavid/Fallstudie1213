@@ -187,7 +187,6 @@ public class P2PRule extends Rule {
 		// hier wird der normale index scan operator (p2pIndexScan) durch einen
 		// SubGraphContainer ersetzt
 		replaceIndexScanOperatorWithSubGraphContainer(this.Op2);
-		System.out.println("hallo in p2prule");
 		// falls Index1 nur noch ein Triple Pattern enthaelt, muss dieser
 		// bereits jetzt ersetzt werden
 		if (tp2.size() == 1) {
