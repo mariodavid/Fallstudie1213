@@ -11,7 +11,6 @@ import lupos.endpoint.server.format.Formatter;
 import lupos.endpoint.server.format.XMLFormatter;
 import lupos.engine.operators.application.Application;
 
-// TODO: Auto-generated Javadoc
 /**
  * Diese Klasse wird mit zusammen mit dem Triple Pattern verschickt und dann bei
  * dem Empfänger von dem ResultOperator aufgerufen (call Methode). Wir befinden
@@ -29,27 +28,14 @@ import lupos.engine.operators.application.Application;
  * Applikation soll dann das Rücksenden durchführen
  * 
  * In der Call Methode ist das Ergebnis der Teilanfrage dann drin und soll an
- * den Ursprünglichen Sender zurück geschickt werden. Dazu muss der
- * ursprüngliche Sender beim versenden in dieser Klasse irgendwie seine Quell IP
- * festlegen, damit der Empfänger an diese dann zurückschicken kann.
+ * den Ursprünglichen Sender zurück geschickt werden.
  * 
  */
 public class P2PApplication implements Application {
 
-	/** The dest_ip. */
-	// private String dest_ip;
-
 	/** The result. */
-	private String			result;
+	private String	result;
 
-	/**
-	 * Instantiates a new p2 p application.
-	 *
-	 * @param dest_ip the dest_ip
-	 */
-	// public P2PApplication(String dest_ip) {
-	// this.dest_ip = dest_ip;
-	// }
 
 	public P2PApplication() {
 	}
@@ -67,25 +53,13 @@ public class P2PApplication implements Application {
 	 * @see lupos.engine.operators.application.Application#call(lupos.datastructures.queryresult.QueryResult)
 	 */
 	public void call(QueryResult res) {
-		/*
-		 * Anfrageresultat (QueryResult res) kommt an (wir befinden uns auf der
-		 * Empfangsseite und wollen jetzt wieder zurück schicken). Nun muss das
-		 * queryresult an den sender verschickt werden Zum Serialisieren des
-		 * QueryResult kann im Packet Endpoint.server/client.format/formatreader
-		 * die Klassen verwendet werden: Serialisierung:
-		 * lupos.endpoint.server.format; Deserialisierung:
-		 * lupos.endpoint.client.formatreader;
-		 */
 
 		// Schritt 3: Ruecksenden des QueryResults
 		Formatter formatter = new XMLFormatter();
 
-		// hier kommt die Implementierung fur das P2P Netz hin
-		OutputStream os = new ByteArrayOutputStream();
-
-
 		// TODO: schlecht, weil hier das Iteratorkonzept verletzt wird. es muss
 		// gewartet werden, bis das komplette query result erzeugt wurde
+		OutputStream os = new ByteArrayOutputStream();
 		Set<Variable> variables = res.getVariableSet();
 
 		try {
@@ -130,9 +104,5 @@ public class P2PApplication implements Application {
 		// TODO Auto-generated method stub
 
 	}
-
-	// public void setDestinationIp(String dest_ip) {
-	// this.dest_ip = dest_ip;
-	// }
 
 }
