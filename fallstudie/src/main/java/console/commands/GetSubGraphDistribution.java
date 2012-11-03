@@ -9,7 +9,7 @@ import p2p.P2PAdapter;
 /**
  * Verändert die Verteilungsstrategie.
  */
-public class GetSubGraphStrategy implements Command {
+public class GetSubGraphDistribution implements Command {
 
 	/*
 	 * (non-Javadoc)
@@ -21,7 +21,8 @@ public class GetSubGraphStrategy implements Command {
 			P2PIndexQueryEvaluator evaluator) {
 
 		P2PAdapter adapter = (P2PAdapter) evaluator.getP2PAdapter();
-		System.out.println(adapter.isSubGraphStrategy());
+		System.out.println("The sub graph diestribution is set to: "
+				+ adapter.isSubGraphStrategy());
 	}
 
 	/*

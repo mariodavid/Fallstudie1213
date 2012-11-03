@@ -2,9 +2,13 @@ package console;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Properties;
 import java.util.Scanner;
 
 import luposdate.LuposServer;
+
+import org.apache.log4j.PropertyConfigurator;
+
 import p2p.P2PAdapter;
 import p2p.P2PConnection;
 import console.commands.Add;
@@ -18,7 +22,7 @@ import console.commands.GetLocalStorage;
 import console.commands.GetMyID;
 import console.commands.GetPeerForContent;
 import console.commands.GetStrategy;
-import console.commands.GetSubGraphStrategy;
+import console.commands.GetSubGraphDistribution;
 import console.commands.Help;
 import console.commands.Put;
 import console.commands.Query;
@@ -26,7 +30,7 @@ import console.commands.Quit;
 import console.commands.Remove;
 import console.commands.SendMessage;
 import console.commands.SetStrategy;
-import console.commands.SetSubGraphStrategy;
+import console.commands.SetSubGraphDistribution;
 
 /**
  * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
@@ -97,8 +101,8 @@ public class Console {
 		commands.put("sm", new SendMessage());
 		commands.put("getmyid", new GetMyID());
 		commands.put("cc", new CreateChannel());
-		commands.put("setsubgraphstrategy", new SetSubGraphStrategy());
-		commands.put("getsubgraphstrategy", new GetSubGraphStrategy());
+		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
+		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
 		// commands.put("loadrdf", new LoadRDF());
 
 		commands.put("help", new Help(commands.values()));
@@ -113,6 +117,9 @@ public class Console {
 	 */
 	public static void main(String[] args) throws Exception {
 
+		Properties props = new Properties();
+		props.load(Console.class.getResourceAsStream("log4j.properties"));
+		PropertyConfigurator.configure(props);
 
 		P2PConnection connection = new P2PConnection();
 		LuposServer server = new LuposServer();

@@ -9,7 +9,7 @@ import p2p.P2PAdapter;
 /**
  * Verändert die Verteilungsstrategie.
  */
-public class SetSubGraphStrategy implements Command {
+public class SetSubGraphDistribution implements Command {
 
 	/*
 	 * (non-Javadoc)
