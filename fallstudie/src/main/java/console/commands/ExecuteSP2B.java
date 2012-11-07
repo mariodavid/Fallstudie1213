@@ -40,7 +40,7 @@ public class ExecuteSP2B implements Command {
 		FileInputStream fis = null;
 		try {
 			fis = new FileInputStream(new File(this.getClass()
-					.getResource("/sp2b/sp2b_100.n3").getPath()));
+					.getResource("/sp2b/sp2b_" + scanner.next() + ".n3").getPath()));
 		} catch (Exception e) {
 			System.out.println("Keine Datei vorhanden!");
 			return;
