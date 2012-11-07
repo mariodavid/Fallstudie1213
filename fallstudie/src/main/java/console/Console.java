@@ -2,13 +2,9 @@ package console;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.Properties;
 import java.util.Scanner;
 
 import luposdate.LuposServer;
-
-import org.apache.log4j.PropertyConfigurator;
-
 import p2p.P2PAdapter;
 import p2p.P2PConnection;
 import console.commands.Add;
@@ -117,9 +113,9 @@ public class Console {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		Properties props = new Properties();
-		props.load(Console.class.getResourceAsStream("log4j.properties"));
-		PropertyConfigurator.configure(props);
+		// Properties props = new Properties();
+		// props.load(Console.class.getResourceAsStream("log4j.properties"));
+		// PropertyConfigurator.configure(props);
 
 		P2PConnection connection = new P2PConnection();
 		LuposServer server = new LuposServer();

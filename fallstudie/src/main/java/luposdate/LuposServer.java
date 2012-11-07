@@ -9,8 +9,11 @@ import lupos.datastructures.items.literal.LiteralFactory;
 import lupos.datastructures.items.literal.LiteralFactory.MapType;
 import lupos.datastructures.items.literal.URILiteral;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-import p2p.P2PAdapter;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import p2p.P2PAdapter;
 /**
  * In dieser Klasse wird eine Lupos Instanz gestartet.
  */
@@ -36,6 +39,8 @@ public class LuposServer {
 	 *            den p2pAdapter
 	 */
 	public void start(P2PAdapter p2pAdapter) {
+		Logger logger = LoggerFactory.getLogger(LuposServer.class);
+		logger.info("suarting up lupos server instance...");
 
 		System.out.println("starting up lupos instance...");
 		try {
