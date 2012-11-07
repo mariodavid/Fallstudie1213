@@ -1,5 +1,6 @@
 package console.commands;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -38,8 +39,9 @@ public class ExecuteSP2B implements Command {
 
 		FileInputStream fis = null;
 		try {
-			fis = new FileInputStream("sp2b.n3");
-		} catch (FileNotFoundException e1) {
+			fis = new FileInputStream(new File(this.getClass()
+					.getResource("/sp2b/sp2b_100.n3").getPath()));
+		} catch (Exception e) {
 			System.out.println("Keine Datei vorhanden!");
 			return;
 		}
@@ -53,7 +55,7 @@ public class ExecuteSP2B implements Command {
 				try {
 					counter++;
 					adapter.distributionStrategy.distribute(triple);
-					if (counter % 250 == 0)
+					if (counter % 25 == 0)
 						System.out.println(counter + " Triple eingelesen ...");
 				} catch (IOException e) {
 					e.printStackTrace();
