@@ -52,12 +52,14 @@ public class GetLocalStorage implements Command {
 	}
 
 	private void printElements(Peer peer) {
+		
 		for (Number160 key : peer.getPeerBean().getStorage()
 				.findContentForResponsiblePeerID(peer.getPeerID())) {
 
 			System.out.print(key);
 			FutureDHT future = peer.get(key).setAll().start();
 			future.awaitUninterruptibly();
+		
 
 			int size = future.getDataMap().values().size();
 			int i = 0;
