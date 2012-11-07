@@ -11,6 +11,7 @@ import lupos.datastructures.items.Item;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.client.formatreader.MIMEFormatReader;
 import lupos.endpoint.client.formatreader.XMLFormatReader;
+import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.IndexCollection;
@@ -103,7 +104,11 @@ public class SubGraphContainer extends BasicIndex {
 				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
 				QueryResult queryResult = deserializier.getQueryResult(is);
 				System.out.println("schritt 4: " + queryResult);
-				return queryResult;
+
+				for (OperatorIDTuple succ : this.getSucceedingOperators()) {
+					succ.processAll(queryResult);
+				}
+				// return queryResult;
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}
