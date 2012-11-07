@@ -7,13 +7,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Scanner;
 
 import p2p.P2PAdapter;
+import xpref.XPref;
 
 import lupos.datastructures.items.Triple;
 import lupos.datastructures.items.literal.Literal;
 import lupos.engine.operators.tripleoperator.TripleConsumer;
+import lupos.gui.Demo_Applet;
+import lupos.gui.GUI;
 import lupos.rdf.parser.N3Parser;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 
@@ -23,7 +27,7 @@ import net.tomp2p.p2p.Peer;
  * Läd eine RDF Datei ein und speichert die Triple in das Netzwerk
  * 
  */
-public class ExecuteSP2B implements Command {
+public class LoadN3 implements Command {
 
 	/** The filename. */
 	public P2PAdapter adapter;
@@ -37,15 +41,16 @@ public class ExecuteSP2B implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
-		FileInputStream fis = null;
+		URL url;
+		InputStream  is = null;
 		try {
-			fis = new FileInputStream(new File(this.getClass()
-					.getResource("/sp2b/sp2b_" + scanner.next() + ".n3").getPath()));
-		} catch (Exception e) {
-			System.out.println("Keine Datei vorhanden!");
-			return;
+			url = new URL( scanner.next() );
+			is = url.openStream();
+		} catch (Exception e1) {
+			System.out.println("NOT FOUND!");
+			e1.printStackTrace();
 		}
-
+		
 		this.adapter = (P2PAdapter) evaluator.getP2PAdapter();
 
 		final TripleConsumer tc = new TripleConsumer() {
@@ -65,7 +70,7 @@ public class ExecuteSP2B implements Command {
 		};
 
 		try {
-			N3Parser.parseRDFData(fis, tc, "UTF-8");
+			N3Parser.parseRDFData(is, tc, "UTF-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
@@ -73,7 +78,7 @@ public class ExecuteSP2B implements Command {
 	}
 
 	public String getDescription() {
-		return "executes the SP2B Benchmark";
+		return "load n3 file from a http link";
 	}
 
 }

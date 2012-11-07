@@ -27,7 +27,7 @@ import console.commands.Remove;
 import console.commands.SendMessage;
 import console.commands.SetStrategy;
 import console.commands.SetSubGraphDistribution;
-import console.commands.ExecuteSP2B;
+import console.commands.LoadN3;
 
 /**
  * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
@@ -100,7 +100,7 @@ public class Console {
 		commands.put("cc", new CreateChannel());
 		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
 		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
-		commands.put("executesp2b", new ExecuteSP2B());
+		commands.put("executesp2b", new LoadN3());
 
 		commands.put("help", new Help(commands.values()));
 
