@@ -15,6 +15,7 @@ import console.commands.Get;
 import console.commands.GetAllNodes;
 import console.commands.GetExampleQueries;
 import console.commands.GetLocalStorage;
+import console.commands.GetLocalStorageSize;
 import console.commands.GetMyID;
 import console.commands.GetPeerForContent;
 import console.commands.GetStrategy;
@@ -88,6 +89,7 @@ public class Console {
 		commands.put("quit", new Quit());
 		commands.put("getallnodes", new GetAllNodes());
 		commands.put("getlocalstorage", new GetLocalStorage());
+		commands.put("getlocalstoragesize", new GetLocalStorageSize());
 		commands.put("query", new Query());
 		commands.put("setstrategy", new SetStrategy());
 		commands.put("getstrategy", new GetStrategy());
