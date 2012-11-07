@@ -100,7 +100,7 @@ public class Console {
 		commands.put("cc", new CreateChannel());
 		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
 		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
-		commands.put("executesp2b", new LoadN3());
+		commands.put("loadn3", new LoadN3());
 
 		commands.put("help", new Help(commands.values()));
 
