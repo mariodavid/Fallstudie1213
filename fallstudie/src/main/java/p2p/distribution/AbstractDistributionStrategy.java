@@ -55,8 +55,10 @@ public abstract class AbstractDistributionStrategy implements
 		Number160 hash = Number160.createHash(key);
 		Number160 contentKey = Number160.createHash(value.toN3String());
 
-		peer.put(hash).setData(contentKey, new Data(value)).start()
-				.awaitUninterruptibly();
+//		peer.put(hash).setData(contentKey, new Data(value)).start()
+//				.awaitUninterruptibly();
+		// asynchron
+		peer.put(hash).setData(contentKey, new Data(value)).start();
 	}
 
 	/**

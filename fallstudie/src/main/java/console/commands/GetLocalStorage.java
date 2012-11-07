@@ -61,6 +61,7 @@ public class GetLocalStorage implements Command {
 
 			int size = future.getDataMap().values().size();
 			int i = 0;
+
 			for (Data result : future.getDataMap().values()) {
 				try {
 					if (i == 0) {
