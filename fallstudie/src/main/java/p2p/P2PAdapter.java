@@ -40,6 +40,8 @@ import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
+import p2p.load.PeerCacheEntry;
+import p2p.load.TripleCache;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -54,19 +56,19 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
 	 */
-	private static final int		DEFAULT_DISTRIBUTION_STRATEGY	= 1;
+	private static final int DEFAULT_DISTRIBUTION_STRATEGY = 1;
 	/** Timeout in ms. */
-	public static final int			TIMEOUT							= 5000;
+	public static final int TIMEOUT = 5000;
 	/** Lupos Evaluator. */
-	public P2PIndexQueryEvaluator	evaluator;
+	public P2PIndexQueryEvaluator evaluator;
 	/** Peer Referenz. */
-	public Peer						peer;
+	public Peer peer;
 	/** aktuelle Verteilungsstrategie. */
-	public DistributionStrategy		distributionStrategy;
-	private Collection<Triple>		result;
-	private String					key;
-	private Boolean					isReady;
-	private Boolean			subGraphStrategy;
+	public DistributionStrategy distributionStrategy;
+	private Collection<Triple> result;
+	private String key;
+	private Boolean isReady;
+	private Boolean subGraphStrategy;
 
 	/**
 	 * Instanziiert ein neuen P2P Adapter. Als Übergabewert wird swohl die Peer
@@ -104,48 +106,53 @@ public class P2PAdapter implements DataStoreAdapter {
 		peer.setObjectDataReply(new ObjectDataReply() {
 			public Object reply(PeerAddress sender, Object request)
 					throws Exception {
+				if (request.getClass() == PeerCacheEntry.class) {
+					for (Triple triple : ((PeerCacheEntry) request)
+							.getTripleList())
+						getDistributionStrategy().distribute(triple);
+					return null;
+				} else {
+					System.out.println("received request: " + request);
 
-				System.out.println("received request: " + request);
+					P2PApplication p2pApplication = new P2PApplication();
+					SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
+							evaluator.getDataset(), p2pApplication);
 
-				P2PApplication p2pApplication = new P2PApplication();
-				SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
-						evaluator.getDataset(), p2pApplication);
+					BasicOperator rootNode = deserializer
+							.deserialize(new JSONObject((String) request));
 
-				BasicOperator rootNode = deserializer
-						.deserialize(new JSONObject((String) request));
+					// erzeugt die Vorgaenger der Collection, wie bei
+					// addSucceedingOperator
+					// (rekursiv fuer den gesamten Baum)
+					rootNode.setParents();
 
-				// erzeugt die Vorgaenger der Collection, wie bei
-				// addSucceedingOperator
-				// (rekursiv fuer den gesamten Baum)
-				rootNode.setParents();
+					// erkennt zyklen im op graphen (vermutlich nicht
+					// relevant,
+					// evtl. bei
+					// spaeteren erweiterungen relevant)
+					rootNode.detectCycles();
 
-				// erkennt zyklen im op graphen (vermutlich nicht
-				// relevant,
-				// evtl. bei
-				// spaeteren erweiterungen relevant)
-				rootNode.detectCycles();
+					// berechnet an welcher stelle welche variablen gebunden
+					// sind und gebunden sein koennen
+					rootNode.sendMessage(new BoundVariablesMessage());
 
-				// berechnet an welcher stelle welche variablen gebunden
-				// sind und gebunden sein koennen
-				rootNode.sendMessage(new BoundVariablesMessage());
+					evaluator.setRootNode(rootNode);
 
-				evaluator.setRootNode(rootNode);
+					evaluator.evaluateQuery();
 
-				evaluator.evaluateQuery();
+					// try {
+					// XPref.getInstance(Demo_Applet.class
+					// .getResource("/preferencesMenu.xml"));
+					// } catch (Exception e) {
+					// XPref.getInstance(new URL("file:"
+					// + GUI.class.getResource("/preferencesMenu.xml")
+					// .getFile()));
+					// }
+					// new Viewer(new GraphWrapperBasicOperator(evaluator
+					// .getRootNode()), "test", true, false);
 
-
-				// try {
-				// XPref.getInstance(Demo_Applet.class
-				// .getResource("/preferencesMenu.xml"));
-				// } catch (Exception e) {
-				// XPref.getInstance(new URL("file:"
-				// + GUI.class.getResource("/preferencesMenu.xml")
-				// .getFile()));
-				// }
-				// new Viewer(new GraphWrapperBasicOperator(evaluator
-				// .getRootNode()), "test", true, false);
-
-				return p2pApplication.getResult();
+					return p2pApplication.getResult();
+				}
 			}
 
 		});
@@ -251,6 +258,15 @@ public class P2PAdapter implements DataStoreAdapter {
 		return null;
 	}
 
+	public void sendMessage(Number160 locationKey, Object message) {
+		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
+				1, 10, 0);
+		FutureDHT futureDHT = peer.send(locationKey).setObject(message)
+				.setRequestP2PConfiguration(requestP2PConfiguration)
+				.setRefreshSeconds(0).setDirectReplication(false).start();
+		// futureDHT.awaitUninterruptibly();
+	}
+
 	public String sendMessage(String locationKey, String message) {
 		return sendMessage(Number160.createHash(locationKey), message);
 	}
@@ -285,7 +301,7 @@ public class P2PAdapter implements DataStoreAdapter {
 
 		return route.first();
 	}
-	
+
 	// testing purpose
 	public void listenForDirectDataMessages() {
 		this.peer.setRawDataReply(new RawDataReply() {
@@ -327,7 +343,7 @@ public class P2PAdapter implements DataStoreAdapter {
 		});
 	}
 
-	//testing purpose
+	// testing purpose
 	public String sendMessageDirect(Number160 destination, String message) {
 		System.out.println("Sende ...");
 		SendDirectBuilder sendBuilder = peer.sendDirect();

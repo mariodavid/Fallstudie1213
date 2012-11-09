@@ -26,6 +26,13 @@ public class OneKeyDistribution extends AbstractDistributionStrategy {
 		addToNetwork(triple.getObject().originalString(), triple);
 	}
 
+	public String[] getDistributeStrings(Triple triple) {
+		String[] result = { triple.getSubject().originalString(),
+				triple.getPredicate().originalString(),
+				triple.getObject().originalString() };
+		return result;
+	}
+
 	@Override
 	public void remove(Triple triple) throws IOException {
 

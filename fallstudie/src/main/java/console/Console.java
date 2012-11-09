@@ -18,6 +18,7 @@ import console.commands.GetLocalStorage;
 import console.commands.GetLocalStorageSize;
 import console.commands.GetMyID;
 import console.commands.GetPeerForContent;
+import console.commands.GetResponsableKeySize;
 import console.commands.GetStrategy;
 import console.commands.GetSubGraphDistribution;
 import console.commands.Help;
@@ -103,6 +104,7 @@ public class Console {
 		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
 		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
 		commands.put("loadn3", new LoadN3());
+		commands.put("getresponsablekeysize", new GetResponsableKeySize());
 
 		commands.put("help", new Help(commands.values()));
 

@@ -28,6 +28,11 @@ public class TwoKeyDistribution extends AbstractDistributionStrategy {
 		addToNetwork(getPO(triple), triple);
 	}
 
+	public String[] getDistributeStrings(Triple triple) {
+		String[] result = { getSP(triple), getSO(triple), getPO(triple) };
+		return result;
+	}
+
 	@Override
 	public void remove(Triple triple) throws IOException {
 		removeFromNetwork(getSP(triple), triple);

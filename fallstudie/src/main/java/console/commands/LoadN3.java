@@ -1,23 +1,15 @@
 package console.commands;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Scanner;
 
 import p2p.P2PAdapter;
-import xpref.XPref;
+import p2p.load.TripleCache;
 
 import lupos.datastructures.items.Triple;
-import lupos.datastructures.items.literal.Literal;
 import lupos.engine.operators.tripleoperator.TripleConsumer;
-import lupos.gui.Demo_Applet;
-import lupos.gui.GUI;
 import lupos.rdf.parser.N3Parser;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 
@@ -31,6 +23,7 @@ public class LoadN3 implements Command {
 
 	/** The filename. */
 	public P2PAdapter adapter;
+	TripleCache tripleCache;
 
 	/*
 	 * (non-Javadoc)
@@ -52,19 +45,20 @@ public class LoadN3 implements Command {
 		}
 		
 		this.adapter = (P2PAdapter) evaluator.getP2PAdapter();
-
+		tripleCache = new TripleCache(adapter);
+		
 		final TripleConsumer tc = new TripleConsumer() {
 			int counter = 0;
-
 			public void consume(final Triple triple) {
-				try {
+//				try {
 					counter++;
-					adapter.distributionStrategy.distribute(triple);
-					if (counter % 25 == 0)
-						System.out.println(counter + " Triple eingelesen ...");
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+					tripleCache.add(triple);
+//					adapter.distributionStrategy.distribute(triple);
+//					if (counter % 25 == 0)
+//						System.out.println(counter + " Triple eingelesen ...");
+//				} catch (IOException e) {
+//					e.printStackTrace();
+//				}
 			}
 
 		};
@@ -74,6 +68,8 @@ public class LoadN3 implements Command {
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
+		
+		tripleCache.flush();
 
 	}
 

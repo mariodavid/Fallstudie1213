@@ -1,6 +1,5 @@
 package p2p.distribution;
 
-
 import java.io.IOException;
 
 import lupos.datastructures.items.Triple;
@@ -24,6 +23,11 @@ public class ThreeKeyDistribution extends AbstractDistributionStrategy {
 		addToNetwork(getSPO(triple), triple);
 	}
 
+	public String[] getDistributeStrings(Triple triple) {
+		String[] result = { getSPO(triple) };
+		return result;
+	}
+
 	private String getSPO(Triple triple) {
 		return triple.getPos(0).originalString()
 				+ triple.getPredicate().originalString()
@@ -34,7 +38,7 @@ public class ThreeKeyDistribution extends AbstractDistributionStrategy {
 	public void remove(Triple triple) throws IOException {
 		removeFromNetwork(getSPO(triple), triple);
 	}
-	
+
 	@Override
 	public boolean contains(Triple triple) throws IOException {
 		return isInNetwork(getSPO(triple), triple);
