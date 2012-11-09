@@ -26,9 +26,7 @@ public class GetLocalStorageSize implements Command {
 			P2PIndexQueryEvaluator evaluator) {
 
 		System.out.println("local storagesize: "
-				+ peer.getPeerBean().getStorage()
-						.findContentForResponsiblePeerID(peer.getPeerID())
-						.size());
+				+ peer.getPeerBean().getStorage().map().size());
 	}
 
 	/*
