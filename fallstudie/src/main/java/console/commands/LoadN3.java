@@ -69,7 +69,7 @@ public class LoadN3 implements Command {
 			e.printStackTrace();
 		}
 		
-		tripleCache.flush();
+		tripleCache.flush(true);
 
 	}
 
