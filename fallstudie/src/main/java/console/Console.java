@@ -18,8 +18,10 @@ import console.commands.Get;
 import console.commands.GetAllNodes;
 import console.commands.GetExampleQueries;
 import console.commands.GetLocalStorage;
+import console.commands.GetLocalStorageSize;
 import console.commands.GetMyID;
 import console.commands.GetPeerForContent;
+import console.commands.GetResponsableKeySize;
 import console.commands.GetStrategy;
 import console.commands.GetSubGraphDistribution;
 import console.commands.Help;
@@ -30,6 +32,7 @@ import console.commands.Remove;
 import console.commands.SendMessage;
 import console.commands.SetStrategy;
 import console.commands.SetSubGraphDistribution;
+import console.commands.LoadN3;
 
 /**
  * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
@@ -90,6 +93,7 @@ public class Console {
 		commands.put("quit", new Quit());
 		commands.put("getallnodes", new GetAllNodes());
 		commands.put("getlocalstorage", new GetLocalStorage());
+		commands.put("getlocalstoragesize", new GetLocalStorageSize());
 		commands.put("query", new Query());
 		commands.put("setstrategy", new SetStrategy());
 		commands.put("getstrategy", new GetStrategy());
@@ -102,7 +106,8 @@ public class Console {
 		commands.put("cc", new CreateChannel());
 		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
 		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
-		// commands.put("loadrdf", new LoadRDF());
+		commands.put("loadn3", new LoadN3());
+		commands.put("getresponsablekeysize", new GetResponsableKeySize());
 
 		commands.put("help", new Help(commands.values()));
 

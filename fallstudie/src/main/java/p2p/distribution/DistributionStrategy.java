@@ -42,4 +42,6 @@ public interface DistributionStrategy {
 	 * @throws IOExecption
 	 */
 	public boolean contains(Triple triple) throws IOException;
+	
+	public String[] getDistributeStrings(Triple triple);
 }
