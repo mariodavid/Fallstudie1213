@@ -14,7 +14,7 @@ import net.tomp2p.storage.Data;
 /**
  * Gibt den lokalen Speicher eines Peers aus.
  */
-public class GetResponsableKeySize implements Command {
+public class GetResponsibleKeySize implements Command {
 
 	/*
 	 * (non-Javadoc)

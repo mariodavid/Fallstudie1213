@@ -21,10 +21,11 @@ import console.commands.GetLocalStorage;
 import console.commands.GetLocalStorageSize;
 import console.commands.GetMyID;
 import console.commands.GetPeerForContent;
-import console.commands.GetResponsableKeySize;
+import console.commands.GetResponsibleKeySize;
 import console.commands.GetStrategy;
 import console.commands.GetSubGraphDistribution;
 import console.commands.Help;
+import console.commands.LoadN3;
 import console.commands.Put;
 import console.commands.Query;
 import console.commands.Quit;
@@ -32,7 +33,6 @@ import console.commands.Remove;
 import console.commands.SendMessage;
 import console.commands.SetStrategy;
 import console.commands.SetSubGraphDistribution;
-import console.commands.LoadN3;
 
 /**
  * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
@@ -107,7 +107,8 @@ public class Console {
 		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
 		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
 		commands.put("loadn3", new LoadN3());
-		commands.put("getresponsablekeysize", new GetResponsableKeySize());
+		commands.put("getresponsiblekeysize", new GetResponsibleKeySize());
+		commands.put("getresponsablekeysize", new GetResponsibleKeySize()); // :-)
 
 		commands.put("help", new Help(commands.values()));
 
