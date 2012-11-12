@@ -8,10 +8,11 @@
 
 	<repositories>
 		<repository>
-			<id>tomp2p.net</id>
+			<id>net.tomp2p</id>
 			<url>http://tomp2p.net/dev/mvn/</url>
 		</repository>
 	</repositories>
+
 
 	<dependencies>
 		<dependency>
@@ -20,12 +21,7 @@
 			<version>1.5.8</version>
 		</dependency>
 
-		<dependency>
-			<groupId>net.tomp2p</groupId>
-			<artifactId>TomP2P</artifactId>
-			<version>4.2</version>
-		</dependency>
-		
+
 		<dependency>
 			<groupId>de.uniluebeck.ifis</groupId>
 			<artifactId>luposdate.core</artifactId>
@@ -52,6 +48,12 @@
 			<groupId>org.json</groupId>
 			<artifactId>json</artifactId>
 			<version>20090211</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.tomp2p</groupId>
+			<artifactId>TomP2P</artifactId>
+			<version>4.2</version>
 		</dependency>
 	</dependencies>
 </project>

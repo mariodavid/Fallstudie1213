@@ -3,11 +3,11 @@ package luposdate.index;
 import java.io.IOException;
 import java.util.Collection;
 
-import p2p.P2PAdapter;
-
 import lupos.datastructures.items.Triple;
 import lupos.datastructures.items.literal.URILiteral;
 import lupos.engine.operators.index.Indices;
+import p2p.DataStoreAdapter;
+import p2p.P2PAdapter;
 
 /**
  * In dieser Klasse wird der Index verwaltet. Das beinhaltet im wesentlichen die
@@ -17,7 +17,7 @@ import lupos.engine.operators.index.Indices;
 public class P2PIndices extends Indices {
 
 	/** Referenz zum P2P-Adapter. */
-	private P2PAdapter adapter;
+	private DataStoreAdapter	adapter;
 
 	/**
 	 * Hier ist wichtig, dass für jedes P2PIndices ein neues P2PNetzwerk
@@ -30,7 +30,7 @@ public class P2PIndices extends Indices {
 	public P2PIndices(URILiteral uriLiteral) {
 		super();
 		setRdfName(uriLiteral);
-		adapter.connect();
+		((P2PAdapter) adapter).connect();
 	}
 
 	/**

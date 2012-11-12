@@ -23,8 +23,9 @@ public class P2PIndexScan extends BasicIndex {
 
 	/**
 	 * Instantiates a new p2 p index scan.
-	 *
-	 * @param indexCollection the index collection
+	 * 
+	 * @param indexCollection
+	 *            the index collection
 	 */
 	public P2PIndexScan(IndexCollection indexCollection) {
 		super(indexCollection);
@@ -33,11 +34,15 @@ public class P2PIndexScan extends BasicIndex {
 
 	/**
 	 * Instantiates a new p2 p index scan.
-	 *
-	 * @param succeedingOperator the succeeding operator
-	 * @param triplePattern the triple pattern
-	 * @param data the data
-	 * @param indexCollection the index collection
+	 * 
+	 * @param succeedingOperator
+	 *            the succeeding operator
+	 * @param triplePattern
+	 *            the triple pattern
+	 * @param data
+	 *            the data
+	 * @param indexCollection
+	 *            the index collection
 	 */
 	public P2PIndexScan(OperatorIDTuple succeedingOperator,
 			Collection<TriplePattern> triplePattern, Item data,
@@ -60,9 +65,11 @@ public class P2PIndexScan extends BasicIndex {
 	 * nachgeschaut werden, ob diese variable existiert und ggf. ersetzt werden
 	 * durch den übergebenen wert. Die Variablen die übergeben werden müssen
 	 * dann im Ergebnis auch auftauchen
-	 *
-	 * @param indices the indices
-	 * @param bindings the bindings
+	 * 
+	 * @param indices
+	 *            the indices
+	 * @param bindings
+	 *            the bindings
 	 * @return the query result
 	 */
 	@Override
@@ -81,7 +88,9 @@ public class P2PIndexScan extends BasicIndex {
 
 			for (Triple triple : p2pIndices.getAll(key)) {
 				Bindings b = addVariablesToBindings(items, triple);
-				result.add(b);
+				if (b != null) {
+					result.add(b);
+				}
 			}
 		}
 
@@ -90,9 +99,11 @@ public class P2PIndexScan extends BasicIndex {
 
 	/**
 	 * Adds the variables to bindings.
-	 *
-	 * @param items the items
-	 * @param t the t
+	 * 
+	 * @param items
+	 *            the items
+	 * @param t
+	 *            the t
 	 * @return the bindings
 	 */
 	private Bindings addVariablesToBindings(Item[] items, Triple t) {
@@ -103,6 +114,12 @@ public class P2PIndexScan extends BasicIndex {
 				Variable v = (Variable) item;
 				b.add(v, t.getPos(i));
 
+			} else {
+				if (t.getPos(i)
+						.compareToNotNecessarilySPARQLSpecificationConform(
+								(Literal) item) != 0) {
+					return null;
+				}
 			}
 		}
 		return b;
@@ -110,8 +127,9 @@ public class P2PIndexScan extends BasicIndex {
 
 	/**
 	 * Generate key.
-	 *
-	 * @param items the items
+	 * 
+	 * @param items
+	 *            the items
 	 * @return the string
 	 */
 	private String generateKey(Item[] items) {

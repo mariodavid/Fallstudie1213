@@ -40,7 +40,7 @@ public class LuposServer {
 	 */
 	public void start(P2PAdapter p2pAdapter) {
 		Logger logger = LoggerFactory.getLogger(LuposServer.class);
-		logger.info("suarting up lupos server instance...");
+		logger.info("starting up lupos server instance...");
 
 		System.out.println("starting up lupos instance...");
 		try {

@@ -5,6 +5,9 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import luposdate.LuposServer;
+
+import org.apache.log4j.PropertyConfigurator;
+
 import p2p.P2PAdapter;
 import p2p.P2PConnection;
 import console.commands.Add;
@@ -113,9 +116,7 @@ public class Console {
 	 */
 	public static void main(String[] args) throws Exception {
 
-		// Properties props = new Properties();
-		// props.load(Console.class.getResourceAsStream("log4j.properties"));
-		// PropertyConfigurator.configure(props);
+
 
 		P2PConnection connection = new P2PConnection();
 		LuposServer server = new LuposServer();
@@ -126,6 +127,16 @@ public class Console {
 		switch (args.length) {
 		// Standardfall: Broadcast und Port ist 4001
 			case 0:
+				connection.connect();
+				config = new P2PAdapter(connection.getPeer());
+				server.start(config);
+
+				config.setEvaluator(server.getEvaluator());
+
+				console.start();
+				break;
+			case 1:
+				PropertyConfigurator.configure(args[0]);
 				connection.connect();
 				config = new P2PAdapter(connection.getPeer());
 				server.start(config);

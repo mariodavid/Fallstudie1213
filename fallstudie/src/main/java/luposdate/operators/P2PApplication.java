@@ -17,9 +17,20 @@ import lupos.engine.operators.application.Application;
  * uns nach der Zeichnung an der Position (3), also direkt bevor der Empfänger
  * sein Ergebnis an den Sender zurückliefern will.
  * 
- * Teil Anfragegraph -------- (1) ------------------> (2) ----------- |Sender|
- * |Empfänger| -------- (4) <------------------ (3) ----------- Anfrage Result
- * 
+ *   | 
+ *  (0)
+ *   |
+ * 	 |			 Teil Anfragegraph 
+ * -------- (1) ------------------> (2) ----------- 
+ * |Sender|								|Empfänger| 
+ * -------- (4) <------------------ (3) ----------- 
+ * 				   Anfrage Result
+ *   | 
+ *   |
+ *   |
+ * 	 |
+ *   \/
+ *   
  * Dazu kann man dem Result Operator (@see
  * lupos.engine.operators.singleinput.Result) sogenannte Applikationen zur
  * Verfügung stellen, die bei einem call Methodenaufruf alle abgearbeitet werden
