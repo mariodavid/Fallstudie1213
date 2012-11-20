@@ -25,7 +25,7 @@ public class GetResponsibleKeySize implements Command {
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
 
-		System.out.println("this node is responsable for : "
+		System.out.println("this node is responsible for : "
 				+ peer.getPeerBean().getStorage().findContentForResponsiblePeerID(peer.getPeerID()).size() + " keys");
 	}
 

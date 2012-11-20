@@ -9,7 +9,7 @@ import p2p.P2PAdapter;
 import lupos.datastructures.items.Triple;
 
 public class TripleCache {
-	final static int CACHE_SIZE = 500;
+	final static int CACHE_SIZE = 1500;
 	P2PAdapter adapter;
 	HashMap<PeerAddress, PeerCacheEntry> peerAddressMap = new HashMap<PeerAddress, PeerCacheEntry>();
 

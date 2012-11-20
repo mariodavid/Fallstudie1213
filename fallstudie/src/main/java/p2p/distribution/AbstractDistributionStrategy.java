@@ -3,6 +3,7 @@ package p2p.distribution;
 import java.io.IOException;
 
 import lupos.datastructures.items.Triple;
+import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.peers.Number160;
@@ -55,10 +56,16 @@ public abstract class AbstractDistributionStrategy implements
 		Number160 hash = Number160.createHash(key);
 		Number160 contentKey = Number160.createHash(value.toN3String());
 
-//		peer.put(hash).setData(contentKey, new Data(value)).start()
-//				.awaitUninterruptibly();
+		// peer.put(hash).setData(contentKey, new Data(value)).start()
+		// .awaitUninterruptibly();
 		// asynchron
-		peer.put(hash).setData(contentKey, new Data(value)).start();
+		peer.put(hash).setData(contentKey, new Data(value)).start()
+				.addListener(new BaseFutureAdapter<FutureDHT>() {
+					public void operationComplete(FutureDHT future)
+							throws Exception {
+						future.shutdown();
+					}
+				});
 	}
 
 	/**
