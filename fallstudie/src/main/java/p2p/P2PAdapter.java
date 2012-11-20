@@ -43,6 +43,7 @@ import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
 import p2p.load.PeerCacheEntry;
 import p2p.load.PeerRequest;
+import p2p.load.TripleCache;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
