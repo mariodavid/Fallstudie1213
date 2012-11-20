@@ -8,9 +8,9 @@ import java.util.Map.Entry;
 
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.index.BasicIndex;
+import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Dataset;
-import lupos.engine.operators.index.IndexCollection;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.singleinput.Result;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
@@ -70,7 +70,6 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 
 		serializeNode(new OperatorIDTuple(operator, 0), nodesJSON, edgesJSON,
 				id_counter);
-		// serializeNode(operator, nodesJSON, edgesJSON, id_counter);
 		JSONObject serializedSubGraph = new JSONObject();
 
 		try {
@@ -116,10 +115,10 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 			}
 		}
 		OperatorFormatter serializer = null;
-		if (op instanceof BasicIndex) {
+		if (op instanceof BasicIndexScan) {
 			serializer = new P2PIndexScanFormatter();
 
-		} else if (op instanceof IndexCollection) {
+		} else if (op instanceof Root) {
 			serializer = new P2PIndexCollectionFormatter();
 
 		} else if (op instanceof Result) {
@@ -192,7 +191,6 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 				precedingOperators.put(to, new LinkedList<BasicOperator>());
 			}
 
-			// succedingOperators.get(from).add(new OperatorIDTuple(to, 0));
 			succedingOperators.get(from).add(
 					new OperatorIDTuple(to, edgeJson.getInt("edge_id")));
 			precedingOperators.get(to).add(from);
@@ -247,7 +245,7 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 				P2PIndexScanFormatter p2pIndexScanFormatter = (P2PIndexScanFormatter) formatters
 						.get(P2PIndexScan.class.getName());
 				p2pIndexScanFormatter
-						.setIndexCollection((P2PIndexCollection) node);
+						.setRoot((P2PIndexCollection) node);
 			}
 
 			try {

@@ -4,16 +4,16 @@ import java.util.Collection;
 
 import lupos.datastructures.items.Item;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.index.BasicIndex;
+import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Dataset;
-import lupos.engine.operators.index.IndexCollection;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
 //TODO: Klasse erklären
 /**
  * The Class P2PIndexCollection.
  */
-public class P2PIndexCollection extends IndexCollection {
+public class P2PIndexCollection extends Root {
 
 	/**
 	 * Instantiates a new p2 p index collection.
@@ -34,7 +34,7 @@ public class P2PIndexCollection extends IndexCollection {
 	 * @return the basic index
 	 */
 	@Override
-	public BasicIndex newIndex(OperatorIDTuple succeedingOperator,
+	public BasicIndexScan newIndexScan(OperatorIDTuple succeedingOperator,
 			Collection<TriplePattern> triplePattern, Item data) {
 		return new P2PIndexScan(succeedingOperator, triplePattern, data, this);
 	}
@@ -46,8 +46,9 @@ public class P2PIndexCollection extends IndexCollection {
 	 * @return the index collection
 	 */
 	@Override
-	public IndexCollection newInstance(Dataset dataset) {
+	public Root newInstance(Dataset dataset) {
 		return new P2PIndexCollection(dataset);
 	}
+
 
 }

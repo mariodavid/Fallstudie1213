@@ -13,7 +13,6 @@ import p2p.P2PConnection;
 import console.commands.Add;
 import console.commands.Command;
 import console.commands.CreateChannel;
-import console.commands.DeserializerTest;
 import console.commands.Get;
 import console.commands.GetAllNodes;
 import console.commands.GetExampleQueries;
@@ -99,7 +98,6 @@ public class Console {
 		commands.put("getstrategy", new GetStrategy());
 		commands.put("getexamplequeries", new GetExampleQueries());
 		commands.put("getpeerforcontent", new GetPeerForContent());
-		commands.put("test", new DeserializerTest());
 		commands.put("sendMessage", new SendMessage());
 		commands.put("sm", new SendMessage());
 		commands.put("getmyid", new GetMyID());

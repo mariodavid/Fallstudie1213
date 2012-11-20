@@ -1,16 +1,10 @@
 package console.commands;
 
-import java.net.URL;
 import java.util.Scanner;
 
 import lupos.datastructures.queryresult.QueryResult;
-import lupos.gui.Demo_Applet;
-import lupos.gui.GUI;
-import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
-import lupos.gui.operatorgraph.viewer.Viewer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.p2p.Peer;
-import xpref.XPref;
 
 /**
  * Führt eine Anfrage aus.
@@ -30,13 +24,15 @@ public class Query implements Command {
 			evaluator.logicalOptimization();
 			evaluator.physicalOptimization();
 			
-			try {
-				XPref.getInstance(Demo_Applet.class.getResource("/preferencesMenu.xml"));
-			} catch(Exception e){
-				XPref.getInstance(new URL("file:"+GUI.class.getResource("/preferencesMenu.xml").getFile()));
-			}
-			new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
-					"test", true, false);
+			// try {
+			// XPref.getInstance(Demo_Applet.class.getResource("/preferencesMenu.xml"));
+			// } catch(Exception e){
+			// XPref.getInstance(new
+			// URL("file:"+GUI.class.getResource("/preferencesMenu.xml").getFile()));
+			// }
+			// new Viewer(new
+			// GraphWrapperBasicOperator(evaluator.getRootNode()),
+			// "test", true, false);
 			QueryResult result = evaluator.getResult();
 
 			System.out.println(result);

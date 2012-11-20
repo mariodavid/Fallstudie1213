@@ -36,7 +36,7 @@ public class P2PRuleGlobalJoin extends Rule {
     private lupos.engine.operators.BasicOperator[] Op3 = null;
     
     /** The Op2. */
-    private lupos.engine.operators.index.BasicIndex Op2 = null;
+	private lupos.engine.operators.index.BasicIndexScan	Op2		= null;
     
     /** The Op1. */
     private lupos.engine.operators.BasicOperator Op1 = null;
@@ -51,11 +51,11 @@ public class P2PRuleGlobalJoin extends Rule {
      * @return true, if successful
      */
     private boolean _checkPrivate0(BasicOperator _op) {
-        if(!(_op instanceof lupos.engine.operators.index.BasicIndex)) {
+		if (!(_op instanceof lupos.engine.operators.index.BasicIndexScan)) {
             return false;
         }
 
-        this.Op2 = (lupos.engine.operators.index.BasicIndex) _op;
+		this.Op2 = (lupos.engine.operators.index.BasicIndexScan) _op;
 
         List<BasicOperator> _precedingOperators_1_0 = _op.getPrecedingOperators();
 
@@ -108,7 +108,7 @@ public class P2PRuleGlobalJoin extends Rule {
      * Instantiates a new p2 p rule global join.
      */
     public P2PRuleGlobalJoin() {
-        this.startOpClass = lupos.engine.operators.index.BasicIndex.class;
+		this.startOpClass = lupos.engine.operators.index.BasicIndexScan.class;
         this.ruleName = "P2PRule";
     }
 
@@ -146,7 +146,7 @@ public class P2PRuleGlobalJoin extends Rule {
         // add new operators...
         lupos.engine.operators.multiinput.join.Join Join1 = null;
         Join1 = new lupos.engine.operators.multiinput.join.Join();
-        lupos.engine.operators.index.BasicIndex Index1 = null;
+		lupos.engine.operators.index.BasicIndexScan Index1 = null;
         Index1 = new P2PIndexScan((P2PIndexCollection)Op1);
 
 

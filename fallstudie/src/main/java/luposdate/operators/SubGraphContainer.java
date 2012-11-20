@@ -6,16 +6,13 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.items.Item;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.client.formatreader.MIMEFormatReader;
 import lupos.endpoint.client.formatreader.XMLFormatReader;
-import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.index.BasicIndex;
+import lupos.engine.operators.RootChild;
 import lupos.engine.operators.index.Dataset;
-import lupos.engine.operators.index.IndexCollection;
-import lupos.engine.operators.index.Indices;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.rdf.Prefix;
 import luposdate.operators.formatter.SubGraphContainerFormatter;
@@ -30,10 +27,11 @@ import p2p.P2PAdapter;
  * sollen.
  * 
  */
-public class SubGraphContainer extends BasicIndex {
+// TODO: extend from RootChild instead of BasicIndexScan
+public class SubGraphContainer extends RootChild {
 
 	/** The root node of sub graph. */
-	IndexCollection						rootNodeOfSubGraph;
+	private final Root					rootNodeOfSubGraph;
 
 	private Collection<TriplePattern>	hashableTriplePatterns;
 
@@ -48,27 +46,15 @@ public class SubGraphContainer extends BasicIndex {
 	 *            the root node of sub graph
 	 */
 	public SubGraphContainer(P2PAdapter p2pAdapter,
-			IndexCollection rootNodeOfOuterGraph,
-			IndexCollection rootNodeOfSubGraph) {
-		super(rootNodeOfOuterGraph);
+ Root rootNodeOfOuterGraph,
+			Root rootNodeOfSubGraph) {
+		// super(rootNodeOfOuterGraph);
 
 		this.p2pAdapter = p2pAdapter;
 		this.rootNodeOfSubGraph = rootNodeOfSubGraph;
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * lupos.engine.operators.index.BasicIndex#join(lupos.engine.operators.index
-	 * .Indices, lupos.datastructures.bindings.Bindings)
-	 */
-	@Override
-	public QueryResult join(Indices indices, Bindings bindings) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 
 	/**
 	 * wird aufgerufen, wenn der OP ausgefuehrt werden soll hier wird verschickt
@@ -83,7 +69,7 @@ public class SubGraphContainer extends BasicIndex {
 	 */
 
 	@Override
-	public QueryResult process(int opt, Dataset dataset) {
+	public QueryResult process(Dataset dataset) {
 		SubGraphContainerFormatter serialzer = new SubGraphContainerFormatter();
 
 		JSONObject serializedGraph;
@@ -103,12 +89,13 @@ public class SubGraphContainer extends BasicIndex {
 			try {
 				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
 				QueryResult queryResult = deserializier.getQueryResult(is);
+
 				System.out.println("schritt 4: " + queryResult);
 
-				for (OperatorIDTuple succ : this.getSucceedingOperators()) {
-					succ.processAll(queryResult);
-				}
-				// return queryResult;
+				// for (OperatorIDTuple succ : this.getSucceedingOperators()) {
+				// succ.processAll(queryResult);
+				// }
+				return queryResult;
 			} catch (UnsupportedEncodingException e) {
 				e.printStackTrace();
 			}

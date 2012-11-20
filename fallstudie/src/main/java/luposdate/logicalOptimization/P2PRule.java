@@ -10,8 +10,8 @@ import java.util.List;
 import lupos.datastructures.items.Variable;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.index.BasicIndex;
-import lupos.engine.operators.index.IndexCollection;
+import lupos.engine.operators.index.BasicIndexScan;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.singleinput.Result;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
@@ -46,7 +46,7 @@ public class P2PRule extends Rule {
 	private lupos.engine.operators.BasicOperator[]	Op3		= null;
 	
 	/** The Op2. */
-	private lupos.engine.operators.index.BasicIndex	Op2		= null;
+	private lupos.engine.operators.index.BasicIndexScan	Op2		= null;
 	
 	/** The Op1. */
 	private lupos.engine.operators.BasicOperator	Op1		= null;
@@ -63,11 +63,11 @@ public class P2PRule extends Rule {
 	 * @return true, if successful
 	 */
 	private boolean _checkPrivate0(BasicOperator _op) {
-		if (!(_op instanceof lupos.engine.operators.index.BasicIndex)) {
+		if (!(_op instanceof lupos.engine.operators.index.BasicIndexScan)) {
 			return false;
 		}
 
-		this.Op2 = (lupos.engine.operators.index.BasicIndex) _op;
+		this.Op2 = (lupos.engine.operators.index.BasicIndexScan) _op;
 
 		List<BasicOperator> _precedingOperators_1_0 = _op
 				.getPrecedingOperators();
@@ -120,7 +120,7 @@ public class P2PRule extends Rule {
 	 * Instantiates a new p2 p rule.
 	 */
 	public P2PRule(P2PAdapter p2pAdapter) {
-		this.startOpClass = lupos.engine.operators.index.BasicIndex.class;
+		this.startOpClass = lupos.engine.operators.index.BasicIndexScan.class;
 		this.ruleName = "P2PRule";
 		this.p2pAdapter = p2pAdapter;
 	}
@@ -148,7 +148,7 @@ public class P2PRule extends Rule {
 		// add new operators...
 		lupos.engine.operators.multiinput.join.Join Join1 = null;
 		Join1 = new lupos.engine.operators.multiinput.join.Join();
-		lupos.engine.operators.index.BasicIndex Index1 = null;
+		lupos.engine.operators.index.BasicIndexScan Index1 = null;
 		Index1 = new P2PIndexScan((P2PIndexCollection) Op1);
 
 		addNewConnections(_label_a, Join1, Index1);
@@ -202,10 +202,10 @@ public class P2PRule extends Rule {
 	 * @param indexScan the index scan
 	 */
 	private void replaceIndexScanOperatorWithSubGraphContainer(
-			BasicIndex indexScan) {
+			BasicIndexScan indexScan) {
 
-		IndexCollection rootNodeOfOuterGraph = indexScan.getIndexCollection();
-		IndexCollection rootNodeOfSubGraph = rootNodeOfOuterGraph
+		Root rootNodeOfOuterGraph = indexScan.getRoot();
+		Root rootNodeOfSubGraph = rootNodeOfOuterGraph
 				.newInstance(rootNodeOfOuterGraph.dataset);
 
 
@@ -220,7 +220,7 @@ public class P2PRule extends Rule {
 
 		container.setUnionVariables(variables);
 		container.setIntersectionVariables(variables);
-		container.setTriplePatterns(new LinkedList<TriplePattern>());
+		// container.setTriplePatterns(new LinkedList<TriplePattern>());
 
 		// vorgaenger und nachfolger des urspruenglichen indexScan OPs merken
 		// und am schluss wieder an den neuen graphen ranhaengen
@@ -262,7 +262,7 @@ public class P2PRule extends Rule {
 	 */
 	private void addNewConnections(int[] _label_a,
 			lupos.engine.operators.multiinput.join.Join Join1,
-			lupos.engine.operators.index.BasicIndex Index1) {
+			lupos.engine.operators.index.BasicIndexScan Index1) {
 		int _label_a_count;
 		// add new connections...
 		this.Op2.addSucceedingOperator(new OperatorIDTuple(Join1, 0));

@@ -7,8 +7,8 @@ import lupos.datastructures.items.Item;
 import lupos.datastructures.items.Variable;
 import lupos.datastructures.items.literal.LazyLiteral;
 import lupos.engine.operators.BasicOperator;
-import lupos.engine.operators.index.BasicIndex;
-import lupos.engine.operators.index.IndexCollection;
+import lupos.engine.operators.index.BasicIndexScan;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import luposdate.index.P2PIndexScan;
 
@@ -26,7 +26,7 @@ public class P2PIndexScanFormatter implements OperatorFormatter {
 	private JSONObject		json;
 
 	/** The index collection. */
-	private IndexCollection	indexCollection;
+	private Root		root;
 
 
 	/**
@@ -42,8 +42,8 @@ public class P2PIndexScanFormatter implements OperatorFormatter {
 	 * @param indexCollection
 	 *            the index collection
 	 */
-	public P2PIndexScanFormatter(IndexCollection indexCollection) {
-		this.setIndexCollection(indexCollection);
+	public P2PIndexScanFormatter(Root indexCollection) {
+		this.setRoot(indexCollection);
 	}
 
 	/*
@@ -56,7 +56,7 @@ public class P2PIndexScanFormatter implements OperatorFormatter {
 	public JSONObject serialize(BasicOperator operator, int node_id) {
 		json = new JSONObject();
 
-		BasicIndex indexScan = (BasicIndex) operator;
+		BasicIndexScan indexScan = (BasicIndexScan) operator;
 		try {
 			json.put("type", operator.getClass().getName());
 			json.put("node_id", node_id);
@@ -136,7 +136,7 @@ public class P2PIndexScanFormatter implements OperatorFormatter {
 
 		json = serialiezedOperator;
 
-		P2PIndexScan indexScan = new P2PIndexScan(indexCollection);
+		P2PIndexScan indexScan = new P2PIndexScan(root);
 
 		Collection<TriplePattern> triplePatterns = createTriplePatternsListFromJSON(json);
 		indexScan.setTriplePatterns(triplePatterns);
@@ -201,18 +201,18 @@ public class P2PIndexScanFormatter implements OperatorFormatter {
 	 * 
 	 * @return the index collection
 	 */
-	private IndexCollection getIndexCollection() {
-		return indexCollection;
+	private Root getRoot() {
+		return root;
 	}
 
 	/**
 	 * Sets the index collection.
 	 * 
-	 * @param indexCollection
+	 * @param root
 	 *            the new index collection
 	 */
-	public void setIndexCollection(IndexCollection indexCollection) {
-		this.indexCollection = indexCollection;
+	public void setRoot(Root root) {
+		this.root = root;
 	}
 
 }

@@ -7,9 +7,10 @@ import java.util.LinkedList;
 
 import lupos.datastructures.items.Variable;
 import lupos.datastructures.items.literal.LazyLiteral;
-import lupos.engine.operators.index.BasicIndex;
-import lupos.engine.operators.index.memoryindex.IndexCollection;
+import lupos.engine.operators.index.BasicIndexScan;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
+import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
 import luposdate.operators.formatter.P2PIndexScanFormatter;
 
@@ -20,12 +21,12 @@ import org.junit.Test;
 
 public class IndexScanFormatterTest {
 
-	private BasicIndex			indexScan;
+	private BasicIndexScan			indexScan;
 	private P2PIndexScanFormatter	serializer;
 
 	@Before
 	public void setUp() throws Exception {
-		IndexCollection indexCollection = new IndexCollection();
+		Root indexCollection = new P2PIndexCollection(null);
 
 		this.indexScan = new P2PIndexScan(indexCollection);
 
