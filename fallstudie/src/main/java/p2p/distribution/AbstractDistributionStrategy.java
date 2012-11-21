@@ -52,6 +52,7 @@ public abstract class AbstractDistributionStrategy implements
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
+	int distributionCounter = 0;
 	protected void addToNetwork(String key, Triple value) throws IOException {
 		Number160 hash = Number160.createHash(key);
 		Number160 contentKey = Number160.createHash(value.toN3String());
@@ -59,13 +60,20 @@ public abstract class AbstractDistributionStrategy implements
 		// peer.put(hash).setData(contentKey, new Data(value)).start()
 		// .awaitUninterruptibly();
 		// asynchron
+		distributionCounter++;
 		peer.put(hash).setData(contentKey, new Data(value)).start()
 				.addListener(new BaseFutureAdapter<FutureDHT>() {
 					public void operationComplete(FutureDHT future)
 							throws Exception {
+						distributionCounter--;
 						future.shutdown();
 					}
 				});
+	}
+	
+	
+	public boolean isDistributionReady() {
+		return distributionCounter == 0;
 	}
 
 	/**
