@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
-import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
 import lupos.engine.operators.BasicOperator;
@@ -18,10 +17,8 @@ import luposdate.operators.formatter.SubGraphContainerFormatter;
 import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
-import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.futures.FutureResponse;
-import net.tomp2p.futures.FutureRouting;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.p2p.RequestP2PConfiguration;
@@ -36,14 +33,12 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
-import org.jboss.netty.handler.timeout.TimeoutException;
 import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
 import p2p.load.PeerCacheEntry;
 import p2p.load.PeerRequest;
-import p2p.load.TripleCache;
 
 import com.google.protobuf.InvalidProtocolBufferException;
 
@@ -427,7 +422,6 @@ public class P2PAdapter implements DataStoreAdapter {
 					isReady = true;
 
 				} else {
-					System.out.println("failure");
 					isReady = true;
 				}
 			}
@@ -435,7 +429,7 @@ public class P2PAdapter implements DataStoreAdapter {
 
 		while (!isReady) {
 			try {
-				Thread.sleep(100);
+				Thread.sleep(10);
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -6,16 +6,13 @@ import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.util.Scanner;
 
-import p2p.P2PAdapter;
-import p2p.load.TripleCache;
-
 import lupos.datastructures.items.Triple;
 import lupos.engine.evaluators.CommonCoreQueryEvaluator;
 import lupos.engine.operators.tripleoperator.TripleConsumer;
-import lupos.rdf.parser.N3Parser;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
-
 import net.tomp2p.p2p.Peer;
+import p2p.P2PAdapter;
+import p2p.load.TripleCache;
 
 /**
  * Läd eine RDF Datei ein und speichert die Triple in das Netzwerk
@@ -27,6 +24,7 @@ public class LoadN3 implements Command {
 	/** The filename. */
 	public P2PAdapter adapter;
 	TripleCache tripleCache;
+	private int					counter;
 
 	/*
 	 * (non-Javadoc)
@@ -52,24 +50,33 @@ public class LoadN3 implements Command {
 
 	}
 
-	public void load(P2PIndexQueryEvaluator evaluator, InputStream is) {
+	public int load(P2PIndexQueryEvaluator evaluator, String file) {
+		InputStream is = getClass().getClassLoader().getResourceAsStream(file);
+		return load(evaluator, is);
+	}
+
+	public int load(P2PIndexQueryEvaluator evaluator, InputStream is) {
 		this.adapter = (P2PAdapter) evaluator.getP2PAdapter();
 		tripleCache = new TripleCache(adapter);
-		
+		counter = 0;
 		final TripleConsumer tc = new TripleConsumer() {
-			int counter = 0;
+			// int counter = 0;
 			public void consume(final Triple triple) {
 				try {
 					counter++;
 					adapter.distributionStrategy.distribute(triple);
-					if (counter % OUTPUT_LIMIT == 0)
+					if (counter % OUTPUT_LIMIT == 0) {
 						System.out.println(counter + " Triple eingelesen ...");
+					}
+					// tripleCache.add(triple);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
 			}
 
 		};
+
+		// tripleCache.flush(true);
 
 		try {
 //			N3Parser.parseRDFData(is, tc, "UTF-8");
@@ -80,6 +87,7 @@ public class LoadN3 implements Command {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return counter;
 	}
 
 	public String getDescription() {
