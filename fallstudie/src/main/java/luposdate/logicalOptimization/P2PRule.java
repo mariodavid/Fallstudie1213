@@ -9,7 +9,6 @@ import java.util.List;
 import lupos.datastructures.items.Variable;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
-
 import lupos.engine.operators.singleinput.Filter;
 import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Root;

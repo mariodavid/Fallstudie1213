@@ -14,7 +14,6 @@ import lupos.engine.operators.RootChild;
 import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.messages.BoundVariablesMessage;
 import lupos.engine.operators.messages.Message;
-
 import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.rdf.Prefix;
@@ -92,7 +91,7 @@ public class SubGraphContainer extends RootChild {
 			try {
 				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
 				QueryResult queryResult = deserializier.getQueryResult(is);
-//				System.out.println("schritt 4: " + queryResult);
+				System.out.println("schritt 4: " + queryResult);
 
 
 				// for (OperatorIDTuple succ : this.getSucceedingOperators()) {
