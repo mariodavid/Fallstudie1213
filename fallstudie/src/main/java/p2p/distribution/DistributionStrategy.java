@@ -44,4 +44,6 @@ public interface DistributionStrategy {
 	public boolean contains(Triple triple) throws IOException;
 	
 	public String[] getDistributeStrings(Triple triple);
+
+	public boolean isDistributionReady();
 }
