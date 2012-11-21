@@ -32,19 +32,19 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	private P2PAdapter p2pAdapter;
 
 	/**
-	 * Gets the p2 p adapter.
+	 * Gets the p2p adapter.
 	 * 
-	 * @return the p2 p adapter
+	 * @return the p2p adapter
 	 */
 	public DataStoreAdapter getP2PAdapter() {
 		return p2pAdapter;
 	}
 
 	/**
-	 * Sets the p2 p adapter.
+	 * Sets the p2p adapter.
 	 * 
 	 * @param adapter
-	 *            the new p2 p adapter
+	 *            the new p2p adapter
 	 */
 	public void setP2PAdapter(P2PAdapter adapter) {
 		this.p2pAdapter = adapter;
@@ -78,7 +78,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	}
 
 	/**
-	 * Instantiates a new p2 p index query evaluator.
+	 * Instantiates a new p2p index query evaluator.
 	 * 
 	 * @param arguments
 	 *            the arguments
@@ -90,7 +90,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	}
 
 	/**
-	 * Instantiates a new p2 p index query evaluator.
+	 * Instantiates a new p2p index query evaluator.
 	 * 
 	 * @param debug
 	 *            the debug
@@ -219,7 +219,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	}
 
 	/**
-	 * Inits the.
+	 * Inits the...
 	 * 
 	 * @param datastructure
 	 *            the datastructure
@@ -231,19 +231,19 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 		Indices.setUsedDatastructure(datastructure);
 		switch (optimization) {
 		case MOSTRESTRICTIONS:
-				opt = BasicIndexScan.MOSTRESTRICTIONS;
+			opt = BasicIndexScan.MOSTRESTRICTIONS;
 			break;
 		case MOSTRESTRICTIONSLEASTENTRIES:
-				opt = BasicIndexScan.MOSTRESTRICTIONSLEASTENTRIES;
+			opt = BasicIndexScan.MOSTRESTRICTIONSLEASTENTRIES;
 			break;
 		case LEASTENTRIES:
-				opt = BasicIndexScan.LEASTENTRIES;
+			opt = BasicIndexScan.LEASTENTRIES;
 			break;
 		case BINARY:
-				opt = BasicIndexScan.Binary;
+			opt = BasicIndexScan.Binary;
 			break;
 		default:
-				opt = BasicIndexScan.NONE;
+			opt = BasicIndexScan.NONE;
 			break;
 		}
 	}
