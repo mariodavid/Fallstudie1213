@@ -22,7 +22,7 @@ import lupos.engine.operators.tripleoperator.TriplePattern;
 public class P2PIndexScan extends BasicIndexScan {
 
 	/**
-	 * Instantiates a new p2 p index scan.
+	 * Instantiates a new p2p index scan.
 	 * 
 	 * @param indexCollection
 	 *            the index collection
@@ -33,7 +33,7 @@ public class P2PIndexScan extends BasicIndexScan {
 	}
 
 	/**
-	 * Instantiates a new p2 p index scan.
+	 * Instantiates a new p2p index scan.
 	 * 
 	 * @param succeedingOperator
 	 *            the succeeding operator
