@@ -57,7 +57,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
 	 */
-	private static final int DEFAULT_DISTRIBUTION_STRATEGY = 1;
+	private static final int DEFAULT_DISTRIBUTION_STRATEGY = 7;
 	/** Timeout in ms. */
 	public static final int TIMEOUT = 5000;
 	/** Lupos Evaluator. */
@@ -115,8 +115,7 @@ public class P2PAdapter implements DataStoreAdapter {
 				} else if (request.getClass() == PeerRequest.class) {
 					return peer.getPeerAddress();
 				} else {
-					System.out.println("received request: " + request);
-
+					
 					P2PApplication p2pApplication = new P2PApplication();
 					SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
 							evaluator.getDataset(), p2pApplication);

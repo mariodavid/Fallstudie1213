@@ -17,8 +17,11 @@ import xpref.XPref;
  */
 public class Query implements Command {
 
-	/* (non-Javadoc)
-	 * @see console.commands.Command#execute(java.util.Scanner, net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see console.commands.Command#execute(java.util.Scanner,
+	 * net.tomp2p.p2p.Peer, luposdate.evaluators.P2PIndexQueryEvaluator)
 	 */
 	public void execute(Scanner scanner, Peer peer,
 			P2PIndexQueryEvaluator evaluator) {
@@ -29,17 +32,20 @@ public class Query implements Command {
 			evaluator.compileQuery(query);
 			evaluator.logicalOptimization();
 			evaluator.physicalOptimization();
-			
+
 			try {
-				XPref.getInstance(Demo_Applet.class.getResource("/preferencesMenu.xml"));
-			} catch(Exception e){
-				XPref.getInstance(new URL("file:"+GUI.class.getResource("/preferencesMenu.xml").getFile()));
+				XPref.getInstance(Demo_Applet.class
+						.getResource("/preferencesMenu.xml"));
+			} catch (Exception e) {
+				XPref.getInstance(new URL("file:"
+						+ GUI.class.getResource("/preferencesMenu.xml")
+								.getFile()));
 			}
 			new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
 					"test", true, false);
 			QueryResult result = evaluator.getResult();
 
-			System.out.println(result);
+			System.out.println("Query Result: " + result);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
@@ -48,7 +54,9 @@ public class Query implements Command {
 
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see console.commands.Command#getDescription()
 	 */
 	public String getDescription() {

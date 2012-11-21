@@ -1,6 +1,5 @@
 package luposdate.logicalOptimization;
 
-
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -12,9 +11,11 @@ import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.IndexCollection;
+import lupos.engine.operators.singleinput.Filter;
 import lupos.engine.operators.singleinput.Result;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
+import lupos.sparql1_1.ParseException;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
 import luposdate.operators.SubGraphContainer;
@@ -43,23 +44,24 @@ import p2p.P2PAdapter;
 public class P2PRule extends Rule {
 
 	/** The Op3. */
-	private lupos.engine.operators.BasicOperator[]	Op3		= null;
-	
-	/** The Op2. */
-	private lupos.engine.operators.index.BasicIndex	Op2		= null;
-	
-	/** The Op1. */
-	private lupos.engine.operators.BasicOperator	Op1		= null;
-	
-	/** The _dim_0. */
-	private int										_dim_0	= -1;
+	private lupos.engine.operators.BasicOperator[] Op3 = null;
 
-	private final P2PAdapter						p2pAdapter;
+	/** The Op2. */
+	private lupos.engine.operators.index.BasicIndex Op2 = null;
+
+	/** The Op1. */
+	private lupos.engine.operators.BasicOperator Op1 = null;
+
+	/** The _dim_0. */
+	private int _dim_0 = -1;
+
+	private final P2PAdapter p2pAdapter;
 
 	/**
 	 * _check private0.
-	 *
-	 * @param _op the _op
+	 * 
+	 * @param _op
+	 *            the _op
 	 * @return true, if successful
 	 */
 	private boolean _checkPrivate0(BasicOperator _op) {
@@ -102,8 +104,9 @@ public class P2PRule extends Rule {
 
 	/**
 	 * _check private1.
-	 *
-	 * @param _op the _op
+	 * 
+	 * @param _op
+	 *            the _op
 	 * @return true, if successful
 	 */
 	private boolean _checkPrivate1(BasicOperator _op) {
@@ -125,8 +128,12 @@ public class P2PRule extends Rule {
 		this.p2pAdapter = p2pAdapter;
 	}
 
-	/* (non-Javadoc)
-	 * @see lupos.optimizations.logical.rules.generated.runtime.Rule#check(lupos.engine.operators.BasicOperator)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * lupos.optimizations.logical.rules.generated.runtime.Rule#check(lupos.
+	 * engine.operators.BasicOperator)
 	 */
 	@Override
 	protected boolean check(BasicOperator _op) {
@@ -137,8 +144,12 @@ public class P2PRule extends Rule {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see lupos.optimizations.logical.rules.generated.runtime.Rule#replace(java.util.HashMap)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * lupos.optimizations.logical.rules.generated.runtime.Rule#replace(java
+	 * .util.HashMap)
 	 */
 	@Override
 	protected void replace(HashMap<Class<?>, HashSet<BasicOperator>> _startNodes) {
@@ -198,8 +209,9 @@ public class P2PRule extends Rule {
 	/**
 	 * hier wird der normale index scan operator (p2pIndexScan) durch einen
 	 * SubGraphContainer ersetzt.
-	 *
-	 * @param indexScan the index scan
+	 * 
+	 * @param indexScan
+	 *            the index scan
 	 */
 	private void replaceIndexScanOperatorWithSubGraphContainer(
 			BasicIndex indexScan) {
@@ -208,7 +220,6 @@ public class P2PRule extends Rule {
 		IndexCollection rootNodeOfSubGraph = rootNodeOfOuterGraph
 				.newInstance(rootNodeOfOuterGraph.dataset);
 
-
 		SubGraphContainer container = new SubGraphContainer(p2pAdapter,
 				rootNodeOfOuterGraph, rootNodeOfSubGraph);
 
@@ -216,7 +227,6 @@ public class P2PRule extends Rule {
 				indexScan.getIntersectionVariables());
 
 		container.setHashableTriplePatterns(indexScan.getTriplePattern());
-
 
 		container.setUnionVariables(variables);
 		container.setIntersectionVariables(variables);
@@ -233,6 +243,42 @@ public class P2PRule extends Rule {
 		}
 
 		// neue Verbindungen werden erzeugt
+
+		// TODO: es wird vermutlich kein Filter OP gefunden (als nachfolger von
+		// indeScan, weil durch die Methode addNewConnections der Join als
+		// nachfolger des IndexScan definiert wurde
+		// hier muss noch die naechste ebene betrachtet werden, damit der filter gefunden wird
+		if (indexScan.getSucceedingOperators().size() == 1) {
+			for (OperatorIDTuple opId : indexScan.getSucceedingOperators()) {
+				if (opId.getOperator() instanceof Filter) {
+					Filter filter = (Filter) opId.getOperator();
+					if (indexScan.getUnionVariables().containsAll(
+							filter.getUsedVariables())) {
+						Filter newFilter;
+						try {
+							newFilter = new Filter(filter.toString());
+							indexScan
+									.setSucceedingOperator(new OperatorIDTuple(
+											newFilter, 0));
+							newFilter
+									.setSucceedingOperator(new OperatorIDTuple(
+											new Result(), 0));
+						} catch (ParseException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+
+					} else {
+						indexScan.setSucceedingOperator(new OperatorIDTuple(
+								new Result(), 0));
+					}
+				}
+			}
+		} else {
+			indexScan
+					.setSucceedingOperator(new OperatorIDTuple(new Result(), 0));
+		}
+
 		indexScan.setSucceedingOperator(new OperatorIDTuple(new Result(), 0));
 		rootNodeOfSubGraph.setSucceedingOperator(new OperatorIDTuple(indexScan,
 				0));
@@ -242,7 +288,6 @@ public class P2PRule extends Rule {
 
 		// urspruengliche Nachfolger werden an neuen Graphen angehangen
 		container.setSucceedingOperators(succs);
-
 
 		// der neue Vorgaenger von den Nachfolgern von dem urspruenglichen
 		// IndexScan werden durchlaufen und der neue container wird festgelegt
@@ -255,10 +300,13 @@ public class P2PRule extends Rule {
 
 	/**
 	 * Adds the new connections.
-	 *
-	 * @param _label_a the _label_a
-	 * @param Join1 the join1
-	 * @param Index1 the index1
+	 * 
+	 * @param _label_a
+	 *            the _label_a
+	 * @param Join1
+	 *            the join1
+	 * @param Index1
+	 *            the index1
 	 */
 	private void addNewConnections(int[] _label_a,
 			lupos.engine.operators.multiinput.join.Join Join1,
@@ -287,7 +335,7 @@ public class P2PRule extends Rule {
 
 	/**
 	 * Removes the obsolete connections.
-	 *
+	 * 
 	 * @return the int[]
 	 */
 	private int[] removeObsoleteConnections() {

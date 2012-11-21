@@ -1,5 +1,7 @@
 package p2p.distribution;
 
+import p2p.distribution.strategies.*;
+
 /**
  * This class creates Strategies for the distribution of RDF Triple within the
  * network. The pattern which is used is the Factory Method
@@ -24,8 +26,18 @@ public class DistributionFactory {
 				return new OneKeyDistribution();
 			case 2:
 				return new TwoKeyDistribution();
-			default:
+			case 3:
 				return new ThreeKeyDistribution();
+			case 4:
+				return new FourKeyDistribution();
+			case 5:
+				return new FiveKeyDistribution();
+			case 6:
+				return new SixKeyDistribution();
+			case 7:
+				return new SevenKeyDistribution();
+			default:
+				return new OneKeyDistribution();
 		}
 	}
 }

@@ -16,6 +16,8 @@ import lupos.engine.operators.index.BasicIndex;
 import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.IndexCollection;
 import lupos.engine.operators.index.Indices;
+import lupos.engine.operators.messages.BoundVariablesMessage;
+import lupos.engine.operators.messages.Message;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.rdf.Prefix;
 import luposdate.operators.formatter.SubGraphContainerFormatter;
@@ -103,7 +105,7 @@ public class SubGraphContainer extends BasicIndex {
 			try {
 				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
 				QueryResult queryResult = deserializier.getQueryResult(is);
-				System.out.println("schritt 4: " + queryResult);
+//				System.out.println("schritt 4: " + queryResult);
 
 				for (OperatorIDTuple succ : this.getSucceedingOperators()) {
 					succ.processAll(queryResult);
@@ -149,6 +151,13 @@ public class SubGraphContainer extends BasicIndex {
 	public void setHashableTriplePatterns(
 			Collection<TriplePattern> triplePattern) {
 		this.hashableTriplePatterns = triplePattern;
+	}
+	
+	@Override
+	public Message preProcessMessage(final BoundVariablesMessage msg) {
+		BoundVariablesMessage newMsg = new BoundVariablesMessage(msg);
+		newMsg.setVariables(getUnionVariables());
+		return newMsg;
 	}
 
 }

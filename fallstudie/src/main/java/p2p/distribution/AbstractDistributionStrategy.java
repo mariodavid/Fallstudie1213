@@ -16,7 +16,7 @@ public abstract class AbstractDistributionStrategy implements
 		DistributionStrategy {
 
 	/** The peer. */
-	private Peer peer;
+	protected Peer peer;
 
 	/*
 	 * (non-Javadoc)
