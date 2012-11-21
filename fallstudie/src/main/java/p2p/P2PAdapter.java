@@ -10,6 +10,7 @@ import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
 import lupos.engine.operators.BasicOperator;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.messages.BoundVariablesMessage;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import luposdate.operators.P2PApplication;
@@ -109,13 +110,18 @@ public class P2PAdapter implements DataStoreAdapter {
 					throws Exception {
 				if (request.getClass() == PeerCacheEntry.class) {
 					for (Triple triple : ((PeerCacheEntry) request)
-							.getTripleList())
+							.getTripleList()) {
 						getDistributionStrategy().distribute(triple);
+					}
 					return null;
-				} else if (request.getClass() == PeerRequest.class) {
-					return peer.getPeerAddress();
-				} else {
-					
+				} 
+//				else if (request.getClass() == PeerRequest.class) {
+//					return peer.getPeerAddress();
+//				} 
+				else {
+					Root oldRoot = evaluator.getRoot();
+					System.out.println("received request: " + request);
+
 					P2PApplication p2pApplication = new P2PApplication();
 					SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
 							evaluator.getDataset(), p2pApplication);
@@ -142,16 +148,11 @@ public class P2PAdapter implements DataStoreAdapter {
 
 					evaluator.evaluateQuery();
 
-					// try {
-					// XPref.getInstance(Demo_Applet.class
-					// .getResource("/preferencesMenu.xml"));
-					// } catch (Exception e) {
-					// XPref.getInstance(new URL("file:"
-					// + GUI.class.getResource("/preferencesMenu.xml")
-					// .getFile()));
-					// }
-					// new Viewer(new GraphWrapperBasicOperator(evaluator
-					// .getRootNode()), "test", true, false);
+					// hier evtl. gegen loesung austauschen, dass man fur den
+					// empfang von nachrichten eine eigene evaluator instanz
+					// verwendet
+					evaluator.setRoot(oldRoot);
+
 
 					return p2pApplication.getResult();
 				}

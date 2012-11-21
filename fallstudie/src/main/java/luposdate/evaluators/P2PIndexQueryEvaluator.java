@@ -10,10 +10,10 @@ import lupos.datastructures.items.literal.URILiteral;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.datastructures.trie.SuperTrie;
 import lupos.engine.evaluators.BasicIndexQueryEvaluator;
-import lupos.engine.operators.index.BasicIndex;
+import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.Indices;
-import lupos.engine.operators.index.memoryindex.IndexCollection;
+import lupos.engine.operators.index.Root;
 import lupos.misc.Tuple;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndices;
@@ -231,19 +231,19 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 		Indices.setUsedDatastructure(datastructure);
 		switch (optimization) {
 		case MOSTRESTRICTIONS:
-			opt = BasicIndex.MOSTRESTRICTIONS;
+				opt = BasicIndexScan.MOSTRESTRICTIONS;
 			break;
 		case MOSTRESTRICTIONSLEASTENTRIES:
-			opt = BasicIndex.MOSTRESTRICTIONSLEASTENTRIES;
+				opt = BasicIndexScan.MOSTRESTRICTIONSLEASTENTRIES;
 			break;
 		case LEASTENTRIES:
-			opt = BasicIndex.LEASTENTRIES;
+				opt = BasicIndexScan.LEASTENTRIES;
 			break;
 		case BINARY:
-			opt = BasicIndex.Binary;
+				opt = BasicIndexScan.Binary;
 			break;
 		default:
-			opt = BasicIndex.NONE;
+				opt = BasicIndexScan.NONE;
 			break;
 		}
 	}
@@ -299,8 +299,8 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	 * 
 	 * @return the index collection
 	 */
-	public IndexCollection getIndexCollection() {
-		return (IndexCollection) indexCollection;
+	public Root getRoot() {
+		return root;
 	}
 
 	/**
@@ -320,7 +320,7 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	 * lupos.engine.evaluators.BasicIndexQueryEvaluator#createIndexCollection()
 	 */
 	@Override
-	public lupos.engine.operators.index.IndexCollection createIndexCollection() {
+	public lupos.engine.operators.index.Root createRoot() {
 		return new P2PIndexCollection(dataset);
 	}
 
@@ -379,12 +379,12 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see
-		 * lupos.engine.operators.index.Dataset.IndicesFactory#createIndexCollection
+		 * @see lupos.engine.operators.index.Dataset.IndicesFactory#createRoot
 		 * ()
 		 */
-		public lupos.engine.operators.index.IndexCollection createIndexCollection() {
+		public lupos.engine.operators.index.Root createRoot() {
 			return new P2PIndexCollection(dataset);
 		}
 	}
+
 }

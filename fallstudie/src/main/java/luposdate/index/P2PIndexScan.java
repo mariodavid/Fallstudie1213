@@ -10,16 +10,16 @@ import lupos.datastructures.items.literal.Literal;
 import lupos.datastructures.items.literal.string.StringURILiteral;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.index.BasicIndex;
-import lupos.engine.operators.index.IndexCollection;
+import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Indices;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
 // TODO: Klasse erklären
 /**
  * ist für die ein oder mehrere Tripelmuster auszuführen.
  */
-public class P2PIndexScan extends BasicIndex {
+public class P2PIndexScan extends BasicIndexScan {
 
 	/**
 	 * Instantiates a new p2 p index scan.
@@ -27,7 +27,7 @@ public class P2PIndexScan extends BasicIndex {
 	 * @param indexCollection
 	 *            the index collection
 	 */
-	public P2PIndexScan(IndexCollection indexCollection) {
+	public P2PIndexScan(Root indexCollection) {
 		super(indexCollection);
 		// TODO Auto-generated constructor stub
 	}
@@ -46,7 +46,7 @@ public class P2PIndexScan extends BasicIndex {
 	 */
 	public P2PIndexScan(OperatorIDTuple succeedingOperator,
 			Collection<TriplePattern> triplePattern, Item data,
-			IndexCollection indexCollection) {
+			Root indexCollection) {
 		super(succeedingOperator, triplePattern, data, indexCollection);
 	}
 
