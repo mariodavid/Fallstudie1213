@@ -23,8 +23,8 @@ import p2p.P2PAdapter;
 
 /**
  * Der P2PIndexQueryEvaluator ist eine spezielle Form eines Evaluators aus
- * Luposdate. Zusätzlich hält er eine Verbindung zum P2P-Netzwerk über den
- * P2PAdapter.
+ * Luposdate der zusätzlich eine Verbindung zum P2P-Netzwerk aufrecht erhält.
+ * Die Verbindung wird dabei über den P2PAdapter aufrecht erhalten.
  */
 public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 
