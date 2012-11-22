@@ -18,8 +18,8 @@ public abstract class AbstractDistributionStrategy implements
 	/** The peer. */
 	protected Peer peer;
 
-	private int		distributionCounter	= 0;
-	private int		storedCounter		= 0;
+	private static int		distributionCounter	= 0;
+	private static int		storedCounter		= 0;
 
 	/*
 	 * (non-Javadoc)
@@ -55,10 +55,12 @@ public abstract class AbstractDistributionStrategy implements
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
+	static int counter = 0;
 	protected void addToNetwork(String key, Triple value) throws IOException {
 		Number160 hash = Number160.createHash(key);
 		Number160 contentKey = Number160.createHash(value.toN3String());
-
+		counter++;
+		System.out.println("C: " + counter + " Key: " + key);
 		// peer.put(hash).setData(contentKey, new Data(value)).start()
 		// .awaitUninterruptibly();
 		// asynchron
@@ -75,6 +77,10 @@ public abstract class AbstractDistributionStrategy implements
 	}
 	
 	public boolean isDistributionReady() {
+		if (distributionCounter == storedCounter) {
+			distributionCounter=0;
+			storedCounter=0;
+		}
 		return distributionCounter == storedCounter;
 	}
 
