@@ -13,6 +13,3 @@ WHERE {
   ?person2 foaf:name ?name2
   FILTER (?name=?name2)
 }
-
-
-
