@@ -38,6 +38,7 @@ public class Sp2bTest {
 	protected static final String			file_q5b				= "benchmarks/sp2b/sp2b_q5b.n3";
 	protected static final String			file_q6					= "benchmarks/sp2b/sp2b_q6.n3";
 	protected static final String			file_q7					= "benchmarks/sp2b/sp2b_q7.n3";
+	protected static final String			file_q7_with_optional	= "benchmarks/sp2b/sp2b_q7_with_optional.n3";
 	protected static final String			file_q8					= "benchmarks/sp2b/sp2b_q8.n3";
 	protected static final String			file_q9					= "benchmarks/sp2b/sp2b_q9.n3";
 	protected static final String			file_q10				= "benchmarks/sp2b/sp2b_q10.n3";
@@ -104,7 +105,7 @@ public class Sp2bTest {
 		p2pAdapter.peer.shutdown();
 	}
 
-	private static P2PIndexQueryEvaluator initP2PQueryEvaluator() {
+	protected static P2PIndexQueryEvaluator initP2PQueryEvaluator() {
 
 		try {
 			P2PConnection connection = new P2PConnection();
@@ -134,6 +135,17 @@ public class Sp2bTest {
 		evaluator.compileQuery(query);
 		evaluator.logicalOptimization();
 		evaluator.physicalOptimization();
+
+		// try {
+		// XPref.getInstance(Demo_Applet.class
+		// .getResource("/preferencesMenu.xml"));
+		// } catch (Exception e) {
+		// XPref.getInstance(new URL("file:"
+		// + GUI.class.getResource("/preferencesMenu.xml").getFile()));
+		// }
+		// new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
+		// "test", true, false);
+
 		return evaluator.getResult();
 	}
 

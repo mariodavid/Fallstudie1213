@@ -18,9 +18,16 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 	static MemoryIndexQueryEvaluator	memoryEvaluator;
 
+
 	@Before
 	public void initAndLoadMemoryEvaluator() {
-
+		// P2PAdapter adapter = (P2PAdapter) p2pEvaluator.getP2PAdapter();
+		// try {
+		// adapter.peer = ExampleUtils.createAndAttachNodes(1, 4004)[0];
+		// } catch (Exception e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
 		memoryEvaluator = initMemoryEvaluator();
 
 		// load dataset to with any sample query (because the lupos api requires
@@ -55,6 +62,24 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 	public void testQ2() throws Exception {
 		loadInP2PNetwork(file_q2);
 		loadInMemory(file_q2);
+
+		String selectQuery = readFile(q2_query_filename);
+
+		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
+		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
+
+		System.out.println(expected);
+
+		System.out.println(expected.toString().length());
+		System.out.println(actual);
+		System.out.println(actual.toString().length());
+		assertEquals(expected, actual);
+	}
+
+	@Test
+	public void testQ2WithOptional() throws Exception {
+		loadInP2PNetwork(file_q2_with_optional);
+		loadInMemory(file_q2_with_optional);
 
 		String selectQuery = readFile(q2_query_filename);
 
@@ -175,11 +200,13 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		String selectQuery = readFile(q6_query_filename);
 
-		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
+		// QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
+		QueryResult expected = memoryEvaluator.getResult(selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 		
+		// Thread.sleep(1000000000);
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}

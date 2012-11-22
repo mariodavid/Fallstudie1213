@@ -8,15 +8,15 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix person: <http://localhost/persons/> .
 
-
-bench:Proceedings rdfs:subClassOf foaf:Document.
+bench:Article rdfs:subClassOf foaf:Document.
 <http://localhost/publications/articles/Journal1/1940/Article1> rdf:type bench:Article.
-<http://localhost/publications/journals/Journal1/1940> dcterms:issued "1940"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article1> dcterms:issued "1940"^^xsd:integer.
 <http://localhost/publications/articles/Journal1/1940/Article1> dc:creator _:Cecil_Kochler.
 _:Cecil_Kochler foaf:name "Cecil Kochler"^^xsd:string.
 
+
+
 bench:Proceedings rdfs:subClassOf foaf:Document.
-<http://localhost/publications/articles/Journal1/1940/Article2> rdf:type bench:Article.
-<http://localhost/publications/journals/Journal1/1940> dcterms:issued "1940"^^xsd:integer.
-<http://localhost/publications/articles/Journal1/1940/Article2> dc:creator _:Maria_Mueller.
-_:Maria_Mueller foaf:name "Maria Mueller"^^xsd:string.
+<http://localhost/publications/articles/Journal1/1940/Article2> rdf:type bench:Proceedings.
+<http://localhost/publications/articles/Journal1/1940/Article2> dcterms:issued "1939"^^xsd:integer.
+<http://localhost/publications/articles/Journal1/1940/Article2> dc:creator _:Cecil_Kochler.

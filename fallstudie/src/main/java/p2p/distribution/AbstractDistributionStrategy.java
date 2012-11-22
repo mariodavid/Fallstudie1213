@@ -81,7 +81,7 @@ public abstract class AbstractDistributionStrategy implements
 			distributionCounter=0;
 			storedCounter=0;
 		}
-		return distributionCounter == storedCounter;
+		return distributionCounter <= storedCounter + 8;
 	}
 
 	/**

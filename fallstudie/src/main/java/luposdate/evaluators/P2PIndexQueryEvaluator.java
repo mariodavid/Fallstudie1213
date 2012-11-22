@@ -355,9 +355,10 @@ public class P2PIndexQueryEvaluator extends BasicIndexQueryEvaluator {
 	 */
 	@Override
 	public long logicalOptimization() {
+		long result = super.logicalOptimization();
 		P2PRulePackage rp = new P2PRulePackage(this.p2pAdapter);
 		rp.applyRules(this.getRootNode());
-		return super.logicalOptimization();
+		return result;
 	};
 
 	/**
