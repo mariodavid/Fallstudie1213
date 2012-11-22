@@ -10,30 +10,46 @@ import lupos.datastructures.items.literal.LiteralFactory.MapType;
 import lupos.datastructures.items.literal.URILiteral;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.evaluators.MemoryIndexQueryEvaluator;
+import luposdate.LuposServer;
 
+import net.tomp2p.examples.ExampleUtils;
+import net.tomp2p.p2p.Peer;
+
+import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 
+import p2p.P2PAdapter;
+import p2p.P2PConnection;
+
 public class MemoryEvaluatorTest extends Sp2bTest {
 
-	static MemoryIndexQueryEvaluator	memoryEvaluator;
-
+	static MemoryIndexQueryEvaluator memoryEvaluator;
 
 	@Before
 	public void initAndLoadMemoryEvaluator() {
-		// P2PAdapter adapter = (P2PAdapter) p2pEvaluator.getP2PAdapter();
-		// try {
-		// adapter.peer = ExampleUtils.createAndAttachNodes(1, 4004)[0];
-		// } catch (Exception e) {
-		// // TODO Auto-generated catch block
-		// e.printStackTrace();
-		// }
+//		try {
+//			Peer newPeer = ExampleUtils.createAndAttachNodes(1, 4005)[0];
+//			P2PAdapter p2pAdapter = new P2PAdapter(newPeer);
+//			p2pEvaluator.setP2PAdapter(p2pAdapter);
+//			p2pAdapter.setEvaluator(p2pEvaluator);
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+		((P2PAdapter) p2pEvaluator.getP2PAdapter()).peer.getPeerBean().getStorage().map().clear();
 		memoryEvaluator = initMemoryEvaluator();
 
 		// load dataset to with any sample query (because the lupos api requires
 		// it)
 
 	}
+	
+//	@After
+//	public void closePeer() {
+//		((P2PAdapter) p2pEvaluator.getP2PAdapter()).peer.shutdown();
+//	}
 
 	private void loadInMemory(String file) {
 		try {
@@ -55,6 +71,9 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
+		System.out.println("expected:" + expected);
+		System.out.println("actual: " + actual);
+		
 		assertEquals(expected, actual);
 	}
 
@@ -68,11 +87,8 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
-		System.out.println(expected);
-
-		System.out.println(expected.toString().length());
-		System.out.println(actual);
-		System.out.println(actual.toString().length());
+		System.out.println("expected:" + expected);
+		System.out.println("actual: " + actual);
 		assertEquals(expected, actual);
 	}
 
@@ -103,7 +119,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -119,7 +135,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -135,7 +151,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -151,7 +167,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -171,7 +187,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
-		
+
 		assertEquals(expected, actual);
 	}
 
@@ -185,7 +201,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -203,7 +219,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 		// QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult expected = memoryEvaluator.getResult(selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		// Thread.sleep(1000000000);
 		System.out.println("expected:" + expected);
 		System.out.println("actual:  " + actual);
@@ -221,7 +237,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -238,7 +254,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -255,7 +271,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -272,7 +288,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -288,7 +304,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
@@ -304,13 +320,12 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 
 		assertEquals(expected, actual);
 	}
-	
 
 	@Test
 	public void testQ12b() throws Exception {
@@ -321,13 +336,12 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
-		
+
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
-		
+
 		assertEquals(expected, actual);
 	}
-	
 
 	@Test
 	public void testQ12c() throws Exception {
@@ -341,10 +355,9 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
-		
+
 		assertEquals(expected, actual);
 	}
-
 
 	private static MemoryIndexQueryEvaluator initMemoryEvaluator() {
 		try {
@@ -365,8 +378,8 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 	}
 
 	private static String full_filepath(String filename) {
-		return MemoryEvaluatorTest.class.getClassLoader()
-				.getResource(filename).getPath();
+		return MemoryEvaluatorTest.class.getClassLoader().getResource(filename)
+				.getPath();
 	}
 
 }
