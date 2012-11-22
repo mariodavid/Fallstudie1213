@@ -16,6 +16,5 @@ bench:MastersThesis rdfs:subClassOf foaf:Document.
 bench:PhDThesis rdfs:subClassOf foaf:Document.
 bench:Incollection rdfs:subClassOf foaf:Document.
 bench:Book rdfs:subClassOf foaf:Document.
-
 <http://localhost/publications/articles/Journal1/1940/Article1> rdf:type bench:Article.
 <http://localhost/publications/articles/Journal1/1940/Article1> swrc:pages "110"^^xsd:integer.
