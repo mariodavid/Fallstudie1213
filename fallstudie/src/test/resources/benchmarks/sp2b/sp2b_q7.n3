@@ -1,0 +1,5 @@
+class rdfs:subClassOf foaf:Document .
+  doc rdf:type class .
+  doc dc:title title .
+  bag2 member2 doc .
+  doc2 dcterms:references bag2 .
