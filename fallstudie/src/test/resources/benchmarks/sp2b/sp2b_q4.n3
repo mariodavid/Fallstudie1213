@@ -8,3 +8,14 @@
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix person: <http://localhost/persons/> .
 
+
+<http://localhost/publications/articles/Journal1/1940/Article1> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal1/1940/Article2> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator _:Adamanta_Schlitt.
+<http://localhost/publications/articles/Journal1/1940/Article2> dc:creator _:Meier_Huber.
+
+_:Adamanta_Schlitt foaf:name "Adamanta Schlitt"^^xsd:string.
+_:Meier_Huber. foaf:name "Meier Huber"^^xsd:string.
+
+<http://localhost/publications/articles/Journal1/1940/Article1> swrc:journal <http://localhost/publications/journals/Journal1/1940>.
+<http://localhost/publications/articles/Journal1/1940/Article2> swrc:journal <http://localhost/publications/journals/Journal1/1940>.
