@@ -27,8 +27,25 @@ public class Sp2bTest {
 	protected static final String			file_500_triples	= "benchmarks/sp2b/sp2b_500.n3";
 	protected static final String			file_5000_triples	= "benchmarks/sp2b/sp2b_5000.n3";
 	protected static final String			file_50000_triples	= "benchmarks/sp2b/sp2b_50000.n3";
+	protected static final String			file_q2				= "benchmarks/sp2b/sp2b_q2.n3";
+	protected static final String			file_q2_with_optional	= "benchmarks/sp2b/sp2b_q2_with_optional.n3";
+	protected static final String			file_q3a				= "benchmarks/sp2b/sp2b_q3a.n3";
+	protected static final String			file_q3b				= "benchmarks/sp2b/sp2b_q3b.n3";
+	protected static final String			file_q3c				= "benchmarks/sp2b/sp2b_q3c.n3";
+	protected static final String			file_q4					= "benchmarks/sp2b/sp2b_q4.n3";
+	protected static final String			file_q5a				= "benchmarks/sp2b/sp2b_q5a.n3";
+	protected static final String			file_q5b				= "benchmarks/sp2b/sp2b_q5b.n3";
+	protected static final String			file_q6					= "benchmarks/sp2b/sp2b_q6.n3";
+	protected static final String			file_q7					= "benchmarks/sp2b/sp2b_q7.n3";
+	protected static final String			file_q8					= "benchmarks/sp2b/sp2b_q8.n3";
+	protected static final String			file_q9					= "benchmarks/sp2b/sp2b_q9.n3";
+	protected static final String			file_q10				= "benchmarks/sp2b/sp2b_q10.n3";
+	protected static final String			file_q11				= "benchmarks/sp2b/sp2b_q11.n3";
+	protected static final String			file_q12a				= "benchmarks/sp2b/sp2b_q12a.n3";
+	protected static final String			file_q12b				= "benchmarks/sp2b/sp2b_q12b.n3";
+	protected static final String			file_q12c				= "benchmarks/sp2b/sp2b_q12c.n3";
 
-	protected static final String			default_file		= file_5000_triples;
+	protected static final String			default_file			= file_5000_triples;
 
 	protected static final String			q1_query_filename	= "benchmarks/sp2b/queries/q1.sparql";
 	protected static final String			q2_query_filename	= "benchmarks/sp2b/queries/q2.sparql";
@@ -58,11 +75,11 @@ public class Sp2bTest {
 	@BeforeClass
 	public static void initAndLoadP2PNetwork() {
 		p2pEvaluator = initP2PQueryEvaluator();
-		loadInP2PNetwork(default_file);
+		// loadInP2PNetwork(default_file);
 	}
 
 	
-	private static void loadInP2PNetwork(String file) {
+	protected static void loadInP2PNetwork(String file) {
 		LoadN3 loader = new LoadN3();
 		int loadedTriples = 7 * loader.load(p2pEvaluator, file);
 		NavigableMap<Number480, Data> p2pMap = ((P2PAdapter) p2pEvaluator
@@ -76,6 +93,8 @@ public class Sp2bTest {
 				e.printStackTrace();
 			}
 		}
+
+		System.out.println("fertig:" + p2pMap.size());
 	}
 
 	@AfterClass
