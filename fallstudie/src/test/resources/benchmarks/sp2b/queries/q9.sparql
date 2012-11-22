@@ -11,3 +11,4 @@ WHERE {
     ?person ?predicate ?object
   }
 }
+
