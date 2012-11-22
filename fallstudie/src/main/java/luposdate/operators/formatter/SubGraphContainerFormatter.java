@@ -11,6 +11,7 @@ import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Dataset;
 import lupos.engine.operators.index.Root;
+import lupos.engine.operators.singleinput.Filter;
 import lupos.engine.operators.singleinput.Result;
 import luposdate.index.P2PIndexCollection;
 import luposdate.index.P2PIndexScan;
@@ -123,6 +124,9 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 
 		} else if (op instanceof Result) {
 			serializer = new ResultFormatter();
+
+		} else if (op instanceof Filter) {
+			serializer = new FilterFormatter();
 
 		}
 		try {

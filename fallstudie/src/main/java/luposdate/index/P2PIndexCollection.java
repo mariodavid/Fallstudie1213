@@ -16,7 +16,7 @@ import lupos.engine.operators.tripleoperator.TriplePattern;
 public class P2PIndexCollection extends Root {
 
 	/**
-	 * Instantiates a new p2 p index collection.
+	 * Instantiates a new P2PIndexCollection.
 	 *
 	 * @param dataset the dataset
 	 */

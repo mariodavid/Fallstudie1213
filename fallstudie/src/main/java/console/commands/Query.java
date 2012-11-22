@@ -43,6 +43,7 @@ public class Query implements Command {
 			}
 			new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
 					"test", true, false);
+
 			QueryResult result = evaluator.getResult();
 
 			System.out.println("Query Result: " + result);
