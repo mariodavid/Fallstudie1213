@@ -86,7 +86,7 @@ public class Sp2bTest {
 		NavigableMap<Number480, Data> p2pMap = ((P2PAdapter) p2pEvaluator
 				.getP2PAdapter()).peer.getPeerBean().getStorage().map();
 
-		while (loadedTriples != p2pMap.size()) {
+		while (loadedTriples > p2pMap.size()) {
 			System.out.println(p2pMap.size());
 			try {
 				Thread.sleep(500);
