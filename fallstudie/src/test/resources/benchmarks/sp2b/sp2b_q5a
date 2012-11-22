@@ -1,0 +1,6 @@
+<http://localhost/publications/articles/Journal1/1940/Article1> rdf:type bench:Article.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator _:Adamanta_Schlitt.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator _:Bhoomika_Secord.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator _:Editta_Servoss.
+<http://localhost/publications/articles/Journal1/1940/Article1> dc:creator <http://localhost/persons/Paul_Erdoes>.
+<http://localhost/publications/articles/Journal1/1940/Article1> rdf:type bench:Inproceedings.
