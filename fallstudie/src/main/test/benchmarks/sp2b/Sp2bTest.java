@@ -27,6 +27,7 @@ public class Sp2bTest {
 	protected static final String			file_500_triples	= "benchmarks/sp2b/sp2b_500.n3";
 	protected static final String			file_5000_triples	= "benchmarks/sp2b/sp2b_5000.n3";
 	protected static final String			file_50000_triples	= "benchmarks/sp2b/sp2b_50000.n3";
+	protected static final String			file_q1					= "benchmarks/sp2b/sp2b_q1.n3";
 	protected static final String			file_q2				= "benchmarks/sp2b/sp2b_q2.n3";
 	protected static final String			file_q2_with_optional	= "benchmarks/sp2b/sp2b_q2_with_optional.n3";
 	protected static final String			file_q3a				= "benchmarks/sp2b/sp2b_q3a.n3";
