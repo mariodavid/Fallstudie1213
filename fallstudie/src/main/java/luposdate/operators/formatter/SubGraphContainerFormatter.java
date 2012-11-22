@@ -271,6 +271,8 @@ public class SubGraphContainerFormatter implements OperatorFormatter {
 				new P2PIndexCollectionFormatter(dataset));
 		formatters.put(P2PIndexScan.class.getName(),
 				new P2PIndexScanFormatter());
+		formatters.put(Filter.class.getName(),
+				new FilterFormatter());
 		formatters.put(Result.class.getName(), new ResultFormatter(
 				p2pApplication));
 
