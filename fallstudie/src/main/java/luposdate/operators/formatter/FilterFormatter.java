@@ -52,8 +52,10 @@ public class FilterFormatter implements OperatorFormatter {
 		json = serialiezedOperator;
 
 		Filter filter;
+		String filtername =  json.getString("expression");
+		filtername = filtername.substring(0,filtername.length()-3);
 		try {
-			filter = new Filter(json.getString("expression"));
+			filter = new Filter(filtername);
 			return filter;
 		} catch (ParseException e) {
 			e.printStackTrace();
