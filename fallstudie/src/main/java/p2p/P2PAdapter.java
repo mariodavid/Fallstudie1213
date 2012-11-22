@@ -148,7 +148,9 @@ public class P2PAdapter implements DataStoreAdapter {
 					// verwendet
 					evaluator.setRoot(oldRoot);
 
-
+					if (p2pApplication.getResult() == null) {
+						System.out.println("ALARM ALARM");
+					}
 					return p2pApplication.getResult();
 				}
 			}
