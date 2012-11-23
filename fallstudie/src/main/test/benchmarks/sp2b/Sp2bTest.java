@@ -2,10 +2,15 @@ package benchmarks.sp2b;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.NavigableMap;
 
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.evaluators.BasicIndexQueryEvaluator;
+import lupos.gui.Demo_Applet;
+import lupos.gui.GUI;
+import lupos.gui.operatorgraph.graphwrapper.GraphWrapperBasicOperator;
+import lupos.gui.operatorgraph.viewer.Viewer;
 import luposdate.LuposServer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.peers.Number480;
@@ -16,6 +21,7 @@ import org.junit.BeforeClass;
 
 import p2p.P2PAdapter;
 import p2p.P2PConnection;
+import xpref.XPref;
 import console.commands.LoadN3;
 
 public class Sp2bTest {
@@ -70,24 +76,19 @@ public class Sp2bTest {
 	protected static P2PIndexQueryEvaluator	p2pEvaluator;
 	private static P2PAdapter				p2pAdapter;
 
-	public Sp2bTest() {
-		super();
-	}
-
 	@BeforeClass
-	public static void initAndLoadP2PNetwork() {
+	public static void initP2PNetwork() {
 		p2pEvaluator = initP2PQueryEvaluator();
-		// loadInP2PNetwork(default_file);
 	}
 
 	
 	protected static void loadInP2PNetwork(String file) {
 		LoadN3 loader = new LoadN3();
-		int loadedTriples = 7 * loader.load(p2pEvaluator, file);
+		loader.load(p2pEvaluator, file);
+
 		NavigableMap<Number480, Data> p2pMap = ((P2PAdapter) p2pEvaluator
 				.getP2PAdapter()).peer.getPeerBean().getStorage().map();
-//
-//		while (loadedTriples > p2pMap.size()) {
+
 		while (!p2pAdapter.getDistributionStrategy().isDistributionReady()) {
 			System.out.println(p2pMap.size());
 			try {
@@ -97,7 +98,6 @@ public class Sp2bTest {
 			}
 		}
 
-		System.out.println("fertig:" + p2pMap.size());
 	}
 
 	@AfterClass
@@ -136,17 +136,28 @@ public class Sp2bTest {
 		evaluator.logicalOptimization();
 		evaluator.physicalOptimization();
 
-		// try {
-		// XPref.getInstance(Demo_Applet.class
-		// .getResource("/preferencesMenu.xml"));
-		// } catch (Exception e) {
-		// XPref.getInstance(new URL("file:"
-		// + GUI.class.getResource("/preferencesMenu.xml").getFile()));
-		// }
-		// new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
-		// "test", true, false);
+		return evaluator.getResult();
+	}
+
+	protected QueryResult executeQueryWithGraphVisualization(
+			BasicIndexQueryEvaluator evaluator, String query) throws Exception {
+
+		evaluator.compileQuery(query);
+		evaluator.logicalOptimization();
+		evaluator.physicalOptimization();
+
+		try {
+			XPref.getInstance(Demo_Applet.class
+					.getResource("/preferencesMenu.xml"));
+		} catch (Exception e) {
+			XPref.getInstance(new URL("file:"
+					+ GUI.class.getResource("/preferencesMenu.xml").getFile()));
+		}
+		new Viewer(new GraphWrapperBasicOperator(evaluator.getRootNode()),
+				"test", true, false);
 
 		return evaluator.getResult();
+
 	}
 
 	protected String readFile(String file) {
@@ -156,8 +167,8 @@ public class Sp2bTest {
 	}
 
 	private String convertStreamToString(java.io.InputStream is) {
-	    java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
-	    return s.hasNext() ? s.next() : "";
+		java.util.Scanner s = new java.util.Scanner(is).useDelimiter("\\A");
+		return s.hasNext() ? s.next() : "";
 	}
 
 }
