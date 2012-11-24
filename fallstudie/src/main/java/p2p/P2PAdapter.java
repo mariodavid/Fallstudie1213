@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
+import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
 import lupos.engine.operators.BasicOperator;
@@ -17,8 +18,10 @@ import luposdate.operators.formatter.SubGraphContainerFormatter;
 import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
+import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.futures.FutureResponse;
+import net.tomp2p.futures.FutureRouting;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.p2p.RequestP2PConfiguration;
@@ -33,6 +36,7 @@ import org.jboss.netty.buffer.ChannelBuffer;
 import org.jboss.netty.buffer.ChannelBufferInputStream;
 import org.jboss.netty.buffer.ChannelBufferOutputStream;
 import org.jboss.netty.buffer.ChannelBuffers;
+import org.jboss.netty.handler.timeout.TimeoutException;
 import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
@@ -103,17 +107,17 @@ public class P2PAdapter implements DataStoreAdapter {
 		peer.setObjectDataReply(new ObjectDataReply() {
 			public Object reply(PeerAddress sender, Object request)
 					throws Exception {
-				if (request.getClass() == PeerCacheEntry.class) {
-					for (Triple triple : ((PeerCacheEntry) request)
-							.getTripleList()) {
-						getDistributionStrategy().distribute(triple);
-					}
-					return null;
-				} 
-//				else if (request.getClass() == PeerRequest.class) {
+//				if (request.getClass() == PeerCacheEntry.class) {
+//					for (Triple triple : ((PeerCacheEntry) request)
+//							.getTripleList()) {
+//						getDistributionStrategy().distribute(triple);
+//					}
+//					return null;
+//				} elses 
+//				 if (request.getClass() == PeerRequest.class) {
 //					return peer.getPeerAddress();
 //				} 
-				else {
+//				else {
 					Root oldRoot = evaluator.getRoot();
 					System.out.println("received request: " + request);
 
@@ -153,7 +157,7 @@ public class P2PAdapter implements DataStoreAdapter {
 					}
 					return p2pApplication.getResult();
 				}
-			}
+//			}
 
 		});
 
@@ -281,37 +285,56 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * @return die Addresse des zuständigen Knoten als PeerAddress Obejkt
 	 */
 	public PeerAddress getPeerAddressFromLocationKey(Number160 locationKey) {
-		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
-				1, 10, 0);
-		FutureDHT futureDHT = peer.send(locationKey).setObject(new PeerRequest())
-				.setRequestP2PConfiguration(requestP2PConfiguration)
-				.setRefreshSeconds(0).setDirectReplication(false).start();
-		futureDHT.awaitUninterruptibly();
-
-		for (Object object : futureDHT.getRawDirectData2().values()) {
-			return (PeerAddress) object;
-		}
-		return null;
-		
-//		FutureChannelCreator channel = peer.getConnectionBean()
-//				.getConnectionReservation().reserve(2);
-//		boolean success = channel.awaitUninterruptibly(TIMEOUT);
-//		if (!success) {
-//			peer.getConnectionBean().getConnectionReservation()
-//					.release(channel.getChannelCreator());
-//			throw new TimeoutException(
-//					"Could not find nearest peers. (Timeout)");
-//		}
+//		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
+//				1, 10, 0);
+//		FutureDHT futureDHT = peer.send(locationKey).setObject(new PeerRequest())
+//				.setRequestP2PConfiguration(requestP2PConfiguration)
+//				.setRefreshSeconds(0).setDirectReplication(false).start();
+//		futureDHT.awaitUninterruptibly();
 //
-//		FutureRouting fRoute = peer.getDistributedRouting().route(locationKey,
-//				null, null, net.tomp2p.message.Message.Type.REQUEST_1, 3, 5, 5,
-//				5, 2, true, channel.getChannelCreator());
-//		fRoute.awaitUninterruptibly(TIMEOUT);
-//		SortedSet<PeerAddress> route = fRoute.getRoutingPath();
-//		peer.getConnectionBean().getConnectionReservation()
-//				.release(channel.getChannelCreator());
+//		for (Object object : futureDHT.getRawDirectData2().values()) {
+//			return (PeerAddress) object;
+//		}
+//		return null;
+		
+		FutureChannelCreator channel = peer.getConnectionBean()
+				.getConnectionReservation().reserve(2);
+		boolean success = channel.awaitUninterruptibly(TIMEOUT);
+		if (!success) {
+			peer.getConnectionBean().getConnectionReservation()
+					.release(channel.getChannelCreator());
+			throw new TimeoutException(
+					"Could not find nearest peers. (Timeout)");
+		}
 
-//		return route.first();
+		FutureRouting fRoute = peer.getDistributedRouting().route(locationKey,
+				null, null, net.tomp2p.message.Message.Type.REQUEST_1, 3, 5, 5,
+				5, 2, true, channel.getChannelCreator());
+		fRoute.awaitUninterruptibly(TIMEOUT);
+		SortedSet<PeerAddress> route = fRoute.getRoutingPath();
+		peer.getConnectionBean().getConnectionReservation()
+				.release(channel.getChannelCreator());
+
+		return route.first();
+	}
+	
+	public Number160 getPeerIDFromLocationKey(Number160 locationKey) {
+//		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
+//				1, 10, 0);
+//		FutureDHT futureDHT = peer.send(locationKey).setObject(new PeerRequest())
+//				.setRequestP2PConfiguration(requestP2PConfiguration)
+//				.setRefreshSeconds(0).setDirectReplication(false).start();
+//		futureDHT.awaitUninterruptibly();
+//
+//		for (Object object : futureDHT.getRawDirectData2().values()) {
+//			return (PeerAddress) object;
+//		}
+//		return null;
+		Number160 result = peer.getPeerBean().getStorage().findPeerIDForResponsibleContent(locationKey);
+
+		if (result == null)
+			result = getPeerAddressFromLocationKey(locationKey).getID();
+		return result;
 	}
 
 	// testing purpose
