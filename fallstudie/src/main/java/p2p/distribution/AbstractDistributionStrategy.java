@@ -22,7 +22,7 @@ public abstract class AbstractDistributionStrategy implements
 	/** The peer. */
 	protected Peer peer;
 
-	private static int distributionCounter = 0;
+	public static int distributionCounter = 0;
 	private static int storedCounter = 0;
 
 	/*
@@ -60,7 +60,7 @@ public abstract class AbstractDistributionStrategy implements
 	 *             Signals that an I/O exception has occurred.
 	 */
 	static SenderCacheStrategy senderCacheStrategy = new SenderCacheStrategy(
-			250, 5000);
+			250, 750);
 	static RequestP2PConfiguration r = new RequestP2PConfiguration(1, 0, 0, false,
 			false, senderCacheStrategy);
 	protected void addToNetwork(String key, Triple value) throws IOException {
