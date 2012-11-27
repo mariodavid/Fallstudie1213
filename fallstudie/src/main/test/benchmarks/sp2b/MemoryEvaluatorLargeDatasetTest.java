@@ -1,6 +1,7 @@
 package benchmarks.sp2b;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -12,6 +13,7 @@ import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.evaluators.MemoryIndexQueryEvaluator;
 
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
@@ -100,6 +102,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 	@Test
 	public void testQ3c() throws Exception {
 
+
 		String selectQuery = readFile(q3c_query_filename);
 
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
@@ -167,8 +170,11 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		assertEquals(expected, actual);
 	}
 
+	@Ignore
 	@Test
 	public void testQ7() throws Exception {
+
+		fail("Diese Anfrage wird nich unterstuetzt");
 
 		String selectQuery = readFile(q7_query_filename);
 
@@ -195,8 +201,11 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		assertEquals(expected, actual);
 	}
 
+	@Ignore
 	@Test
 	public void testQ9() throws Exception {
+
+		fail("Diese Anfrage wird nich unterstuetzt");
 
 		String selectQuery = readFile(q9_query_filename);
 
