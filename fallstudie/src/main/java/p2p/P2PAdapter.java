@@ -41,9 +41,6 @@ import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
-import p2p.load.PeerCacheEntry;
-import p2p.load.PeerRequest;
-
 import com.google.protobuf.InvalidProtocolBufferException;
 
 // TODO: Auto-generated Javadoc
