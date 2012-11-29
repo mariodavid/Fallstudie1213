@@ -3,6 +3,7 @@ package benchmarks.sp2b;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.io.IOException;
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -16,12 +17,14 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import p2p.P2PAdapter;
+
 public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 
 	static MemoryIndexQueryEvaluator memoryEvaluator;
 
 	@BeforeClass
-	public static void initDatastores() {
+	public static void initDatastores() throws IOException {
 		memoryEvaluator = initMemoryEvaluator();
 		loadInMemory(default_file);
 
@@ -33,12 +36,12 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 	public void testQ1() throws Exception {
 
 		String selectQuery = readFile(q1_query_filename);
-
+//		System.out.println("lala: " + ((P2PAdapter)p2pEvaluator.getP2PAdapter()).peer.getPeerBean().getStorage().map().size());
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 		
 		System.out
 				.println(p2pEvaluator
@@ -56,7 +59,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 		assertEquals(expected, actual);
 	}
 
@@ -85,7 +88,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -99,7 +102,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -114,7 +117,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -128,7 +131,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -142,7 +145,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -156,7 +159,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -187,7 +190,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -201,7 +204,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -218,7 +221,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -232,7 +235,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -246,7 +249,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -260,7 +263,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -274,7 +277,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}
@@ -288,7 +291,7 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
-		System.out.println("actual: " + actual);
+		System.out.println("actual:  " + actual);
 
 		assertEquals(expected, actual);
 	}

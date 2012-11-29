@@ -73,7 +73,7 @@ public abstract class AbstractDistributionStrategy implements
 					public void operationComplete(FutureDHT future)
 							throws Exception {
 						storedCounter++;
-						future.shutdown();
+					//	future.shutdown();
 					}
 				});
 	}
@@ -83,7 +83,7 @@ public abstract class AbstractDistributionStrategy implements
 			distributionCounter = 0;
 			storedCounter = 0;
 		}
-		return distributionCounter <= (storedCounter * 1.02);
+		return distributionCounter <= (storedCounter * 1.001);
 	}
 
 	/**
