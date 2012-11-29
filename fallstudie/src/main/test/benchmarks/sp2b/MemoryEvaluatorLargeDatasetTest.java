@@ -40,6 +40,11 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 		System.out.println("expected:" + expected);
 		System.out.println("actual: " + actual);
 		
+		System.out
+				.println(p2pEvaluator
+						.getP2PAdapter()
+						.get("http://localhost/publications/articles/Journal1/1940/Article12"));
+
 		assertEquals(expected, actual);
 	}
 

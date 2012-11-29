@@ -1,6 +1,7 @@
 package benchmarks.sp2b;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -254,6 +255,8 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 
 	@Test
 	public void testQ9() throws Exception {
+
+		fail("Diese Anfrage wird nich unterstuetzt");
 
 		loadInP2PNetwork(file_q9);
 		loadInMemory(file_q9);

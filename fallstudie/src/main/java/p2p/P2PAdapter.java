@@ -41,6 +41,7 @@ import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
+
 import com.google.protobuf.InvalidProtocolBufferException;
 
 // TODO: Auto-generated Javadoc
@@ -116,6 +117,7 @@ public class P2PAdapter implements DataStoreAdapter {
 //				} 
 //				else {
 					Root oldRoot = evaluator.getRoot();
+
 					System.out.println("received request: " + request);
 
 					P2PApplication p2pApplication = new P2PApplication();
@@ -152,6 +154,9 @@ public class P2PAdapter implements DataStoreAdapter {
 					if (p2pApplication.getResult() == null) {
 						System.out.println("ALARM ALARM");
 					}
+
+				System.out.println("Ende schritt 3:"
+						+ p2pApplication.getResult());
 					return p2pApplication.getResult();
 				}
 //			}
@@ -329,8 +334,9 @@ public class P2PAdapter implements DataStoreAdapter {
 //		return null;
 		Number160 result = peer.getPeerBean().getStorage().findPeerIDForResponsibleContent(locationKey);
 
-		if (result == null)
+		if (result == null) {
 			result = getPeerAddressFromLocationKey(locationKey).getID();
+		}
 		return result;
 	}
 

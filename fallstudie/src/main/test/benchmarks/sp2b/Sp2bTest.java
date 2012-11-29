@@ -98,6 +98,8 @@ public class Sp2bTest {
 			}
 		}
 
+		System.out.println("fertig:" + p2pMap.size());
+
 	}
 
 	@AfterClass
