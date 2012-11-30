@@ -59,7 +59,7 @@ import com.sun.net.httpserver.HttpServer;
 public class HTTPServer {
 
 	public static P2PIndexQueryEvaluator evaluator;
-	public final static int port = 9998;
+	public final static int port = 8080;
 
 	// enable or disable logging into console
 	public static boolean log = false;
@@ -145,7 +145,7 @@ public class HTTPServer {
 
 	public static void startServer() {
 		try {
-			HttpServer server = HttpServer.create(new InetSocketAddress(8080),
+			HttpServer server = HttpServer.create(new InetSocketAddress(port),
 					0);
 
 			for (Entry<String, HttpHandler> entry : HTTPServer.registeredhandler
