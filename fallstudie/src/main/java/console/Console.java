@@ -12,7 +12,6 @@ import p2p.P2PAdapter;
 import p2p.P2PConnection;
 import console.commands.Add;
 import console.commands.Command;
-import console.commands.CreateChannel;
 import console.commands.Get;
 import console.commands.GetAllNodes;
 import console.commands.GetExampleQueries;
@@ -32,6 +31,7 @@ import console.commands.Remove;
 import console.commands.SendMessage;
 import console.commands.SetStrategy;
 import console.commands.SetSubGraphDistribution;
+import console.commands.Sp2b;
 
 /**
  * In dieser Klasse wird die Konsolenfunktion implementiert. Gleichzeitig stellt
@@ -39,9 +39,9 @@ import console.commands.SetSubGraphDistribution;
  */
 public class Console {
 	/** Verbindung. */
-	private final P2PConnection	connection;
+	private final P2PConnection connection;
 	/** Lupos-Server. */
-	private final LuposServer	server;
+	private final LuposServer server;
 
 	/**
 	 * Konstruktor.
@@ -101,12 +101,11 @@ public class Console {
 		commands.put("sendMessage", new SendMessage());
 		commands.put("sm", new SendMessage());
 		commands.put("getmyid", new GetMyID());
-		commands.put("cc", new CreateChannel());
 		commands.put("setsubgraphdistribution", new SetSubGraphDistribution());
 		commands.put("getsubgraphdistribution", new GetSubGraphDistribution());
 		commands.put("loadn3", new LoadN3());
 		commands.put("getresponsiblekeysize", new GetResponsibleKeySize());
-		commands.put("getresponsablekeysize", new GetResponsibleKeySize()); // :-)
+		commands.put("sp2b", new Sp2b());
 
 		commands.put("help", new Help(commands.values()));
 
@@ -120,8 +119,6 @@ public class Console {
 	 */
 	public static void main(String[] args) throws Exception {
 
-
-
 		P2PConnection connection = new P2PConnection();
 		LuposServer server = new LuposServer();
 
@@ -130,44 +127,44 @@ public class Console {
 
 		switch (args.length) {
 		// Standardfall: Broadcast und Port ist 4001
-			case 0:
-				connection.connect();
-				config = new P2PAdapter(connection.getPeer());
-				server.start(config);
+		case 0:
+			connection.connect();
+			config = new P2PAdapter(connection.getPeer());
+			server.start(config);
 
-				config.setEvaluator(server.getEvaluator());
+			config.setEvaluator(server.getEvaluator());
 
-				console.start();
-				break;
-			case 1:
-				PropertyConfigurator.configure(args[0]);
-				connection.connect();
-				config = new P2PAdapter(connection.getPeer());
-				server.start(config);
+			console.start();
+			break;
+		case 1:
+			PropertyConfigurator.configure(args[0]);
+			connection.connect();
+			config = new P2PAdapter(connection.getPeer());
+			server.start(config);
 
-				config.setEvaluator(server.getEvaluator());
+			config.setEvaluator(server.getEvaluator());
 
-				console.start();
-				break;
-			// IP + remote Port + local Port
-			case 3:
-				String ip = args[0];
-				int remotePort = Integer.parseInt(args[1]);
-				int localPort = Integer.parseInt(args[2]);
+			console.start();
+			break;
+		// IP + remote Port + local Port
+		case 3:
+			String ip = args[0];
+			int remotePort = Integer.parseInt(args[1]);
+			int localPort = Integer.parseInt(args[2]);
 
-				connection.connect(ip, remotePort, localPort);
+			connection.connect(ip, remotePort, localPort);
 
-				config = new P2PAdapter(connection.getPeer());
-				server.start(config);
+			config = new P2PAdapter(connection.getPeer());
+			server.start(config);
 
-				config.setEvaluator(server.getEvaluator());
+			config.setEvaluator(server.getEvaluator());
 
-				console.start();
-				break;
+			console.start();
+			break;
 
-			default:
-				System.out.println("usage: program [ip] [port]");
-				break;
+		default:
+			System.out.println("usage: program [ip] [port]");
+			break;
 		}
 	}
 }

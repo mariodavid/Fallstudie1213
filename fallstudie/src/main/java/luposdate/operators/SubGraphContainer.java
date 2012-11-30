@@ -33,11 +33,11 @@ import p2p.P2PAdapter;
 public class SubGraphContainer extends RootChild {
 
 	/** The root node of sub graph. */
-	private final Root					rootNodeOfSubGraph;
+	private final Root rootNodeOfSubGraph;
 
-	private Collection<TriplePattern>	hashableTriplePatterns;
+	private Collection<TriplePattern> hashableTriplePatterns;
 
-	private final P2PAdapter			p2pAdapter;
+	private final P2PAdapter p2pAdapter;
 
 	/**
 	 * Instantiates a new sub graph container.
@@ -47,8 +47,7 @@ public class SubGraphContainer extends RootChild {
 	 * @param rootNodeOfSubGraph
 	 *            the root node of sub graph
 	 */
-	public SubGraphContainer(P2PAdapter p2pAdapter,
- Root rootNodeOfOuterGraph,
+	public SubGraphContainer(P2PAdapter p2pAdapter, Root rootNodeOfOuterGraph,
 			Root rootNodeOfSubGraph) {
 		// super(rootNodeOfOuterGraph);
 
@@ -56,7 +55,6 @@ public class SubGraphContainer extends RootChild {
 		this.rootNodeOfSubGraph = rootNodeOfSubGraph;
 
 	}
-
 
 	/**
 	 * wird aufgerufen, wenn der OP ausgefuehrt werden soll hier wird verschickt
@@ -84,25 +82,19 @@ public class SubGraphContainer extends RootChild {
 			String result = p2pAdapter.sendMessage(key,
 					serializedGraph.toString());
 
-			System.out.println("vor schritt 4:" + result);
-
 			// Schritt 4: Deserialisierung
 			MIMEFormatReader deserializier = new JSONFormatReader();
 
 			InputStream is;
 			byte[] ba = result.getBytes("UTF-8");
 
-				is = new ByteArrayInputStream(ba);
-				QueryResult queryResult = deserializier.getQueryResult(is);
-				System.out.println("schritt 4: " + queryResult);
+			is = new ByteArrayInputStream(ba);
+			QueryResult queryResult = deserializier.getQueryResult(is);
 
-
-				// for (OperatorIDTuple succ : this.getSucceedingOperators()) {
-				// succ.processAll(queryResult);
-				// }
-				return queryResult;
-
-
+			// for (OperatorIDTuple succ : this.getSucceedingOperators()) {
+			// succ.processAll(queryResult);
+			// }
+			return queryResult;
 
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -111,7 +103,6 @@ public class SubGraphContainer extends RootChild {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-
 
 		return null;
 	}
@@ -142,7 +133,7 @@ public class SubGraphContainer extends RootChild {
 			Collection<TriplePattern> triplePattern) {
 		this.hashableTriplePatterns = triplePattern;
 	}
-	
+
 	@Override
 	public Message preProcessMessage(final BoundVariablesMessage msg) {
 		BoundVariablesMessage newMsg = new BoundVariablesMessage(msg);

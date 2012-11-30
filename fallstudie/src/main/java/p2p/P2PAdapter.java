@@ -1,11 +1,9 @@
 package p2p;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.Random;
-import java.util.Scanner;
 import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
@@ -15,34 +13,24 @@ import lupos.engine.operators.messages.BoundVariablesMessage;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import luposdate.operators.P2PApplication;
 import luposdate.operators.formatter.SubGraphContainerFormatter;
-import net.tomp2p.connection.PeerConnection;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
-import net.tomp2p.futures.FutureResponse;
 import net.tomp2p.futures.FutureRouting;
 import net.tomp2p.p2p.Peer;
 import net.tomp2p.p2p.PeerMaker;
 import net.tomp2p.p2p.RequestP2PConfiguration;
-import net.tomp2p.p2p.builder.SendDirectBuilder;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
-import net.tomp2p.rpc.RawDataReply;
 import net.tomp2p.storage.Data;
 
-import org.jboss.netty.buffer.ChannelBuffer;
-import org.jboss.netty.buffer.ChannelBufferInputStream;
-import org.jboss.netty.buffer.ChannelBufferOutputStream;
-import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.timeout.TimeoutException;
 import org.json.JSONObject;
 
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
-
-import com.google.protobuf.InvalidProtocolBufferException;
 
 // TODO: Auto-generated Javadoc
 /**
@@ -105,62 +93,41 @@ public class P2PAdapter implements DataStoreAdapter {
 		peer.setObjectDataReply(new ObjectDataReply() {
 			public Object reply(PeerAddress sender, Object request)
 					throws Exception {
-//				if (request.getClass() == PeerCacheEntry.class) {
-//					for (Triple triple : ((PeerCacheEntry) request)
-//							.getTripleList()) {
-//						getDistributionStrategy().distribute(triple);
-//					}
-//					return null;
-//				} elses 
-//				 if (request.getClass() == PeerRequest.class) {
-//					return peer.getPeerAddress();
-//				} 
-//				else {
-					Root oldRoot = evaluator.getRoot();
+				Root oldRoot = evaluator.getRoot();
 
-					System.out.println("received request: " + request);
+				P2PApplication p2pApplication = new P2PApplication();
+				SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
+						evaluator.getDataset(), p2pApplication);
 
-					P2PApplication p2pApplication = new P2PApplication();
-					SubGraphContainerFormatter deserializer = new SubGraphContainerFormatter(
-							evaluator.getDataset(), p2pApplication);
+				BasicOperator rootNode = deserializer
+						.deserialize(new JSONObject((String) request));
 
-					BasicOperator rootNode = deserializer
-							.deserialize(new JSONObject((String) request));
+				// erzeugt die Vorgaenger der Collection, wie bei
+				// addSucceedingOperator
+				// (rekursiv fuer den gesamten Baum)
+				rootNode.setParents();
 
-					// erzeugt die Vorgaenger der Collection, wie bei
-					// addSucceedingOperator
-					// (rekursiv fuer den gesamten Baum)
-					rootNode.setParents();
+				// erkennt zyklen im op graphen (vermutlich nicht
+				// relevant,
+				// evtl. bei
+				// spaeteren erweiterungen relevant)
+				rootNode.detectCycles();
 
-					// erkennt zyklen im op graphen (vermutlich nicht
-					// relevant,
-					// evtl. bei
-					// spaeteren erweiterungen relevant)
-					rootNode.detectCycles();
+				// berechnet an welcher stelle welche variablen gebunden
+				// sind und gebunden sein koennen
+				rootNode.sendMessage(new BoundVariablesMessage());
 
-					// berechnet an welcher stelle welche variablen gebunden
-					// sind und gebunden sein koennen
-					rootNode.sendMessage(new BoundVariablesMessage());
+				evaluator.setRootNode(rootNode);
 
-					evaluator.setRootNode(rootNode);
+				evaluator.evaluateQuery();
 
-					evaluator.evaluateQuery();
+				// hier evtl. gegen loesung austauschen, dass man fur den
+				// empfang von nachrichten eine eigene evaluator instanz
+				// verwendet
+				evaluator.setRoot(oldRoot);
 
-					// hier evtl. gegen loesung austauschen, dass man fur den
-					// empfang von nachrichten eine eigene evaluator instanz
-					// verwendet
-					evaluator.setRoot(oldRoot);
-
-					if (p2pApplication.getResult() == null) {
-						System.out.println("ALARM ALARM");
-					}
-
-				System.out.println("Ende schritt 3:"
-						+ p2pApplication.getResult());
-					return p2pApplication.getResult();
-				}
-//			}
-
+				return p2pApplication.getResult();
+			}
 		});
 
 	}
@@ -270,7 +237,7 @@ public class P2PAdapter implements DataStoreAdapter {
 		FutureDHT futureDHT = peer.send(locationKey).setObject(message)
 				.setRequestP2PConfiguration(requestP2PConfiguration)
 				.setRefreshSeconds(0).setDirectReplication(false).start();
-		//futureDHT.awaitUninterruptibly();
+		// futureDHT.awaitUninterruptibly();
 	}
 
 	public String sendMessage(String locationKey, String message) {
@@ -287,18 +254,6 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * @return die Addresse des zuständigen Knoten als PeerAddress Obejkt
 	 */
 	public PeerAddress getPeerAddressFromLocationKey(Number160 locationKey) {
-//		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
-//				1, 10, 0);
-//		FutureDHT futureDHT = peer.send(locationKey).setObject(new PeerRequest())
-//				.setRequestP2PConfiguration(requestP2PConfiguration)
-//				.setRefreshSeconds(0).setDirectReplication(false).start();
-//		futureDHT.awaitUninterruptibly();
-//
-//		for (Object object : futureDHT.getRawDirectData2().values()) {
-//			return (PeerAddress) object;
-//		}
-//		return null;
-		
 		FutureChannelCreator channel = peer.getConnectionBean()
 				.getConnectionReservation().reserve(2);
 		boolean success = channel.awaitUninterruptibly(TIMEOUT);
@@ -319,104 +274,15 @@ public class P2PAdapter implements DataStoreAdapter {
 
 		return route.first();
 	}
-	
+
 	public Number160 getPeerIDFromLocationKey(Number160 locationKey) {
-//		RequestP2PConfiguration requestP2PConfiguration = new RequestP2PConfiguration(
-//				1, 10, 0);
-//		FutureDHT futureDHT = peer.send(locationKey).setObject(new PeerRequest())
-//				.setRequestP2PConfiguration(requestP2PConfiguration)
-//				.setRefreshSeconds(0).setDirectReplication(false).start();
-//		futureDHT.awaitUninterruptibly();
-//
-//		for (Object object : futureDHT.getRawDirectData2().values()) {
-//			return (PeerAddress) object;
-//		}
-//		return null;
-		Number160 result = peer.getPeerBean().getStorage().findPeerIDForResponsibleContent(locationKey);
+		Number160 result = peer.getPeerBean().getStorage()
+				.findPeerIDForResponsibleContent(locationKey);
 
 		if (result == null) {
 			result = getPeerAddressFromLocationKey(locationKey).getID();
 		}
 		return result;
-	}
-
-	// testing purpose
-	public void listenForDirectDataMessages() {
-		this.peer.setRawDataReply(new RawDataReply() {
-
-			public ChannelBuffer reply(final PeerAddress sender,
-					final ChannelBuffer requestBuffer)
-					throws InvalidProtocolBufferException {
-				System.out.println("Empfange ...");
-				ChannelBufferInputStream inStream = new ChannelBufferInputStream(
-						requestBuffer);
-				Scanner inReader = new Scanner(inStream);
-
-				for (int i = 0; i < 1000000; i++) {
-					if (inReader.hasNext()) {
-						System.out.println("kam an: " + inReader.nextLine());
-					}
-					try {
-						Thread.sleep(2000);
-					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
-				}
-
-				System.out.println("Uund wieder weg");
-				// System.out.println(receivedMessage);
-
-				/**
-				 * AN DIESER STELLE MUSS DIE ANKOMMENDE NACHRICHT VERARBEITET
-				 * WERDEN!!!
-				 */
-
-				// momentan wird einfach die Nachricht zur√ºck geschickt
-				return null;
-				// return ChannelBuffers
-				// .wrappedBuffer(("Deine Nachricht war: " + receivedMessage)
-				// .getBytes());
-			}
-		});
-	}
-
-	// testing purpose
-	public String sendMessageDirect(Number160 destination, String message) {
-		System.out.println("Sende ...");
-		SendDirectBuilder sendBuilder = peer.sendDirect();
-		ChannelBuffer buffer = ChannelBuffers.dynamicBuffer(512);
-		ChannelBufferOutputStream outStream = new ChannelBufferOutputStream(
-				buffer);
-		PeerAddress pa = this.getPeerAddressFromLocationKey(destination);
-		PeerConnection pc = peer.createPeerConnection(pa, TIMEOUT);
-		sendBuilder.setConnection(pc);
-		sendBuilder.setBuffer(buffer);
-
-		final FutureResponse response = sendBuilder.start();
-
-		PrintWriter pw = new PrintWriter(outStream);
-		for (int i = 0; i < 2; i++) {
-			System.out.println("sende  " + i);
-			pw.println("Halllloo " + i);
-			pw.flush();
-			try {
-				Thread.sleep(2000);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		response.awaitUninterruptibly();
-		try {
-			outStream.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		pc.close();
-		return null;
 	}
 
 	/*
@@ -466,49 +332,6 @@ public class P2PAdapter implements DataStoreAdapter {
 
 		return result;
 	}
-
-	// public Collection<Triple> get(String key2) {
-	//
-	// this.key = key2;
-	//
-	// result = new LinkedList<Triple>();
-	//
-	// Runnable run = new Runnable() {
-	//
-	//
-	// public void run() {
-	// // perform p2p operation
-	// FutureDHT future = getPeer()
-	// .get(Number160.createHash(key)).setAll().start();
-	// future.awaitUninterruptibly();
-	//
-	// // add all p2p results to the result collection
-	// for (Data r : future.getDataMap().values()) {
-	// try {
-	// result.add((Triple) r.getObject());
-	//
-	// } catch (ClassNotFoundException e) {
-	// e.printStackTrace();
-	// } catch (IOException e) {
-	// e.printStackTrace();
-	// }
-	// }
-	//
-	// }
-	// };
-	// Thread myTherad = new Thread(run);
-	// myTherad.start();
-	//
-	// try {
-	// Thread.sleep(2000);
-	// } catch (InterruptedException e) {
-	// // TODO Auto-generated catch block
-	// e.printStackTrace();
-	// }
-	//
-	// return result;
-	// }
-	//
 
 	/*
 	 * (non-Javadoc)

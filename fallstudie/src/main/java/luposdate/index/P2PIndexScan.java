@@ -83,8 +83,6 @@ public class P2PIndexScan extends BasicIndexScan {
 
 			String key = generateKey(items);
 
-			System.out.println("Hash: h(" + key + ")");
-
 			for (Triple triple : p2pIndices.getAll(key)) {
 				Bindings b = addVariablesToBindings(items, triple);
 				if (b != null) {

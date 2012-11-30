@@ -1,7 +1,6 @@
 package luposdate.operators.formatter;
 
 import lupos.engine.operators.BasicOperator;
-import lupos.engine.operators.application.Output;
 import lupos.engine.operators.singleinput.Result;
 import luposdate.operators.P2PApplication;
 
@@ -15,15 +14,15 @@ import org.json.JSONObject;
 public class ResultFormatter implements OperatorFormatter {
 
 	/** The json. */
-	private JSONObject				json;
+	private JSONObject json;
 
 	/** The dest_ip. */
-	private String					dest_ip;
+	private String dest_ip;
 
 	/** The request_id. */
-	private int				request_id;
+	private int request_id;
 
-	private P2PApplication	p2pApplication;
+	private P2PApplication p2pApplication;
 
 	/**
 	 * Use: public ResultSerializer(String dest_ip, int request_id).
@@ -35,6 +34,7 @@ public class ResultFormatter implements OperatorFormatter {
 
 	public ResultFormatter() {
 	}
+
 	/**
 	 * Instantiates a new result formatter.
 	 * 
@@ -89,31 +89,9 @@ public class ResultFormatter implements OperatorFormatter {
 			this.p2pApplication = new P2PApplication();
 		}
 
-		// this.p2pApplication.setDestinationIp(ip);
-
-		result.addApplication(new Output());
 		result.addApplication(this.p2pApplication);
 
 		return result;
 
 	}
-
-	/**
-	 * Gets the destination ip.
-	 * 
-	 * @return the destination ip
-	 */
-	// private String getDestinationIp() {
-	// return dest_ip;
-	// }
-
-	/**
-	 * Sets the destination ip.
-	 * 
-	 * @param dest_ip
-	 *            the new destination ip
-	 */
-	// public void setDestinationIp(String dest_ip) {
-	// this.dest_ip = dest_ip;
-	// }
 }
