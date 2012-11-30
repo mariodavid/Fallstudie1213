@@ -59,7 +59,7 @@ import com.sun.net.httpserver.HttpServer;
 public class HTTPServer {
 
 	public static P2PIndexQueryEvaluator evaluator;
-	public static String dir;
+	public final static int port = 9998;
 
 	// enable or disable logging into console
 	public static boolean log = false;
@@ -110,17 +110,9 @@ public class HTTPServer {
 		evaluator = ev;
 		try {
 			final String localHost = InetAddress.getLocalHost().getHostName();
-			System.out.println("Starting LUPOSDATE Endpoint on host: "
-					+ localHost);
-			System.out.println("Canonical host name: "
-					+ InetAddress.getLocalHost().getCanonicalHostName());
-			for (InetAddress ia : InetAddress.getAllByName(localHost)) {
-				System.out.println("IP: " + ia);
-			}
-
+			System.out.println("HTTP Endpoint gestartet: "
+					+ localHost + ":" + port);
 			HTTPServer.startServer();
-			System.out.println("Endpoint ready to receive requests...");
-			System.out.println("_____________________________________");
 		} catch (Exception e) {
 			System.err.println(e);
 			e.printStackTrace();
