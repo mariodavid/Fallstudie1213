@@ -37,6 +37,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import org.jboss.netty.handler.codec.http.HttpServerCodec;
+
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.server.format.CSVFormatter;
 import lupos.endpoint.server.format.Formatter;
@@ -341,8 +343,7 @@ public class HTTPServer {
 
 	public static class StandardHTMLForm implements HTMLForm {
 
-		private static String HTML_FORM_1 = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n"
-				+ "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"
+		private static String HTML_FORM_1 = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"
 				+ "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"
 				+ "<head>\n <title>LUPOSDATE SPARQL Endpoint</title>\n</head>\n"
 				+ "<body>\n <h1>LUPOSDATE SPARQL Endpoint</h1>\n\n"
@@ -368,7 +369,8 @@ public class HTTPServer {
 				toSend.append(StandardHTMLForm.HTML_OPTION_3);
 			}
 			toSend.append(StandardHTMLForm.HTML_FORM_2);
-			HTTPServer.sendString(t, toSend.toString());
+			String html = toSend.toString();
+			HTTPServer.sendString(t, html);
 		}
 	}
 
