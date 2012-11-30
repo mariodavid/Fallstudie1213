@@ -14,7 +14,7 @@ import net.tomp2p.p2p.Peer;
 import p2p.P2PAdapter;
 
 /**
- * Läd eine RDF Datei ein und speichert die Triple in das Netzwerk
+ * Lädt eine RDF Datei ein und speichert die Triple in das Netzwerk
  * 
  */
 public class LoadN3 implements Command {
@@ -22,7 +22,7 @@ public class LoadN3 implements Command {
 	private static final int OUTPUT_LIMIT = 100;
 	/** The filename. */
 	public P2PAdapter adapter;
-	private int					counter;
+	private int counter;
 
 	/*
 	 * (non-Javadoc)
@@ -34,17 +34,16 @@ public class LoadN3 implements Command {
 			P2PIndexQueryEvaluator evaluator) {
 
 		URL url;
-		InputStream  is = null;
+		InputStream is = null;
 		try {
-			url = new URL( scanner.next() );
+			url = new URL(scanner.next());
 			is = url.openStream();
 		} catch (Exception e1) {
 			System.out.println("NOT FOUND!");
 			e1.printStackTrace();
 		}
-		
+
 		load(evaluator, is);
-		
 
 	}
 
@@ -56,9 +55,8 @@ public class LoadN3 implements Command {
 	public int load(P2PIndexQueryEvaluator evaluator, InputStream is) {
 		this.adapter = (P2PAdapter) evaluator.getP2PAdapter();
 		counter = 0;
-		
+
 		final TripleConsumer tc = new TripleConsumer() {
-			// int counter = 0;
 			public void consume(final Triple triple) {
 				try {
 					counter++;
@@ -66,7 +64,6 @@ public class LoadN3 implements Command {
 					if (counter % OUTPUT_LIMIT == 0) {
 						System.out.println(counter + " Triple eingelesen ...");
 					}
-					// tripleCache.add(triple);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -74,9 +71,7 @@ public class LoadN3 implements Command {
 
 		};
 
-
 		try {
-//			N3Parser.parseRDFData(is, tc, "UTF-8");
 			CommonCoreQueryEvaluator.readTriples("N3", is, tc);
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
@@ -90,5 +85,4 @@ public class LoadN3 implements Command {
 	public String getDescription() {
 		return "load n3 file from a http link";
 	}
-
 }

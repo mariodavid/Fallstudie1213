@@ -21,7 +21,7 @@
  * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package http;
+package p2p;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,6 +36,8 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
+import org.jboss.netty.handler.codec.http.HttpServerCodec;
 
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.server.format.CSVFormatter;
@@ -57,7 +59,7 @@ import com.sun.net.httpserver.HttpServer;
 public class HTTPServer {
 
 	public static P2PIndexQueryEvaluator evaluator;
-	public final static int							port				= 8080;
+	public final static int port = 8080;
 
 	// enable or disable logging into console
 	public static boolean log = false;
@@ -108,8 +110,8 @@ public class HTTPServer {
 		evaluator = ev;
 		try {
 			final String localHost = InetAddress.getLocalHost().getHostName();
-			System.out.println("http endpoint started: " + localHost + ":"
-					+ port);
+			System.out.println("http endpoint started: "
+					+ localHost + ":" + port);
 			HTTPServer.startServer();
 		} catch (Exception e) {
 			System.err.println(e);
@@ -202,7 +204,7 @@ public class HTTPServer {
 														// several queries in
 														// parallel!
 					System.out.println("Evaluating query:\n" + queryParameter);
-					QueryResult queryResult = HTTPServer.evaluator instanceof CommonCoreQueryEvaluator ? ((CommonCoreQueryEvaluator) HTTPServer.evaluator)
+					QueryResult queryResult = (HTTPServer.evaluator instanceof CommonCoreQueryEvaluator) ? ((CommonCoreQueryEvaluator) HTTPServer.evaluator)
 							.getResult(queryParameter, true)
 							: HTTPServer.evaluator.getResult(queryParameter);
 					final String mimeType = formatter.getMIMEType(queryResult);
@@ -333,7 +335,7 @@ public class HTTPServer {
 
 	public static class StandardHTMLForm implements HTMLForm {
 
-		private static String	HTML_FORM_1		= "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"
+		private static String HTML_FORM_1 = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n"
 				+ "<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"en\" lang=\"en\">\n"
 				+ "<head>\n <title>LUPOSDATE SPARQL Endpoint</title>\n</head>\n"
 				+ "<body>\n <h1>LUPOSDATE SPARQL Endpoint</h1>\n\n"
