@@ -69,7 +69,7 @@ public class Sp2b implements Command {
 			testQ12b();
 			testQ12c();
 
-			printCSV();
+//			printCSV();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
