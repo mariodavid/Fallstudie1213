@@ -28,7 +28,6 @@ public class P2PIndexScan extends BasicIndexScan {
 	 */
 	public P2PIndexScan(Root indexCollection) {
 		super(indexCollection);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**

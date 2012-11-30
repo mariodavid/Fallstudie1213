@@ -1,5 +1,7 @@
 package luposdate;
 
+import http.HTTPServer;
+
 import java.util.Collection;
 import java.util.LinkedList;
 
@@ -60,6 +62,8 @@ public class LuposServer {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+
+		HTTPServer.initAndStartServer(evaluator);
 
 	}
 

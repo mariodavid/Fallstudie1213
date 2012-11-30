@@ -8,7 +8,6 @@ import luposdate.LuposServer;
 
 import org.apache.log4j.PropertyConfigurator;
 
-import p2p.HTTPServer;
 import p2p.P2PAdapter;
 import p2p.P2PConnection;
 import console.commands.Add;
@@ -134,7 +133,6 @@ public class Console {
 			server.start(config);
 
 			config.setEvaluator(server.getEvaluator());
-			HTTPServer.initAndStartServer(server.getEvaluator());
 			console.start();
 			break;
 		case 1:
@@ -144,7 +142,6 @@ public class Console {
 			server.start(config);
 
 			config.setEvaluator(server.getEvaluator());
-			HTTPServer.initAndStartServer(server.getEvaluator());
 			console.start();
 			break;
 		// IP + remote Port + local Port
@@ -159,7 +156,6 @@ public class Console {
 			server.start(config);
 
 			config.setEvaluator(server.getEvaluator());
-			HTTPServer.initAndStartServer(server.getEvaluator());
 			console.start();
 			break;
 
