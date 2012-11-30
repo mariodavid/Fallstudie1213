@@ -12,7 +12,6 @@ import lupos.engine.operators.tripleoperator.TripleConsumer;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import net.tomp2p.p2p.Peer;
 import p2p.P2PAdapter;
-import p2p.load.TripleCache;
 
 /**
  * Läd eine RDF Datei ein und speichert die Triple in das Netzwerk
@@ -23,7 +22,6 @@ public class LoadN3 implements Command {
 	private static final int OUTPUT_LIMIT = 100;
 	/** The filename. */
 	public P2PAdapter adapter;
-	TripleCache tripleCache;
 	private int					counter;
 
 	/*
@@ -57,8 +55,8 @@ public class LoadN3 implements Command {
 
 	public int load(P2PIndexQueryEvaluator evaluator, InputStream is) {
 		this.adapter = (P2PAdapter) evaluator.getP2PAdapter();
-		tripleCache = new TripleCache(adapter);
 		counter = 0;
+		
 		final TripleConsumer tc = new TripleConsumer() {
 			// int counter = 0;
 			public void consume(final Triple triple) {
@@ -76,7 +74,6 @@ public class LoadN3 implements Command {
 
 		};
 
-		// tripleCache.flush(true);
 
 		try {
 //			N3Parser.parseRDFData(is, tc, "UTF-8");

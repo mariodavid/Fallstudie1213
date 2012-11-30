@@ -9,9 +9,10 @@ import java.util.List;
 import lupos.datastructures.items.Variable;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.OperatorIDTuple;
-import lupos.engine.operators.singleinput.Filter;
 import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Root;
+import lupos.engine.operators.multiinput.join.Join;
+import lupos.engine.operators.singleinput.Filter;
 import lupos.engine.operators.singleinput.Result;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.optimizations.logical.rules.generated.runtime.Rule;
@@ -44,19 +45,18 @@ import p2p.P2PAdapter;
 public class P2PRule extends Rule {
 
 	/** The Op3. */
-	private lupos.engine.operators.BasicOperator[]	Op3		= null;
-	
+	private lupos.engine.operators.BasicOperator[]		Op3		= null;
+
 	/** The Op2. */
 	private lupos.engine.operators.index.BasicIndexScan	Op2		= null;
-	
+
 	/** The Op1. */
-	private lupos.engine.operators.BasicOperator	Op1		= null;
-	
+	private lupos.engine.operators.BasicOperator		Op1		= null;
+
 	/** The _dim_0. */
-	private int										_dim_0	= -1;
+	private int											_dim_0	= -1;
 
-
-	private final P2PAdapter p2pAdapter;
+	private final P2PAdapter							p2pAdapter;
 
 	/**
 	 * _check private0.
@@ -207,6 +207,25 @@ public class P2PRule extends Rule {
 
 	}
 
+	private Filter getFilterFromIndexScan(BasicOperator root) {
+		List<OperatorIDTuple> succs = root.getSucceedingOperators();
+		if (succs.size() == 1) {
+			for (OperatorIDTuple succ : succs) {
+				BasicOperator op = succ.getOperator();
+				if (op instanceof Filter) {
+					return (Filter) op;
+				}
+				if (op instanceof Join) {
+					return getFilterFromIndexScan(op);
+				}
+
+			}
+		}
+
+		return null;
+
+	}
+
 	/**
 	 * hier wird der normale index scan operator (p2pIndexScan) durch einen
 	 * SubGraphContainer ersetzt.
@@ -248,39 +267,37 @@ public class P2PRule extends Rule {
 		// TODO: es wird vermutlich kein Filter OP gefunden (als nachfolger von
 		// indeScan, weil durch die Methode addNewConnections der Join als
 		// nachfolger des IndexScan definiert wurde
-		// hier muss noch die naechste ebene betrachtet werden, damit der filter gefunden wird
-		if (indexScan.getSucceedingOperators().size() == 1) {
-			for (OperatorIDTuple opId : indexScan.getSucceedingOperators()) {
-				if (opId.getOperator() instanceof Filter) {
-					Filter filter = (Filter) opId.getOperator();
-					if (indexScan.getUnionVariables().containsAll(
-							filter.getUsedVariables())) {
-						Filter newFilter;
-						try {
-							newFilter = new Filter(filter.toString());
-							indexScan
-									.setSucceedingOperator(new OperatorIDTuple(
-											newFilter, 0));
-							newFilter
-									.setSucceedingOperator(new OperatorIDTuple(
-											new Result(), 0));
-						} catch (ParseException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+		// hier muss noch die naechste ebene betrachtet werden, damit der filter
+		// gefunden wird
 
-					} else {
-						indexScan.setSucceedingOperator(new OperatorIDTuple(
-								new Result(), 0));
-					}
+		Filter filter = getFilterFromIndexScan(indexScan);
+
+		if (filter != null) {
+			if (indexScan.getUnionVariables().containsAll(
+					filter.getUsedVariables())) {
+				Filter newFilter;
+				try {
+					newFilter = new Filter(filter.toString().substring(0,
+							filter.toString().length() - 2));
+					indexScan.setSucceedingOperator(new OperatorIDTuple(
+							newFilter, 0));
+					newFilter.setSucceedingOperator(new OperatorIDTuple(
+							new Result(), 0));
+				} catch (ParseException e) {
+					e.printStackTrace();
 				}
+
+			} else {
+				indexScan.setSucceedingOperator(new OperatorIDTuple(
+						new Result(), 0));
 			}
 		} else {
 			indexScan
 					.setSucceedingOperator(new OperatorIDTuple(new Result(), 0));
 		}
 
-		indexScan.setSucceedingOperator(new OperatorIDTuple(new Result(), 0));
+		// indexScan.setSucceedingOperator(new OperatorIDTuple(new Result(),
+		// 0));
 		rootNodeOfSubGraph.setSucceedingOperator(new OperatorIDTuple(indexScan,
 				0));
 

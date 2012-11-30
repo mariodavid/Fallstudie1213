@@ -1,12 +1,16 @@
 package p2p.distribution;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import lupos.datastructures.items.Triple;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
+import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
+import net.tomp2p.rpc.SenderCacheStrategy;
 import net.tomp2p.storage.Data;
 
 /**
@@ -18,8 +22,8 @@ public abstract class AbstractDistributionStrategy implements
 	/** The peer. */
 	protected Peer peer;
 
-	private static int		distributionCounter	= 0;
-	private static int		storedCounter		= 0;
+	public static int distributionCounter = 0;
+	private static int storedCounter = 0;
 
 	/*
 	 * (non-Javadoc)
@@ -55,33 +59,31 @@ public abstract class AbstractDistributionStrategy implements
 	 * @throws IOException
 	 *             Signals that an I/O exception has occurred.
 	 */
-	static int counter = 0;
+	static SenderCacheStrategy senderCacheStrategy = new SenderCacheStrategy(
+			250, 750);
+	static RequestP2PConfiguration r = new RequestP2PConfiguration(1, 0, 0, false,
+			false, senderCacheStrategy);
 	protected void addToNetwork(String key, Triple value) throws IOException {
 		Number160 hash = Number160.createHash(key);
 		Number160 contentKey = Number160.createHash(value.toN3String());
-		counter++;
-		System.out.println("C: " + counter + " Key: " + key);
-		// peer.put(hash).setData(contentKey, new Data(value)).start()
-		// .awaitUninterruptibly();
-		// asynchron
 		distributionCounter++;
-		peer.put(hash).setData(contentKey, new Data(value)).start()
+		peer.put(hash).setData(contentKey, new Data(value))
+				.setRequestP2PConfiguration(r).start()
 				.addListener(new BaseFutureAdapter<FutureDHT>() {
-
 					public void operationComplete(FutureDHT future)
 							throws Exception {
 						storedCounter++;
-						future.shutdown();
+					//	future.shutdown();
 					}
 				});
 	}
-	
+
 	public boolean isDistributionReady() {
 		if (distributionCounter == storedCounter) {
-			distributionCounter=0;
-			storedCounter=0;
+			distributionCounter = 0;
+			storedCounter = 0;
 		}
-		return distributionCounter == storedCounter;
+		return distributionCounter <= (storedCounter * 1.001);
 	}
 
 	/**

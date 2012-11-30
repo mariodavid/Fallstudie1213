@@ -8,13 +8,13 @@ import java.util.Collection;
 
 import lupos.datastructures.items.Item;
 import lupos.datastructures.queryresult.QueryResult;
+import lupos.endpoint.client.formatreader.JSONFormatReader;
 import lupos.endpoint.client.formatreader.MIMEFormatReader;
-import lupos.endpoint.client.formatreader.XMLFormatReader;
 import lupos.engine.operators.RootChild;
 import lupos.engine.operators.index.Dataset;
+import lupos.engine.operators.index.Root;
 import lupos.engine.operators.messages.BoundVariablesMessage;
 import lupos.engine.operators.messages.Message;
-import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 import lupos.rdf.Prefix;
 import luposdate.operators.formatter.SubGraphContainerFormatter;
@@ -84,12 +84,15 @@ public class SubGraphContainer extends RootChild {
 			String result = p2pAdapter.sendMessage(key,
 					serializedGraph.toString());
 
+			System.out.println("vor schritt 4:" + result);
+
 			// Schritt 4: Deserialisierung
-			MIMEFormatReader deserializier = new XMLFormatReader();
+			MIMEFormatReader deserializier = new JSONFormatReader();
 
 			InputStream is;
-			try {
-				is = new ByteArrayInputStream(result.getBytes("UTF-8"));
+			byte[] ba = result.getBytes("UTF-8");
+
+				is = new ByteArrayInputStream(ba);
 				QueryResult queryResult = deserializier.getQueryResult(is);
 				System.out.println("schritt 4: " + queryResult);
 
@@ -98,13 +101,13 @@ public class SubGraphContainer extends RootChild {
 				// succ.processAll(queryResult);
 				// }
 				return queryResult;
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-			}
 
-			return null;
+
 
 		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

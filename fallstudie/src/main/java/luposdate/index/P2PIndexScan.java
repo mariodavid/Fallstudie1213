@@ -7,7 +7,6 @@ import lupos.datastructures.items.Item;
 import lupos.datastructures.items.Triple;
 import lupos.datastructures.items.Variable;
 import lupos.datastructures.items.literal.Literal;
-import lupos.datastructures.items.literal.string.StringURILiteral;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.operators.OperatorIDTuple;
 import lupos.engine.operators.index.BasicIndexScan;
@@ -136,7 +135,7 @@ public class P2PIndexScan extends BasicIndexScan {
 		StringBuilder key = new StringBuilder();
 
 		for (Item item : items) {
-			if (item.getClass() == StringURILiteral.class) {
+			if (!item.isVariable()) {
 				Literal lit = (Literal) item;
 				key.append(lit.originalString());
 			}

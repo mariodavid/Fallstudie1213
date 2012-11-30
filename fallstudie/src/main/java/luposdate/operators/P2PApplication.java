@@ -8,7 +8,7 @@ import java.util.Set;
 import lupos.datastructures.items.Variable;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.server.format.Formatter;
-import lupos.endpoint.server.format.XMLFormatter;
+import lupos.endpoint.server.format.JSONFormatter;
 import lupos.engine.operators.application.Application;
 
 /**
@@ -17,20 +17,10 @@ import lupos.engine.operators.application.Application;
  * uns nach der Zeichnung an der Position (3), also direkt bevor der Empfänger
  * sein Ergebnis an den Sender zurückliefern will.
  * 
- *   | 
- *  (0)
- *   |
- * 	 |			 Teil Anfragegraph 
- * -------- (1) ------------------> (2) ----------- 
- * |Sender|								|Empfänger| 
- * -------- (4) <------------------ (3) ----------- 
- * 				   Anfrage Result
- *   | 
- *   |
- *   |
- * 	 |
- *   \/
- *   
+ * | (0) | | Teil Anfragegraph -------- (1) ------------------> (2) -----------
+ * |Sender| |Empfänger| -------- (4) <------------------ (3) ----------- Anfrage
+ * Result | | | | \/
+ * 
  * Dazu kann man dem Result Operator (@see
  * lupos.engine.operators.singleinput.Result) sogenannte Applikationen zur
  * Verfügung stellen, die bei einem call Methodenaufruf alle abgearbeitet werden
@@ -66,7 +56,7 @@ public class P2PApplication implements Application {
 	public void call(QueryResult res) {
 
 		// Schritt 3: Ruecksenden des QueryResults
-		Formatter formatter = new XMLFormatter();
+		Formatter formatter = new JSONFormatter();
 
 		// TODO: schlecht, weil hier das Iteratorkonzept verletzt wird. es muss
 		// gewartet werden, bis das komplette query result erzeugt wurde
