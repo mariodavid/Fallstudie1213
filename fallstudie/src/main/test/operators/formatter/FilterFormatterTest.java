@@ -33,8 +33,7 @@ public class FilterFormatterTest {
 			JSONObject obj = this.serializer.serialize(filter, node_id);
 			assertEquals(obj.get("type"), filter.getClass().getName());
 			assertEquals(obj.get("node_id"), node_id);
-			//assertEquals(obj.get("expression"), filtername);
-			//TODO: Fehler im String finden und den Test aktivieren....
+			assertEquals(obj.get("expression"), filtername + " .\n");
 			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
@@ -52,8 +51,7 @@ public class FilterFormatterTest {
 	 .deserialize(this.serializer.serialize(filter, node_id));
 	
 	 assertEquals(actual.getClass(), filter.getClass());
-	 //assertEquals(filter.toString(), filtername + " .");
-	//TODO: Fehler im String finden und den Test aktivieren....
+	 assertEquals(filter.toString(), filtername + " .\n");
 	 } catch (JSONException e) {
 	 // TODO Auto-generated catch block
 	 e.printStackTrace();
