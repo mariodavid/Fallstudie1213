@@ -110,7 +110,7 @@ public class HTTPServer {
 		evaluator = ev;
 		try {
 			final String localHost = InetAddress.getLocalHost().getHostName();
-			System.out.println("HTTP Endpoint gestartet: "
+			System.out.println("http endpoint started: "
 					+ localHost + ":" + port);
 			HTTPServer.startServer();
 		} catch (Exception e) {
