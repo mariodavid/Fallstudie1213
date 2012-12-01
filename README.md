@@ -7,12 +7,8 @@ Die Open Source Semantic Web Datenbank [Luposdate](https://github.com/luposdate/
 
 Ziel der Fallstudie ist es, SPARQL Anfragen per Lupodate an das P2P Netzwerk zu senden, wobei diese SPARQL Anfragen ggf. auch aufgeteilt und an die P2P Knoten gesendet werden können, um u.a. lokale Joins zu ermöglichen.
 
-## Getting Started
-1. Clonen des Git Repositories
-    https://github.com/mariodavid/Fallstudie1213/wiki/startanleitung
-2. Software ausführen unter
-    cd /path/to/the/local/copy/of/fallstudie
-    java -jar bin/fallstudie.jar
+## Getting started
+Um zu erfahren, wie die Software auszuführen ist, findet sich unter [Startanleitung](https://github.com/mariodavid/Fallstudie1213/wiki/startanleitung) im Wiki ein Eintrag.
 
 
 
