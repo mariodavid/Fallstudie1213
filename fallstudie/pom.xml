@@ -82,6 +82,25 @@
 	</dependencies>
 	<build>
 		<plugins>
+			<!-- mvn license:check / mvn license:format -->
+			<plugin>
+				<groupId>com.mycila.maven-license-plugin</groupId>
+				<version>1.9.0</version>
+				<artifactId>maven-license-plugin</artifactId>
+				<configuration>
+					<header>src/etc/license-header.txt</header>
+
+					<strictCheck>true</strictCheck>
+
+					<excludes>
+						<exclude>**/resources/wsdls/**</exclude>
+						<exclude>.git/**</exclude>
+						<exclude>.gitignore</exclude>
+						<exclude>README</exclude>
+					</excludes>
+
+				</configuration>
+			</plugin>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<configuration>

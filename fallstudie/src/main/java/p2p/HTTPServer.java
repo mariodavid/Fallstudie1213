@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012, Institute of Information Systems (Sven Groppe), University of Luebeck
+ * Copyright (c) 2012, Institute of Telematics, Institute of Information Systems (Dennis Pfisterer, Sven Groppe, Andreas Haller, Thomas Kiencke, Sebastian Walther, Mario David), University of Luebeck
  *
  * All rights reserved.
  *
