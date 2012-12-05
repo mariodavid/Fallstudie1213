@@ -111,7 +111,7 @@ public class P2PIndexScan extends BasicIndexScan {
 
 			/*
 			 * Wenn die Anzahl der Literale größer ist als die Anzahl der
-			 * Literale nachdem man gehasht hat muss man den Key verändern.
+			 * Literale nach denen man gehasht hat muss man den Key verändern.
 			 */
 			if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
 				List<Literal> keyList = new ArrayList<Literal>();
@@ -123,7 +123,7 @@ public class P2PIndexScan extends BasicIndexScan {
 			} else
 			/*
 			 * Wenn die Anzahl der Literale und die verwendete Hashstrategie
-			 * kleiner/gleich sind kann man jedes Literal hashen.
+			 * kleiner/gleich ist kann man jedes Literal hashen.
 			 */
 			if (literale.size() <= P2PAdapter.DISTRIBUTION_STRATEGY) {
 				String key = generateKey(literale);
