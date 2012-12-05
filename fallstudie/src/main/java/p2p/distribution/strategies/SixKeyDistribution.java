@@ -23,14 +23,10 @@
  */
 package p2p.distribution.strategies;
 
-import java.io.IOException;
-import java.util.LinkedList;
 
 import p2p.distribution.CombinationDistribution;
 import p2p.distribution.DistributionFactory;
-import p2p.distribution.DistributionStrategy;
 
-import lupos.datastructures.items.Triple;
 
 /**
  * The Class ThreeKeyDistribution is a distribution strategy where all three
@@ -38,6 +34,7 @@ import lupos.datastructures.items.Triple;
  * combinations are stored h(spo)
  */
 public class SixKeyDistribution extends CombinationDistribution {
+	public final static int STRATEGY_ID = 6;
 
 	public SixKeyDistribution() {
 		super();
@@ -45,9 +42,14 @@ public class SixKeyDistribution extends CombinationDistribution {
 		strategies.add(DistributionFactory.create(2));
 
 	}
-	
+
 	@Override
 	public String toString() {
 		return "6: SixKeyStrategy [h(S),h(P),h(O),h(SP),h(SO),h(PO)]";
+	}
+	
+	@Override
+	public int getStrategyID() {
+		return STRATEGY_ID;
 	}
 }

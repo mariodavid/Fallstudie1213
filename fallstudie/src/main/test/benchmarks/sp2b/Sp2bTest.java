@@ -84,7 +84,7 @@ public class Sp2bTest {
 	protected static final String file_q12b = "benchmarks/sp2b/sp2b_q12b.n3";
 	protected static final String file_q12c = "benchmarks/sp2b/sp2b_q12c.n3";
 
-	protected static final String default_file = file_10000_triples;
+	protected static final String default_file = file_1000_triples;
 
 	protected static final String q1_query_filename = "benchmarks/sp2b/queries/q1.sparql";
 	protected static final String q2_query_filename = "benchmarks/sp2b/queries/q2.sparql";
@@ -135,10 +135,10 @@ public class Sp2bTest {
 		}
 //		NavigableMap<Number480, Data> p2pMap2 = ((P2PAdapter) adapters[1]).peer
 //				.getPeerBean().getStorage().map();
-		System.out.println("fertig 1: " + p2pMap.size());
+//		System.out.println("fertig 1: " + p2pMap.size());
 //		System.out.println("fertig 2: " + p2pMap2.size());
 
-		System.out.println("fertig:" + p2pMap.size());
+//		System.out.println("fertig:" + p2pMap.size());
 
 	}
 

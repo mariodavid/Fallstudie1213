@@ -94,4 +94,8 @@ public class CombinationDistribution extends AbstractDistributionStrategy {
 			strategy.setPeer(peer);
 		}
 	}
+
+	public int getStrategyID() {
+		return 0;
+	}
 }

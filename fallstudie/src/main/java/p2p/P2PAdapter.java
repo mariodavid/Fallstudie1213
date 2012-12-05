@@ -66,7 +66,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
 	 */
-	private static final int DEFAULT_DISTRIBUTION_STRATEGY = 7;
+	public static int DISTRIBUTION_STRATEGY = 7;
 	/** Timeout in ms. */
 	public static final int TIMEOUT = 5000;
 	/** Lupos Evaluator. */
@@ -191,6 +191,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	 */
 	public void setDistributionStrategy(
 			DistributionStrategy distributionStrategy) {
+		DISTRIBUTION_STRATEGY = distributionStrategy.getStrategyID();
 		this.distributionStrategy = distributionStrategy;
 		this.distributionStrategy.setPeer(peer);
 	}
@@ -201,7 +202,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	 */
 	private void initDistributionStrategy() {
 		distributionStrategy = DistributionFactory
-				.create(DEFAULT_DISTRIBUTION_STRATEGY);
+				.create(DISTRIBUTION_STRATEGY);
 		distributionStrategy.setPeer(peer);
 	}
 

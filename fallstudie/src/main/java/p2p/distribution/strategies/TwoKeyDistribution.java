@@ -38,6 +38,7 @@ import lupos.datastructures.items.Triple;
  * 
  */
 public class TwoKeyDistribution extends AbstractDistributionStrategy {
+	public final static int STRATEGY_ID = 2;
 
 	/*
 	 * (non-Javadoc)
@@ -76,7 +77,7 @@ public class TwoKeyDistribution extends AbstractDistributionStrategy {
 	public String toString() {
 		return "2: TwoKeyStrategy [h(SP),h(SO),h(PO)]";
 	}
-	
+
 	protected String getSP(Triple triple) {
 		return triple.getSubject().originalString()
 				+ triple.getPredicate().originalString();
@@ -90,5 +91,9 @@ public class TwoKeyDistribution extends AbstractDistributionStrategy {
 	protected String getPO(Triple triple) {
 		return triple.getPredicate().originalString()
 				+ triple.getObject().originalString();
+	}
+
+	public int getStrategyID() {
+		return STRATEGY_ID;
 	}
 }

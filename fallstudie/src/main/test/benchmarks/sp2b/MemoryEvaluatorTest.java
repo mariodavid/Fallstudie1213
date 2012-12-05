@@ -36,6 +36,7 @@ import lupos.datastructures.queryresult.QueryResult;
 import lupos.engine.evaluators.MemoryIndexQueryEvaluator;
 
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import p2p.P2PAdapter;
@@ -276,6 +277,7 @@ public class MemoryEvaluatorTest extends Sp2bTest {
 		assertEquals(expected, actual);
 	}
 
+	@Ignore
 	@Test
 	public void testQ9() throws Exception {
 

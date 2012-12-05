@@ -36,6 +36,8 @@ import lupos.datastructures.items.Triple;
  */
 public class ThreeKeyDistribution extends AbstractDistributionStrategy {
 
+	public final static int STRATEGY_ID = 3;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -67,10 +69,14 @@ public class ThreeKeyDistribution extends AbstractDistributionStrategy {
 	public String toString() {
 		return "3: ThreeKeyStrategy [h(SPO)]";
 	}
-	
+
 	protected String getSPO(Triple triple) {
 		return triple.getPos(0).originalString()
 				+ triple.getPredicate().originalString()
 				+ triple.getObject().originalString();
+	}
+
+	public int getStrategyID() {
+		return STRATEGY_ID;
 	}
 }

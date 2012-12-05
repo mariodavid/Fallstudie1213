@@ -35,6 +35,7 @@ import lupos.datastructures.items.Triple;
  * h(s), h(p), h(o)
  */
 public class OneKeyDistribution extends AbstractDistributionStrategy {
+	public final static int STRATEGY_ID = 1;
 
 	/*
 	 * (non-Javadoc)
@@ -78,6 +79,10 @@ public class OneKeyDistribution extends AbstractDistributionStrategy {
 	@Override
 	public String toString() {
 		return "1: OneKeyStrategy [h(S),h(P),h(O)]";
+	}
+	
+	public int getStrategyID() {
+		return STRATEGY_ID;
 	}
 
 }

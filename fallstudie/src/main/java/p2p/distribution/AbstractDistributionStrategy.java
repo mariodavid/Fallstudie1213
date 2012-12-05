@@ -24,8 +24,6 @@
 package p2p.distribution;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import lupos.datastructures.items.Triple;
 import net.tomp2p.futures.BaseFutureAdapter;

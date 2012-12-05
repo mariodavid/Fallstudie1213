@@ -23,7 +23,11 @@
  */
 package luposdate.index;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
+
+import p2p.P2PAdapter;
 
 import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.items.Item;
@@ -37,7 +41,6 @@ import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
 
-// TODO: Klasse erklären
 /**
  * ist für die ein oder mehrere Tripelmuster auszuführen.
  */
@@ -103,9 +106,31 @@ public class P2PIndexScan extends BasicIndexScan {
 
 			Item[] items = pattern.getItems();
 
-			String key = generateKey(items);
+			List<Literal> literale = getLiterals(items);
+			Collection<Triple> tripleCollection = new ArrayList<Triple>();
 
-			for (Triple triple : p2pIndices.getAll(key)) {
+			/*
+			 * Wenn die Anzahl der Literale größer ist als die Anzahl der
+			 * Literale nachdem man gehasht hat muss man den Key verändern.
+			 */
+			if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
+				List<Literal> keyList = new ArrayList<Literal>();
+				for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
+					keyList.add(literale.get(i));
+				}
+				String key = generateKey(keyList);
+				tripleCollection = p2pIndices.getAll(key);
+			} else
+			/*
+			 * Wenn die Anzahl der Literale und die verwendete Hashstrategie
+			 * kleiner/gleich sind kann man jedes Literal hashen.
+			 */
+			if (literale.size() <= P2PAdapter.DISTRIBUTION_STRATEGY) {
+				String key = generateKey(literale);
+				tripleCollection = p2pIndices.getAll(key);
+			}
+
+			for (Triple triple : tripleCollection) {
 				Bindings b = addVariablesToBindings(items, triple);
 				if (b != null) {
 					result.add(b);
@@ -151,16 +176,29 @@ public class P2PIndexScan extends BasicIndexScan {
 	 *            the items
 	 * @return the string
 	 */
-	private String generateKey(Item[] items) {
+	private String generateKey(List<Literal> items) {
 		StringBuilder key = new StringBuilder();
+		for (Literal literal : items)
+			key.append(literal.toString());
+		return key.toString();
+	}
 
+	/**
+	 * Generate key.
+	 * 
+	 * @param items
+	 *            the items
+	 * @return the literal
+	 */
+	private List<Literal> getLiterals(Item[] items) {
+		List<Literal> result = new ArrayList<Literal>();
 		for (Item item : items) {
 			if (!item.isVariable()) {
 				Literal lit = (Literal) item;
-				key.append(lit.originalString());
+				result.add(lit);
 			}
 		}
-		return key.toString();
+		return result;
 	}
 
 }

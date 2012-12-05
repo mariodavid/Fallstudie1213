@@ -51,22 +51,26 @@ public interface DistributionStrategy {
 	 *             Signals that an I/O exception has occurred.
 	 */
 	public void distribute(Triple triple) throws IOException;
-	
+
 	/**
 	 * removes on triple (content) based on the choosen strategy
+	 * 
 	 * @param triple
 	 * @throws IOExecption
 	 */
 	public void remove(Triple triple) throws IOException;
-	
+
 	/**
 	 * contains on triple (content) based on the choosen strategy
+	 * 
 	 * @param triple
 	 * @throws IOExecption
 	 */
 	public boolean contains(Triple triple) throws IOException;
-	
+
 	public String[] getDistributeStrings(Triple triple);
 
 	public boolean isDistributionReady();
+
+	public int getStrategyID();
 }
