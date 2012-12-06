@@ -24,8 +24,10 @@
 package p2p;
 
 import java.util.Collection;
+import java.util.List;
 
 import lupos.datastructures.items.Triple;
+import lupos.datastructures.items.literal.Literal;
 import p2p.distribution.DistributionStrategy;
 
 /**
@@ -58,7 +60,7 @@ public interface DataStoreAdapter {
 	 *            den Key
 	 * @return eine Collection von Triple
 	 */
-	public abstract Collection<Triple> get(String key);
+	public abstract Collection<Triple> get(List<Literal> key);
 
 	/**
 	 * Fügt ein Triple hinzu.

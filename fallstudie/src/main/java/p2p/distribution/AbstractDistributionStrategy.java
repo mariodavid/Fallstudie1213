@@ -24,8 +24,13 @@
 package p2p.distribution;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 
 import lupos.datastructures.items.Triple;
+import lupos.datastructures.items.literal.Literal;
 import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureDHT;
 import net.tomp2p.p2p.Peer;
@@ -33,6 +38,8 @@ import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.rpc.SenderCacheStrategy;
 import net.tomp2p.storage.Data;
+import p2p.P2PAdapter;
+import p2p.distribution.strategies.SevenKeyDistribution;
 
 /**
  * The Class AbstractDistributionStrategy.
@@ -40,6 +47,9 @@ import net.tomp2p.storage.Data;
 public abstract class AbstractDistributionStrategy implements
 		DistributionStrategy {
 
+	private Collection<Triple> result;
+	private String key;
+	private Boolean isReady;
 	/** The peer. */
 	protected Peer peer;
 
@@ -82,8 +92,9 @@ public abstract class AbstractDistributionStrategy implements
 	 */
 	static SenderCacheStrategy senderCacheStrategy = new SenderCacheStrategy(
 			250, 750);
-	static RequestP2PConfiguration r = new RequestP2PConfiguration(1, 0, 0, false,
-			false, senderCacheStrategy);
+	static RequestP2PConfiguration r = new RequestP2PConfiguration(1, 0, 0,
+			false, false, senderCacheStrategy);
+
 	protected void addToNetwork(String key, Triple value) throws IOException {
 		Number160 hash = Number160.createHash(key);
 		Number160 contentKey = Number160.createHash(value.toN3String());
@@ -94,7 +105,7 @@ public abstract class AbstractDistributionStrategy implements
 					public void operationComplete(FutureDHT future)
 							throws Exception {
 						storedCounter++;
-					//	future.shutdown();
+						// future.shutdown();
 					}
 				});
 	}
@@ -148,6 +159,84 @@ public abstract class AbstractDistributionStrategy implements
 
 		return future.isSuccess();
 
+	}
+
+	public Collection<Triple> get(List<Literal> literale) {
+		result = new LinkedList<Triple>();
+		isReady = false;
+		String key = "";
+
+		// Key erzeugen:
+		/*
+		 * Wenn die Anzahl der Literale größer ist als die Anzahl der Literale
+		 * nach denen man gehasht hat muss man den Key verändern.
+		 */
+		if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
+			List<Literal> keyList = new ArrayList<Literal>();
+			for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
+				keyList.add(literale.get(i));
+			}
+			key = generateKey(keyList);
+		}
+		/*
+		 * Wenn die Anzahl der Literale und die verwendete Hashstrategie gleich
+		 * ist kann man jedes Literal hashen. Bei der 7 Key Strategie geht jede
+		 * Variante.
+		 */
+		else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
+				|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
+			key = generateKey(literale);
+		}
+
+		// perform p2p operation
+		FutureDHT future = peer.get(Number160.createHash(key)).setAll().start();
+		future.addListener(new BaseFutureAdapter<FutureDHT>() {
+			public void operationComplete(FutureDHT future) throws Exception {
+				if (future.isSuccess()) {
+					// add all p2p results to the result collection
+					for (Data r : future.getDataMap().values()) {
+						try {
+							result.add((Triple) r.getObject());
+
+						} catch (ClassNotFoundException e) {
+							e.printStackTrace();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}
+
+					isReady = true;
+
+				} else {
+					isReady = true;
+				}
+			}
+		});
+
+		while (!isReady) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		return result;
+	}
+
+	/**
+	 * Generate key.
+	 * 
+	 * @param items
+	 *            the items
+	 * @return the string
+	 */
+	private String generateKey(List<Literal> items) {
+		StringBuilder key = new StringBuilder();
+		for (Literal literal : items)
+			key.append(literal.toString());
+		return key.toString();
 	}
 
 }

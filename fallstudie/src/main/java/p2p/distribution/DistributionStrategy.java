@@ -24,8 +24,11 @@
 package p2p.distribution;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
 
 import lupos.datastructures.items.Triple;
+import lupos.datastructures.items.literal.Literal;
 import net.tomp2p.p2p.Peer;
 
 /**
@@ -73,4 +76,6 @@ public interface DistributionStrategy {
 	public boolean isDistributionReady();
 
 	public int getStrategyID();
+
+	public Collection<Triple> get(List<Literal> key);
 }

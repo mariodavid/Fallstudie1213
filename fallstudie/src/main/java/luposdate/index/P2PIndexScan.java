@@ -38,8 +38,6 @@ import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
-import p2p.P2PAdapter;
-import p2p.distribution.strategies.SevenKeyDistribution;
 
 /**
  * ist für die ein oder mehrere Tripelmuster auszuführen.
@@ -107,32 +105,8 @@ public class P2PIndexScan extends BasicIndexScan {
 			Item[] items = pattern.getItems();
 
 			List<Literal> literale = getLiterals(items);
-			Collection<Triple> tripleCollection = new ArrayList<Triple>();
 
-			/*
-			 * Wenn die Anzahl der Literale größer ist als die Anzahl der
-			 * Literale nach denen man gehasht hat muss man den Key verändern.
-			 */
-			if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
-				List<Literal> keyList = new ArrayList<Literal>();
-				for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
-					keyList.add(literale.get(i));
-				}
-				String key = generateKey(keyList);
-				tripleCollection = p2pIndices.getAll(key);
-			}
-			/*
-			 * Wenn die Anzahl der Literale und die verwendete Hashstrategie
-			 * gleich ist kann man jedes Literal hashen. Bei der 7 Key Strategie
-			 * geht jede Variante.
-			 */
-			else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
-					|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
-				String key = generateKey(literale);
-				tripleCollection = p2pIndices.getAll(key);
-			}
-
-			for (Triple triple : tripleCollection) {
+			for (Triple triple : p2pIndices.getAll(literale)) {
 				Bindings b = addVariablesToBindings(items, triple);
 				if (b != null) {
 					result.add(b);
@@ -169,20 +143,6 @@ public class P2PIndexScan extends BasicIndexScan {
 			}
 		}
 		return b;
-	}
-
-	/**
-	 * Generate key.
-	 * 
-	 * @param items
-	 *            the items
-	 * @return the string
-	 */
-	private String generateKey(List<Literal> items) {
-		StringBuilder key = new StringBuilder();
-		for (Literal literal : items)
-			key.append(literal.toString());
-		return key.toString();
 	}
 
 	/**

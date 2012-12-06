@@ -25,18 +25,18 @@ package p2p;
 
 import java.io.IOException;
 import java.util.Collection;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Random;
 import java.util.SortedSet;
 
 import lupos.datastructures.items.Triple;
+import lupos.datastructures.items.literal.Literal;
 import lupos.engine.operators.BasicOperator;
 import lupos.engine.operators.index.Root;
 import lupos.engine.operators.messages.BoundVariablesMessage;
 import luposdate.evaluators.P2PIndexQueryEvaluator;
 import luposdate.operators.P2PApplication;
 import luposdate.operators.formatter.SubGraphContainerFormatter;
-import net.tomp2p.futures.BaseFutureAdapter;
 import net.tomp2p.futures.FutureBootstrap;
 import net.tomp2p.futures.FutureChannelCreator;
 import net.tomp2p.futures.FutureDHT;
@@ -47,7 +47,6 @@ import net.tomp2p.p2p.RequestP2PConfiguration;
 import net.tomp2p.peers.Number160;
 import net.tomp2p.peers.PeerAddress;
 import net.tomp2p.rpc.ObjectDataReply;
-import net.tomp2p.storage.Data;
 
 import org.jboss.netty.handler.timeout.TimeoutException;
 import org.json.JSONObject;
@@ -55,7 +54,6 @@ import org.json.JSONObject;
 import p2p.distribution.DistributionFactory;
 import p2p.distribution.DistributionStrategy;
 
-// TODO: Auto-generated Javadoc
 /**
  * Der P2P Adapter stellt das Bindeglied zwischen dem P2P Netzwerk und dem
  * Lupos-Server dar. Daher gibt es in dieser Klasse sowohl eine Refenz vom Peer
@@ -66,7 +64,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
 	 */
-	public static int DISTRIBUTION_STRATEGY = 7;
+	public static int DISTRIBUTION_STRATEGY = 1;
 	/** Timeout in ms. */
 	public static final int TIMEOUT = 5000;
 	/** Lupos Evaluator. */
@@ -314,47 +312,8 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * 
 	 * @see p2p.DataStoreAdapter#get(java.lang.String)
 	 */
-	public Collection<Triple> get(String key) {
-
-		result = new LinkedList<Triple>();
-		isReady = false;
-
-		// perform p2p operation
-		FutureDHT future = getPeer().get(Number160.createHash(key)).setAll()
-				.start();
-		future.addListener(new BaseFutureAdapter<FutureDHT>() {
-			public void operationComplete(FutureDHT future) throws Exception {
-				if (future.isSuccess()) {
-					// add all p2p results to the result collection
-					for (Data r : future.getDataMap().values()) {
-						try {
-							result.add((Triple) r.getObject());
-
-						} catch (ClassNotFoundException e) {
-							e.printStackTrace();
-						} catch (IOException e) {
-							e.printStackTrace();
-						}
-					}
-
-					isReady = true;
-
-				} else {
-					isReady = true;
-				}
-			}
-		});
-
-		while (!isReady) {
-			try {
-				Thread.sleep(10);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-
-		return result;
+	public Collection<Triple> get(List<Literal> key) {
+		return this.getDistributionStrategy().get(key);
 	}
 
 	/*

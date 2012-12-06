@@ -40,8 +40,6 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import p2p.P2PAdapter;
-
 public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 
 	static MemoryIndexQueryEvaluator memoryEvaluator;
@@ -59,17 +57,18 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 	public void testQ1() throws Exception {
 
 		String selectQuery = readFile(q1_query_filename);
-//		System.out.println("lala: " + ((P2PAdapter)p2pEvaluator.getP2PAdapter()).peer.getPeerBean().getStorage().map().size());
+		// System.out.println("lala: " +
+		// ((P2PAdapter)p2pEvaluator.getP2PAdapter()).peer.getPeerBean().getStorage().map().size());
 		QueryResult expected = executeQuery(memoryEvaluator, selectQuery);
 		QueryResult actual = executeQuery(p2pEvaluator, selectQuery);
 
 		System.out.println("expected:" + expected);
 		System.out.println("actual:  " + actual);
-		
-		System.out
-				.println(p2pEvaluator
-						.getP2PAdapter()
-						.get("http://localhost/publications/articles/Journal1/1940/Article12"));
+
+		// System.out
+		// .println(p2pEvaluator
+		// .getP2PAdapter()
+		// .get("http://localhost/publications/articles/Journal1/1940/Article12"));
 
 		assertEquals(expected, actual);
 	}
@@ -132,7 +131,6 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 
 	@Test
 	public void testQ3c() throws Exception {
-
 
 		String selectQuery = readFile(q3c_query_filename);
 
@@ -347,8 +345,8 @@ public class MemoryEvaluatorLargeDatasetTest extends Sp2bTest {
 	}
 
 	private static String full_filepath(String filename) {
-		return MemoryEvaluatorLargeDatasetTest.class.getClassLoader().getResource(filename)
-				.getPath();
+		return MemoryEvaluatorLargeDatasetTest.class.getClassLoader()
+				.getResource(filename).getPath();
 	}
 
 }
