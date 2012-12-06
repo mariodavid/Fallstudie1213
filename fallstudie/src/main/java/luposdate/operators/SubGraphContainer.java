@@ -48,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import p2p.P2PAdapter;
+import p2p.distribution.AbstractDistributionStrategy;
 import p2p.distribution.strategies.SevenKeyDistribution;
 
 /**
@@ -102,7 +103,7 @@ public class SubGraphContainer extends RootChild {
 		try {
 			// Schritt 1: Serialisierung
 			serializedGraph = serialzer.serialize(rootNodeOfSubGraph, 0);
-			String key = generateKey();
+			String key = getKey();
 
 			// Versand des Teilbaumes und Empfang des Ergebnisses
 			String result = p2pAdapter.sendMessage(key,
@@ -130,33 +131,12 @@ public class SubGraphContainer extends RootChild {
 		return null;
 	}
 
-	private String generateKey() {
+	private String getKey() {
 		ArrayList<TriplePattern> hash = new ArrayList<TriplePattern>(
 				hashableTriplePatterns);
 		List<Literal> literale = getLiterals(hash.get(0).getItems());
-		String key = "";
-
-		/*
-		 * Wenn die Anzahl der Literale größer ist als die Anzahl der Literale
-		 * nach denen man gehasht hat muss man den Key verändern.
-		 */
-		if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
-			List<Literal> keyList = new ArrayList<Literal>();
-			for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
-				keyList.add(literale.get(i));
-			}
-			key = generateKey(keyList);
-		}
-		/*
-		 * Wenn die Anzahl der Literale und die verwendete Hashstrategie gleich
-		 * ist kann man jedes Literal hashen. Bei der 7 Key Strategie geht jede
-		 * Variante.
-		 */
-		else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
-				|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
-			key = generateKey(literale);
-		}
-		return key;
+		return ((AbstractDistributionStrategy) p2pAdapter
+				.getDistributionStrategy()).generateKey(literale);
 	}
 
 	@Override

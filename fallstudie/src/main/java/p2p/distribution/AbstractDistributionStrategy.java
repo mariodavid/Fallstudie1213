@@ -48,7 +48,6 @@ public abstract class AbstractDistributionStrategy implements
 		DistributionStrategy {
 
 	private Collection<Triple> result;
-	private String key;
 	private Boolean isReady;
 	/** The peer. */
 	protected Peer peer;
@@ -164,31 +163,10 @@ public abstract class AbstractDistributionStrategy implements
 	public Collection<Triple> get(List<Literal> literale) {
 		result = new LinkedList<Triple>();
 		isReady = false;
-		String key = "";
 
 		// Key erzeugen:
-		/*
-		 * Wenn die Anzahl der Literale größer ist als die Anzahl der Literale
-		 * nach denen man gehasht hat muss man den Key verändern.
-		 */
-		if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
-			List<Literal> keyList = new ArrayList<Literal>();
-			for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
-				keyList.add(literale.get(i));
-			}
-			key = generateKey(keyList);
-		}
-		/*
-		 * Wenn die Anzahl der Literale und die verwendete Hashstrategie gleich
-		 * ist kann man jedes Literal hashen. Bei der 7 Key Strategie geht jede
-		 * Variante.
-		 */
-		else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
-				|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
-			key = generateKey(literale);
-		}
-
-		// perform p2p operation
+		String key = generateKey(literale);
+		
 		FutureDHT future = peer.get(Number160.createHash(key)).setAll().start();
 		future.addListener(new BaseFutureAdapter<FutureDHT>() {
 			public void operationComplete(FutureDHT future) throws Exception {
@@ -225,6 +203,33 @@ public abstract class AbstractDistributionStrategy implements
 		return result;
 	}
 
+	public String generateKey(List<Literal> literale) {
+		String key = "";
+		// Key erzeugen:
+		/*
+		 * Wenn die Anzahl der Literale größer ist als die Anzahl der Literale
+		 * nach denen man gehasht hat muss man den Key verändern.
+		 */
+		if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
+			List<Literal> keyList = new ArrayList<Literal>();
+			for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
+				keyList.add(literale.get(i));
+			}
+			key = convertLiteralToString(keyList);
+		}
+		/*
+		 * Wenn die Anzahl der Literale und die verwendete Hashstrategie gleich
+		 * ist kann man jedes Literal hashen. Bei der 7 Key Strategie geht jede
+		 * Variante.
+		 */
+		else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
+				|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
+			key = convertLiteralToString(literale);
+		}
+
+		return key;
+	}
+
 	/**
 	 * Generate key.
 	 * 
@@ -232,7 +237,7 @@ public abstract class AbstractDistributionStrategy implements
 	 *            the items
 	 * @return the string
 	 */
-	private String generateKey(List<Literal> items) {
+	public String convertLiteralToString(List<Literal> items) {
 		StringBuilder key = new StringBuilder();
 		for (Literal literal : items)
 			key.append(literal.toString());
