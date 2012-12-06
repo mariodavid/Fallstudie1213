@@ -64,7 +64,7 @@ public class P2PAdapter implements DataStoreAdapter {
 	 * Die Standard Strategie die genutzt wird zum verteilen der Triple im P2P
 	 * Netzwerk.
 	 */
-	public static int DISTRIBUTION_STRATEGY = 1;
+	public static int DISTRIBUTION_STRATEGY = 7;
 	/** Timeout in ms. */
 	public static final int TIMEOUT = 5000;
 	/** Lupos Evaluator. */
