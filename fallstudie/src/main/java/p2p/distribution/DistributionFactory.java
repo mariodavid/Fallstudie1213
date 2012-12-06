@@ -23,7 +23,10 @@
  */
 package p2p.distribution;
 
-import p2p.distribution.strategies.*;
+import p2p.distribution.strategies.OneKeyDistribution;
+import p2p.distribution.strategies.SevenKeyDistribution;
+import p2p.distribution.strategies.ThreeKeyDistribution;
+import p2p.distribution.strategies.TwoKeyDistribution;
 
 /**
  * This class creates Strategies for the distribution of RDF Triple within the
@@ -45,22 +48,16 @@ public class DistributionFactory {
 	 */
 	public static DistributionStrategy create(int strategy) {
 		switch (strategy) {
-			case 1:
-				return new OneKeyDistribution();
-			case 2:
-				return new TwoKeyDistribution();
-			case 3:
-				return new ThreeKeyDistribution();
-			case 4:
-				return new FourKeyDistribution();
-			case 5:
-				return new FiveKeyDistribution();
-			case 6:
-				return new SixKeyDistribution();
-			case 7:
-				return new SevenKeyDistribution();
-			default:
-				return new OneKeyDistribution();
+		case 1:
+			return new OneKeyDistribution();
+		case 2:
+			return new TwoKeyDistribution();
+		case 3:
+			return new ThreeKeyDistribution();
+		case 7:
+			return new SevenKeyDistribution();
+		default:
+			return new OneKeyDistribution();
 		}
 	}
 }

@@ -27,8 +27,6 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import p2p.P2PAdapter;
-
 import lupos.datastructures.bindings.Bindings;
 import lupos.datastructures.items.Item;
 import lupos.datastructures.items.Triple;
@@ -40,6 +38,8 @@ import lupos.engine.operators.index.BasicIndexScan;
 import lupos.engine.operators.index.Indices;
 import lupos.engine.operators.index.Root;
 import lupos.engine.operators.tripleoperator.TriplePattern;
+import p2p.P2PAdapter;
+import p2p.distribution.strategies.SevenKeyDistribution;
 
 /**
  * ist für die ein oder mehrere Tripelmuster auszuführen.
@@ -120,12 +120,14 @@ public class P2PIndexScan extends BasicIndexScan {
 				}
 				String key = generateKey(keyList);
 				tripleCollection = p2pIndices.getAll(key);
-			} else
+			}
 			/*
 			 * Wenn die Anzahl der Literale und die verwendete Hashstrategie
-			 * kleiner/gleich ist kann man jedes Literal hashen.
+			 * gleich ist kann man jedes Literal hashen. Bei der 7 Key Strategie
+			 * geht jede Variante.
 			 */
-			if (literale.size() <= P2PAdapter.DISTRIBUTION_STRATEGY) {
+			else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
+					|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
 				String key = generateKey(literale);
 				tripleCollection = p2pIndices.getAll(key);
 			}

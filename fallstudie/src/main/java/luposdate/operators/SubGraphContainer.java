@@ -28,8 +28,10 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import lupos.datastructures.items.Item;
+import lupos.datastructures.items.literal.Literal;
 import lupos.datastructures.queryresult.QueryResult;
 import lupos.endpoint.client.formatreader.JSONFormatReader;
 import lupos.endpoint.client.formatreader.MIMEFormatReader;
@@ -46,6 +48,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import p2p.P2PAdapter;
+import p2p.distribution.strategies.SevenKeyDistribution;
 
 /**
  * enthaelt die Operatoren, die alle an den Empfaengerknoten verschickt werden
@@ -114,9 +117,6 @@ public class SubGraphContainer extends RootChild {
 			is = new ByteArrayInputStream(ba);
 			QueryResult queryResult = deserializier.getQueryResult(is);
 
-			// for (OperatorIDTuple succ : this.getSucceedingOperators()) {
-			// succ.processAll(queryResult);
-			// }
 			return queryResult;
 
 		} catch (JSONException e) {
@@ -131,15 +131,32 @@ public class SubGraphContainer extends RootChild {
 	}
 
 	private String generateKey() {
-		StringBuilder key = new StringBuilder();
-		ArrayList<TriplePattern> hashbla = new ArrayList<TriplePattern>(
+		ArrayList<TriplePattern> hash = new ArrayList<TriplePattern>(
 				hashableTriplePatterns);
-		for (Item item : hashbla.get(0).getItems()) {
-			if (!item.isVariable()) {
-				key.append(item.getName());
+		List<Literal> literale = getLiterals(hash.get(0).getItems());
+		String key = "";
+
+		/*
+		 * Wenn die Anzahl der Literale größer ist als die Anzahl der Literale
+		 * nach denen man gehasht hat muss man den Key verändern.
+		 */
+		if (literale.size() > P2PAdapter.DISTRIBUTION_STRATEGY) {
+			List<Literal> keyList = new ArrayList<Literal>();
+			for (int i = 0; i < P2PAdapter.DISTRIBUTION_STRATEGY; i++) {
+				keyList.add(literale.get(i));
 			}
+			key = generateKey(keyList);
 		}
-		return key.toString();
+		/*
+		 * Wenn die Anzahl der Literale und die verwendete Hashstrategie gleich
+		 * ist kann man jedes Literal hashen. Bei der 7 Key Strategie geht jede
+		 * Variante.
+		 */
+		else if (P2PAdapter.DISTRIBUTION_STRATEGY == SevenKeyDistribution.STRATEGY_ID
+				|| literale.size() == P2PAdapter.DISTRIBUTION_STRATEGY) {
+			key = generateKey(literale);
+		}
+		return key;
 	}
 
 	@Override
@@ -162,6 +179,38 @@ public class SubGraphContainer extends RootChild {
 		BoundVariablesMessage newMsg = new BoundVariablesMessage(msg);
 		newMsg.setVariables(getUnionVariables());
 		return newMsg;
+	}
+
+	/**
+	 * Generate key.
+	 * 
+	 * @param items
+	 *            the items
+	 * @return the string
+	 */
+	private String generateKey(List<Literal> items) {
+		StringBuilder key = new StringBuilder();
+		for (Literal literal : items)
+			key.append(literal.toString());
+		return key.toString();
+	}
+
+	/**
+	 * Generate key.
+	 * 
+	 * @param items
+	 *            the items
+	 * @return the literal
+	 */
+	private List<Literal> getLiterals(Item[] items) {
+		List<Literal> result = new ArrayList<Literal>();
+		for (Item item : items) {
+			if (!item.isVariable()) {
+				Literal lit = (Literal) item;
+				result.add(lit);
+			}
+		}
+		return result;
 	}
 
 }
